@@ -26,8 +26,13 @@ public class PhoneDriver {
         File output = new File("output" + date + ".txt");
         output.createNewFile();
         PrintWriter out = new PrintWriter(output);
+        
+        String HTML, num;
+        
         for (Person p : voters) {
-            p.findNum();
+            HTML = HTMLGet(p);
+            num = recursivePhoneFinder(HTML);
+            p.num = num;
             out.println(String.valueOf(p.getFirst()) + " " + p.getLast() + " " + p.getNum());
             out.flush();
         }
@@ -47,7 +52,7 @@ public class PhoneDriver {
         return list;
     }
     
-    public String HTMLGet(Person p) throws InterruptedException{
+    public static String HTMLGet(Person p) throws InterruptedException{
     	String html = null;
         try {
             html = Jsoup.connect((String)("http://www.yellowpages.com/whitepages?first=" + p.first + "&last=" + p.last + "&zip=Auburn&state=MA")).timeout(10000).get().html();
@@ -59,7 +64,7 @@ public class PhoneDriver {
         return html;
     }
     
-    public String recursivePhoneFinder(String text){
+    public static String recursivePhoneFinder(String text){
     	String area[] = {"508-832", "508-407", "508-729", "774-221"};
     	String num = "No phone number";
     	if(text == null)
@@ -71,6 +76,10 @@ public class PhoneDriver {
                  num = text.substring(start, start + 12);
             }
         }
+    	
+    	if(num == "No phone number"){
+    		return num;
+    	}
     	
     	if(num.matches(".*[a-zA-Z]+.*") && text.length() > 0){
     		num = num.substring(1, num.length());
