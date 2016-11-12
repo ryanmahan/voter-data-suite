@@ -1,4 +1,4 @@
-package phones;
+package suite;
 
 public class Person {
     String first;

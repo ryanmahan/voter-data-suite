@@ -1,4 +1,4 @@
-package phones;
+package suite;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -8,10 +8,9 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
-
 import org.jsoup.Jsoup;
 
-import phones.Person;
+import suite.Person;
 
 public class PhoneDriver {
     public static void main(String[] args) throws Exception {
