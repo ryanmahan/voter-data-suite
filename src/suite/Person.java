@@ -17,7 +17,9 @@ public class Person {
     public String getLast() {
         return this.last;
     }
-//Adding comment block until the new method in Phone Driver will be finished
+
+    
+//LEGACY CODE NO LONGER IN FUNCTION USE HTMLGET AND RECURSIVEPHONEFINDER IN PHONEDRIVER CLASS 
 //    public String findNum() throws IllegalArgumentException, IOException, InterruptedException {
 //        if (this.num == null) {
 //            String html;
