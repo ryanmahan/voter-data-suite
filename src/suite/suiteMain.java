@@ -1,7 +1,8 @@
 package suite;
 
 import java.util.Scanner;
-import suite.*;
+import suite.DataDriver;
+import java.io.File;
 
 public class suiteMain {
 	
@@ -19,29 +20,37 @@ public class suiteMain {
 		Scanner input = new Scanner(System.in);
 		int command = input.nextInt();
 		System.out.println("Please input a tab-delimited text file of Voters");
+		
 		String textFile = input.next();
+		File f = null;
+		
+		try{
+			f = new File(textFile);
+		} catch (Error e){
+			System.out.println("File Error: " + e);
+			return;
+		}
+		
 		
 		switch(command){
 		
 			case 1 : //Phonebank make
-				PhoneDriver.phoneBankMaker(textFile);
+				DataDriver.phoneBankMaker(f);
 				System.out.println("File Created!");
 				
 			case 2 : //house make
-				//tokenize
-				//find matching snum and sname
-				//create house objects with that
+				DataDriver.houseMaker(f);
+				
+				
 				
 				
 		}
-		
+		input.close();
 		System.out.println("Would you like to run another command? Y/N");
 		String reply = input.next();
-		System.out.println(reply + "end");
 		if(reply.equals("Y") || reply.equals("y")){
 			commandlineGUI();
 		} else { 
-			input.close();
 			return;
 		}
 	}
