@@ -1,8 +1,12 @@
 package suite;
 
 public class Person {
+	String party;
     String first;
     String last;
+    String snum;//Street Number
+    String sname;//Street Name
+    
     String num = null;
 
     public Person(String f, String l) {
@@ -10,6 +14,14 @@ public class Person {
         this.last = l;
     }
 
+    public Person(String p, String f, String l, String stNum, String stName){
+    	this.party = p;
+    	this.first = f;
+    	this.last = l;
+    	this.snum = stNum;
+    	this.sname = stName;
+    }
+    
     public String getFirst() {
         return this.first;
     }

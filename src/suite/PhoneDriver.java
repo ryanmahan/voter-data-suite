@@ -16,15 +16,13 @@ import suite.Person;
 
 
 public class PhoneDriver {
-    public static void main(String[] args) throws Exception {
-        Scanner user = new Scanner(System.in);
-        System.out.println("Please name a tab-collated file with First/Last Names to a line");
-        String fileName = user.nextLine();
-        user.close();
+    public static void phoneBankMaker(String fileName) throws Exception {
+    	
         List<Person> voters = PhoneDriver.tokenizer(new File(fileName));
         SimpleDateFormat df = new SimpleDateFormat("dd-MM-yy-hh-mm-ss");
         String date = df.format(new Date());
-        File output = new File("output" + date + ".txt");
+        System.out.println("File is named: Phonebank "+ date + ".txt");
+        File output = new File("PhoneBank " + date + ".txt");
         output.createNewFile();
         PrintWriter out = new PrintWriter(output);
         
@@ -98,7 +96,6 @@ public class PhoneDriver {
      * if its not found, or if a text with these numbers but incorrect, it gets rid of the current finding by moving forward one
      * then running the function again. Does this until no area codes are found, then returns "No phone number"
      */
-    
     public static String recursivePhoneFinder(String text, String num){
     	String area[] = {"(508) 832", "(508) 407", "(508) 729", "(774) 221", "(508) 721"};
     	//System.out.println("Recursive loop");
