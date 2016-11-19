@@ -106,7 +106,7 @@ public class DataDriver {
     		
         	if (text.contains(area[i]) == true) {
                  int start = text.indexOf(area[i].substring(0, 3));
-                 num = text.substring(start-1, start + 14);
+                 num = text.substring(start-1, start + 14);//this is okay, start will never be at the front or end of the text
                  
             }
         }
@@ -146,6 +146,49 @@ public class DataDriver {
     		}
     	}
     	
+    	return houses;
+    	
+    }
+    
+    
+    public static void houseNumbers(LinkedList<House> list) throws InterruptedException{
+    	
+    	for(House home : list){
+    		
+    		LinkedList<Person> residents = home.getMembers();
+    		home.landline = "No phone number";
+    		
+    		for(Person p : residents){
+    			
+    			String html = HTMLGet(p);
+    			String number = "No phone number"; 
+    			
+    			System.out.println("HTMl TEST: " + html.length());
+    			
+    			number = recursivePhoneFinder(html, number);
+    			System.out.println("This num: " + number);
+    			
+    			/*if(number != "No phone number" && home.landline != "No phone number"){
+    				number = " and/or " + number;
+    				home.landline.concat(number);
+    			}*/
+    			
+    			if(home.landline == "No phone number" && number != "No phone number"){
+    				System.out.println("New num");
+    				home.landline = number;
+    			}    			
+    		}
+    		
+    		if(home.landline.length() > 15){
+    			home.landline = "Multiple numbers found: " + home.landline;
+    		}
+    		
+    	} 
+    	
+    	
+    	return;
+    
+    	
     	/*System.out.println("Test print");
     	
     	for(House test : houses){
@@ -154,10 +197,7 @@ public class DataDriver {
         		System.out.println("\t" + p.first);
         	}
     	}*/
-    	
-    	
-    	return houses;
-    	
+  
     }
     
     

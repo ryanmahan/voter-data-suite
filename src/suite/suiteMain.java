@@ -1,5 +1,6 @@
 package suite;
 
+import java.util.LinkedList;
 import java.util.Scanner;
 import suite.DataDriver;
 import java.io.File;
@@ -37,20 +38,36 @@ public class suiteMain {
 			case 1 : //Phonebank make
 				DataDriver.phoneBankMaker(f);
 				System.out.println("File Created!");
+				break;
 				
 			case 2 : //house make
 				DataDriver.houseMaker(f);
+				break;
 				
+			case 3 :
+				LinkedList<House> list = DataDriver.houseMaker(f);
+				DataDriver.houseNumbers(list);
+				
+				
+				//TEST PRINT
+				
+				for (House info : list){
+					System.out.println("NEW HOUSE");
+					System.out.println("\t" + info.head.first + info.head.last);
+					System.out.println("\t" + info.landline);
+				}
+				break;
 				
 				
 				
 		}
-		input.close();
+		
 		System.out.println("Would you like to run another command? Y/N");
 		String reply = input.next();
 		if(reply.equals("Y") || reply.equals("y")){
 			commandlineGUI();
 		} else { 
+			input.close();
 			return;
 		}
 	}
