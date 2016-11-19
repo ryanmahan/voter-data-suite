@@ -78,7 +78,11 @@ public class DataDriver {
     public static String HTMLGet(Person p) throws InterruptedException{
     	String html = null;
         try {
-            html = Jsoup.connect((String)("http://people.yellowpages.com/whitepages?first=" + p.first + "&last=" + p.last + "&zip=auburn&state=ma&site=79")).timeout(2000).get().html();
+        	String streetName = p.sname;
+        	streetName = streetName.replaceAll(" ", "+");
+        	String link = "http://www.whitepages.com/search/FindNearby?&street="+ p.snum + "+" + streetName + "&where=Auburn+Ma";
+        	System.out.println(link);
+            html = Jsoup.connect((String)(link)).timeout(2000).get().html();
         }
         catch (Exception e) {
         	System.out.println("error? " + e);
@@ -98,9 +102,12 @@ public class DataDriver {
      * Searches for the phone numbers in Area, runs a loop over all areas, tests if its in the html input, then isolates it
      * if its not found, or if a text with these numbers but incorrect, it gets rid of the current finding by moving forward one
      * then running the function again. Does this until no area codes are found, then returns "No phone number"
+     * 
+     * Using an address-based http://www.whitepages.com/search/FindNearby?utf8=%E2%9C%93&street=129+Ramshorn+Rd&where=Charlton+Ma might work better
      */
     public static String recursivePhoneFinder(String text, String num){
     	String area[] = {"(508) 832", "(508) 407", "(508) 729", "(774) 221", "(508) 721"};
+    	String areaByAddress[] = {"508-832" , "508-408" , "508-729" , "774-221" , "508-721"};
     	//System.out.println("Recursive loop");
     	for(int i = 0 ; i < area.length ; i++){
     		

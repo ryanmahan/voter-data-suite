@@ -2,13 +2,18 @@ package suite;
 
 import java.util.LinkedList;
 import java.util.Scanner;
+
+import javax.swing.*;
+
 import suite.DataDriver;
 import java.io.File;
+
 
 public class suiteMain {
 	
 	public static void main(String args[]) throws Exception{
-		commandlineGUI();
+		visualGUI();
+		//commandlineGUI();
 	}
 	
 	public static void commandlineGUI() throws Exception{
@@ -71,6 +76,17 @@ public class suiteMain {
 			return;
 		}
 	}
+	
+	
+	public static void visualGUI(){
+		
+		Gui test = new Gui();
+		
+		
+		
+	}
+	
+	
 	
 	
 }
