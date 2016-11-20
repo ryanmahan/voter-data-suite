@@ -2,6 +2,7 @@ package suite;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -14,15 +15,21 @@ import suite.*;
 
 public class DataDriver {
 	
-    public static void phoneBankMaker(File fileName) throws Exception {
+    public static File phoneBankMaker(File fileName) {
     	
         LinkedList<Person> voters = tokenizer(fileName);
         SimpleDateFormat df = new SimpleDateFormat("dd-MM-yy-hh-mm-ss");
         String date = df.format(new Date());
         System.out.println("File is named: Phonebank "+ date + ".txt");
         File output = new File("PhoneBank " + date + ".txt");
-        output.createNewFile();
-        PrintWriter out = new PrintWriter(output);
+        PrintWriter out = null;
+        try {
+			output.createNewFile();
+			out = new PrintWriter(output);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+        
         
         String HTML, num = "No phone number";
         
@@ -34,7 +41,10 @@ public class DataDriver {
             out.flush();
             num = "No phone number";
         }
+        
         out.close();
+        return output;
+        
     }
     /* Tokenizer
      * @returns a LinkedList of Person objects, filled in with info from a file
@@ -43,9 +53,14 @@ public class DataDriver {
      * Runs through every line in the file, splitting the line on tabs, then creates a new person object
      * and adds person object to the list
      */
-    public static LinkedList<Person> tokenizer(File f) throws FileNotFoundException {
+    public static LinkedList<Person> tokenizer(File f)  {
     	
-        Scanner names = new Scanner(f);
+        Scanner names = null;
+		try {
+			names = new Scanner(f);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
         LinkedList<Person> list = new LinkedList<Person>();
         
         while (names.hasNextLine()) {
@@ -56,7 +71,7 @@ public class DataDriver {
             	list.add(new Person(splits[0], splits[1]));
             }
             if(splits.length == 5){
-            	list.add(new Person(splits[0], splits[1], splits[2], splits[3], splits[4]));
+            	list.add(new Person(splits[0], splits[2], splits[1], splits[3], splits[4]));
             }
             
         }
@@ -75,18 +90,25 @@ public class DataDriver {
      * if no error, return this HTML file as string
      * 
      */
-    public static String HTMLGet(Person p) throws InterruptedException{
+    public static String HTMLGet(Person p) {
     	String html = null;
         try {
         	String streetName = p.sname;
         	streetName = streetName.replaceAll(" ", "+");
-        	String link = "http://www.whitepages.com/search/FindNearby?&street="+ p.snum + "+" + streetName + "&where=Auburn+Ma";
+        	//String link = "http://www.whitepages.com/search/FindNearby?&street="+ p.snum + "+" + streetName + "&where=Auburn+Ma";
+        	
+        	//String link = "http://people.yellowpages.com/whitepages?first=" + p.first + "&last=" + p.last + "&zip=auburn&state=ma&site=79";
+        	String link = "https://thatsthem.com/name/" + p.first + "-" + p.last + "/Auburn-MA";
         	System.out.println(link);
             html = Jsoup.connect((String)(link)).timeout(2000).get().html();
         }
         catch (Exception e) {
         	System.out.println("error? " + e);
-			Thread.sleep(10000);
+			try {
+				Thread.sleep(2000);
+			} catch (InterruptedException e1) {
+				e1.printStackTrace();
+			}
 			html = HTMLGet(p);
             return html;
         }
@@ -107,13 +129,13 @@ public class DataDriver {
      */
     public static String recursivePhoneFinder(String text, String num){
     	String area[] = {"(508) 832", "(508) 407", "(508) 729", "(774) 221", "(508) 721"};
-    	String areaByAddress[] = {"508-832" , "508-408" , "508-729" , "774-221" , "508-721"};
+    	String areaByAddress[] = {"508-832" , "508-407" , "508-729" , "774-221" , "508-721"};
     	//System.out.println("Recursive loop");
     	for(int i = 0 ; i < area.length ; i++){
     		
-        	if (text.contains(area[i]) == true) {
-                 int start = text.indexOf(area[i].substring(0, 3));
-                 num = text.substring(start-1, start + 14);//this is okay, start will never be at the front or end of the text
+        	if (text.contains(areaByAddress[i]) == true) {
+                 int start = text.indexOf(areaByAddress[i].substring(0, 3));
+                 num = text.substring(start, start + 12);//this is okay, start will never be at the front or end of the text
                  
             }
         }
@@ -122,10 +144,10 @@ public class DataDriver {
     		return num;
     	}
     	
-    	if(num.matches(".*[a-zA-Z]+.*") && text.length() > 0){
-    		num = num.substring(1, num.length());
-    		num = recursivePhoneFinder(text, num);
-    	}
+    	//if(num.matches(".*[a-zA-Z]+.*") && text.length() > 0){
+    		//num = num.substring(1, num.length());
+    		//num = recursivePhoneFinder(text, num);
+    	//}
     	
     	return num;
     }
@@ -170,7 +192,7 @@ public class DataDriver {
     			String html = HTMLGet(p);
     			String number = "No phone number"; 
     			
-    			System.out.println("HTMl TEST: " + html.length());
+    			System.out.println("HTML TEST: " + html.length());
     			
     			number = recursivePhoneFinder(html, number);
     			System.out.println("This num: " + number);

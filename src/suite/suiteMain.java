@@ -7,9 +7,15 @@ import javax.swing.*;
 
 import suite.DataDriver;
 import java.io.File;
+import java.io.PrintWriter;
 
 
 public class suiteMain {
+	
+	//TODO: Create Home ID's
+	//TODO: Create a method to compile data using Home ID's and Notes
+	//TODO: Create a method to display Not Homes
+	
 	
 	public static void main(String args[]) throws Exception{
 		visualGUI();
@@ -51,16 +57,21 @@ public class suiteMain {
 				
 			case 3 :
 				LinkedList<House> list = DataDriver.houseMaker(f);
-				DataDriver.houseNumbers(list);
+				//DataDriver.houseNumbers(list);
 				
 				
 				//TEST PRINT
-				
+				File output = new File("HousesList.txt");
+				output.createNewFile();
+				PrintWriter out = new PrintWriter(output);
 				for (House info : list){
-					System.out.println("NEW HOUSE");
-					System.out.println("\t" + info.head.first + info.head.last);
-					System.out.println("\t" + info.landline);
+					
+					out.println("NEW HOUSE");
+					out.println("\t" + info.head.first + info.head.last);
+					out.println("\t" + info.head.getAddress());
+					out.flush();
 				}
+				out.close();
 				break;
 				
 				
