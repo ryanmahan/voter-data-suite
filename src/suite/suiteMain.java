@@ -7,6 +7,8 @@ import javax.swing.*;
 
 import suite.DataDriver;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintWriter;
 
 
@@ -16,10 +18,16 @@ public class suiteMain {
 	//TODO: Create a method to compile data using Home ID's and Notes
 	//TODO: Create a method to display Not Homes
 	
-	
 	public static void main(String args[]) throws Exception{
 		visualGUI();
 		//commandlineGUI();
+	}
+	
+	static Gui UX;
+	
+	public static void visualGUI(){
+		//@SuppressWarnings("unused")
+		UX = new Gui();
 	}
 	
 	public static void commandlineGUI() throws Exception{
@@ -46,8 +54,8 @@ public class suiteMain {
 		
 		switch(command){
 		
-			case 1 : //Phonebank make
-				DataDriver.phoneBankMaker(f);
+			case 1 : //Phone bank make
+				DataDriver.phoneBankMaker(f, UX);
 				System.out.println("File Created!");
 				break;
 				
@@ -87,15 +95,7 @@ public class suiteMain {
 			return;
 		}
 	}
-	
-	
-	public static void visualGUI(){
-		
-		Gui test = new Gui();
-		
-		
-		
-	}
+
 	
 	
 	

@@ -15,7 +15,7 @@ import suite.*;
 
 public class DataDriver {
 	
-    public static File phoneBankMaker(File fileName) {
+    public static File phoneBankMaker(File fileName, Gui UX) throws IOException {
     	
         LinkedList<Person> voters = tokenizer(fileName);
         SimpleDateFormat df = new SimpleDateFormat("dd-MM-yy-hh-mm-ss");
@@ -23,21 +23,22 @@ public class DataDriver {
         System.out.println("File is named: Phonebank "+ date + ".txt");
         File output = new File("PhoneBank " + date + ".txt");
         PrintWriter out = null;
-        try {
+      
 			output.createNewFile();
 			out = new PrintWriter(output);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		
         
         
         String HTML, num = "No phone number";
-        
+        String all = "";
         for (Person p : voters) {
             HTML = HTMLGet(p);
             num = recursivePhoneFinder(HTML, num);
             p.num = num;
-            out.println(String.valueOf(p.getFirst()) + " " + p.getLast() + " " + num);
+            String text = p.getFirst() + " " + p.getLast() + " " + num + "\n";
+            all = all.concat(text);
+            UX.setTextArea(all);
+            out.println(text);
             out.flush();
             num = "No phone number";
         }
@@ -156,9 +157,10 @@ public class DataDriver {
     
     //START HOUSE METHODS
     
-    public static LinkedList<House> houseMaker(File fin) throws FileNotFoundException{
+    public static LinkedList<House> houseMaker(File fin) {
     	
     	LinkedList<Person> voters = tokenizer(fin);
+    	
     	LinkedList<House> houses = new LinkedList<House>();
     	String curr = null;
     	House nextHouse = null;

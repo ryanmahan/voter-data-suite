@@ -7,7 +7,10 @@ import javax.swing.text.DefaultCaret;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.charset.Charset;
+import java.util.LinkedList;
 import java.util.Scanner;
 import suite.*;
 
@@ -21,7 +24,6 @@ public class Gui extends JFrame implements ActionListener {
 	
 	public Gui(){
 		prepareGUI();
-		
 	}
 	
 	//Needs so much reorganization and commenting, but well do that later, right?
@@ -133,13 +135,12 @@ public class Gui extends JFrame implements ActionListener {
 
   public void actionPerformed(ActionEvent e) {
 	  
-	  //System.out.println("RUN");
 	  String cmd = e.getActionCommand();
 	  Scanner s = null;
 	  File read = null;
 	  
 	  
-	  if(cmd == "input" || cmd == "Phone Bank"){
+	  if(cmd != null){
 		  try{
 			 read = new File(textField.getText());  
 		  }
@@ -164,7 +165,7 @@ public class Gui extends JFrame implements ActionListener {
     	  
     	File output = null;
 		try {
-			output = DataDriver.phoneBankMaker(read);
+			output = DataDriver.phoneBankMaker(read, this);
 		} catch (Exception except) {
 			except.printStackTrace();
 		}
@@ -173,14 +174,33 @@ public class Gui extends JFrame implements ActionListener {
       
       
       case "Houses" : 
-    	  
-    	  try {
-			DataDriver.houseMaker(read);
-		} catch (FileNotFoundException e1) {
+    	  LinkedList<House> list = DataDriver.houseMaker(read);
+			//DataDriver.houseNumbers(list);
+			
+			
+			//TEST PRINT
+			File worker = new File("HousesList.txt");
+			PrintWriter out = null;
+		try {
+			worker.createNewFile();
+			out = new PrintWriter(worker);
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-    	  
-    	  break;
+			 
+			for (House info : list){
+				
+				out.println("NEW HOUSE");
+				out.println("\t" + info.head.first + info.head.last);
+				out.println("\t" + info.head.getAddress());
+				out.flush();
+			}
+			out.close();
+			
+			fileOutput.setText(fileToString(worker));
+			
+			break;
     	  
       }
   }
@@ -201,4 +221,7 @@ public class Gui extends JFrame implements ActionListener {
 	  return contents;
   }
   
+  public void setTextArea(String text){
+	  fileOutput.setText(text);
+  }
 }
