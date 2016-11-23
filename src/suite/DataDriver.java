@@ -47,6 +47,49 @@ public class DataDriver {
         return output;
         
     }
+    
+    public static File phoneFromFile(File f, Gui UX) throws IOException{
+    	
+    	File have = new File("masterlist.txt");
+    	
+    	LinkedList<Person> need = tokenizer(f);
+    	LinkedList<Person> master = tokenizer(have);
+    	
+    	
+    	for(Person p : need){
+    		p.num = "No phone number";
+    		
+    		for(Person p2 : master){
+    			System.out.println("Run no math" + p.first + p2.first);
+    			if((p.first).equals(p2.first) && (p.last).equals(p2.last)){
+    				System.out.println("Match found for" + p.first + p.last);
+    				p.num = p2.num;
+    				master.remove(p2);
+    			}
+    		}
+    		
+    	}
+    	
+    	 SimpleDateFormat df = new SimpleDateFormat("dd-MM-yy-hh-mm-ss");
+         String date = df.format(new Date());
+         System.out.println("File is named: Phonebank "+ date + ".txt");
+         File output = new File("PhoneBank " + date + ".txt");
+         PrintWriter out = null;
+         output.createNewFile();
+         out = new PrintWriter(output);
+         
+         String all = "";
+    	for(Person p : need){
+    		String text = p.getFirst() + " " + p.getLast() + " " + p.num + "\n";
+            all = all.concat(text);
+            UX.setTextArea(all);
+            out.print(text);
+            out.flush();
+    	}
+    	out.close();
+		return output;
+    	
+    }
     /* Tokenizer
      * @returns a LinkedList of Person objects, filled in with info from a file
      * @param a file of tab-delimited names "FIRST	LAST"
@@ -63,6 +106,20 @@ public class DataDriver {
 			e.printStackTrace();
 		}
         LinkedList<Person> list = new LinkedList<Person>();
+        
+        int[] positions = {0,0,0,0,0,0,0,0,0,0};
+        
+        String firstLine = names.nextLine();
+        String[] catagories = firstLine.split("\t");
+        for(int i = 0 ; i < catagories.length ; i++){
+        	switch (catagories[i]){
+        		case "first" : 
+        			positions[0] = i;
+        			break;
+        		case "last"
+        			positions[1] = i;
+        	}
+        }
         
         while (names.hasNextLine()) {
         	

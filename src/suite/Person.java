@@ -7,6 +7,10 @@ public class Person {
     String snum;//Street Number
     String sname;//Street Name
     String num = null;
+    int rank;
+    int timesVoted;
+    int precinct;
+    String notes;
 
     public Person(String f, String l) {
         this.first = f;

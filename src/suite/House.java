@@ -8,6 +8,7 @@ public class House {
 	LinkedList<Person> members = new LinkedList<Person>();
 	Person head;
 	String landline;
+	int ID;
 	
 	public House(){} //empty constructor
 	

@@ -132,7 +132,8 @@ public class Gui extends JFrame implements ActionListener {
  
   }
   
-
+  JFrame popUp = null;
+  
   public void actionPerformed(ActionEvent e) {
 	  
 	  String cmd = e.getActionCommand();
@@ -154,6 +155,7 @@ public class Gui extends JFrame implements ActionListener {
     	  }
 	  }
 	  
+
 	  
       switch(cmd){
       
@@ -163,14 +165,21 @@ public class Gui extends JFrame implements ActionListener {
       
       case "Phone Bank" :
     	  
-    	File output = null;
-		try {
-			output = DataDriver.phoneBankMaker(read, this);
-		} catch (Exception except) {
-			except.printStackTrace();
-		}
-    	  fileOutput.setText(fileToString(output));
-    	  break;
+    	popUp = new JFrame("Phone Bank from File or Net");
+    	popUp.setLayout(new BorderLayout());
+    	popUp.setSize(250,100);
+    	JLabel instructions = new JLabel("Do you want to grab numbers from file or Net?");
+    	popUp.add(instructions, BorderLayout.NORTH);
+    	JButton file = new JButton("File");
+    	file.addActionListener(this);
+    	file.setActionCommand("POPfile");
+    	popUp.add(file, BorderLayout.EAST);
+    	JButton net = new JButton("Net");
+    	net.addActionListener(this);
+    	net.setActionCommand("POPnet");
+    	popUp.add(net, BorderLayout.WEST);
+    	popUp.setVisible(true);
+    	break;
       
       
       case "Houses" : 
@@ -201,6 +210,32 @@ public class Gui extends JFrame implements ActionListener {
 			fileOutput.setText(fileToString(worker));
 			
 			break;
+			
+      case "POPfile" :
+    	  
+    	  popUp.setVisible(false);
+    	  popUp.dispose();
+    	  File output = null;
+    		try {
+    			output = DataDriver.phoneFromFile(read, this);
+    		} catch (Exception except) {
+    			except.printStackTrace();
+    		}
+        	  fileOutput.setText(fileToString(output));
+        	  break;
+    	  
+      case "POPnet" : 
+    	 
+    	popUp.setVisible(false);
+    	popUp.dispose();
+    	File output1 = null;
+  		try {
+  			output1 = DataDriver.phoneBankMaker(read, this);
+  		} catch (Exception except) {
+  			except.printStackTrace();
+  		}
+      	  fileOutput.setText(fileToString(output1));
+      	  break;
     	  
       }
   }
