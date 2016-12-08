@@ -1,9 +1,6 @@
 package suite;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.PrintWriter;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
@@ -11,6 +8,15 @@ import java.util.LinkedList;
 import java.util.Scanner;
 import org.jsoup.Jsoup;
 import suite.*;
+import org.w3c.dom.*;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.*;
+import javax.xml.transform.*;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
+import java.io.*;
 
 
 public class DataDriver {
@@ -99,6 +105,7 @@ public class DataDriver {
      */
     public static LinkedList<Person> tokenizer(File f)  {
     	
+    	
         Scanner names = null;
 		try {
 			names = new Scanner(f);
@@ -107,20 +114,6 @@ public class DataDriver {
 		}
         LinkedList<Person> list = new LinkedList<Person>();
         
-        int[] positions = {0,0,0,0,0,0,0,0,0,0};
-        
-        String firstLine = names.nextLine();
-        String[] catagories = firstLine.split("\t");
-        for(int i = 0 ; i < catagories.length ; i++){
-        	switch (catagories[i]){
-        		case "first" : 
-        			positions[0] = i;
-        			break;
-        		case "last"
-        			positions[1] = i;
-        	}
-        }
-        
         while (names.hasNextLine()) {
         	
             String curr = names.nextLine();
@@ -128,15 +121,103 @@ public class DataDriver {
             if(splits.length == 2){
             	list.add(new Person(splits[0], splits[1]));
             }
-            if(splits.length == 5){
+            else if(splits.length == 5){
             	list.add(new Person(splits[0], splits[2], splits[1], splits[3], splits[4]));
             }
+            
             
         }
         
         names.close();
         return list;
     }
+    	
+    	
+//        Scanner names = null;
+//		try {
+//			names = new Scanner(f);
+//		} catch (FileNotFoundException e) {
+//			e.printStackTrace();
+//		}
+//        LinkedList<Person> list = new LinkedList<Person>();
+//        
+//        int[] positions = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
+//        
+//        String firstLine = names.nextLine();
+//        String[] catagories = firstLine.split("\t");
+//        
+//        for(int i = 0 ; i < catagories.length ; i++){
+//        	
+//        	catagories[i] = catagories[i].toLowerCase();
+//        	//System.out.println(catagories[i]);
+//        	
+//        	switch (catagories[i]){
+//        		case "party" : 
+//        			positions[0] = i;
+//        			break;
+//        		case "last" :
+//        			positions[1] = i;
+//        			break;
+//        		case "first" :
+//        			positions[2] = i;
+//        			break;
+//        		case "snum" :
+//        			positions[3] = i;
+//        			break;
+//        		case "sname" :
+//        			positions[4] = i;
+//        			break;
+//        		case "rank" :
+//        			positions[5] = i;
+//        			break;
+//        		case "precinct" : 
+//        			positions[6] = i;
+//        			break;
+//        		case "voted" : 
+//        			positions[7] = i;
+//        			break;
+//        		case "notes" :
+//        			positions[8] = i;
+//        			break;
+//        		case "number" :
+//        			positions[9] = i;
+//        			break;
+//        		default : 
+//        			break;
+//        	}
+//        	
+//        }
+//        
+//        while(names.hasNextLine()){
+//        	
+//            String curr = names.nextLine();
+//            String[] split;
+//            split = curr.split("\t");
+//            String[] splits = {"","","","","","","","","","",};
+//            int[] tempPos = new int[10];
+//            
+//            
+//            System.out.println(split[1]);
+//            
+//            for(int i = 0 ; i < split.length ; i++){
+//            	if(positions[i] == -1){
+//            		tempPos[i] = i;
+//            	} else {
+//            		tempPos[i] = positions[i];
+//            		splits[i] = split[i];
+//            	}
+//            }
+           
+            
+//            list.add(new Person(splits[tempPos[0]], splits[tempPos[1]], splits[tempPos[2]], splits[tempPos[3]], splits[tempPos[4]], splits[tempPos[5]], splits[tempPos[6]],
+//            		splits[tempPos[7]], splits[tempPos[8]], splits[tempPos[9]]));
+//            
+//            //System.out.println(tempPos[1] + " Something " + splits[tempPos[1]]);
+//        }
+//        
+//        names.close();
+//        return list;
+   // }
     /* HTMLGet
      * @returns a large HTML file formatted as a string
      * @param person object with the names filled in at the very least
@@ -276,7 +357,7 @@ public class DataDriver {
     	
     	return;
     
-    	
+    }
     	/*System.out.println("Test print");
     	
     	for(House test : houses){
@@ -285,7 +366,98 @@ public class DataDriver {
         		System.out.println("\t" + p.first);
         	}
     	}*/
-  
+   
+    public static void xmlWrite(LinkedList<Person> list) {
+    	
+    	
+    	
+    	try{
+    		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+    		DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+    		
+    		Document doc = docBuilder.newDocument();
+    		Element rootElement = doc.createElement("auburn");
+    		doc.appendChild(rootElement);
+    		
+    		Element people = doc.createElement("people");
+    		rootElement.appendChild(people);
+    		
+    		for(Person p : list){
+    			Element person = doc.createElement("person"); //create element
+        		person.setAttribute("first", p.first); //give it data
+        		person.setAttribute("last", p.last);
+        		person.setAttribute("number", p.num);
+        		person.setAttribute("sname", p.sname);
+        		person.setAttribute("snum", p.snum);
+        		person.setAttribute("notes", p.notes);
+        		person.setAttribute("rank", Integer.toString(p.rank));
+        		person.setAttribute("precinct", Integer.toString(p.precinct));
+        		person.setAttribute("timesVoted", p.timesVoted);
+        		person.setAttribute("party", p.party);
+        	
+        		people.appendChild(person); //finalize element
+    		}
+    		
+    		SimpleDateFormat df = new SimpleDateFormat("dd-MM-yy-hh-mm-ss");
+            String date = df.format(new Date());
+    		
+    		TransformerFactory transformerFactory = TransformerFactory.newInstance();
+    		Transformer transformer = transformerFactory.newTransformer();
+    		DOMSource source = new DOMSource(doc);
+    		System.out.println("Writing: " + "list+"+date+".xml");
+    		StreamResult result = new StreamResult(new File("list+"+date+".xml"));
+    		
+    		transformer.transform(source, result);
+    		System.out.println("file");
+    		
+    	}catch (Exception e){
+    		System.out.println("XML WRITE ERROR");
+    		e.printStackTrace();
+    	}
+    		
+    		
+    }
+    
+    //literally learned from tutorialpoint.com shoutout to them
+    public static LinkedList<Person> xmlParse(File f) throws ParserConfigurationException, SAXException, IOException{
+    	
+    	LinkedList<Person> returnList = new LinkedList<Person>();
+    	
+    	DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+    	DocumentBuilder builder = factory.newDocumentBuilder();
+    	
+    	StringBuilder xmlStringBuilder = new StringBuilder();
+    	xmlStringBuilder.append("<?xml version=\"1.0\"?> <class> </class>");
+//    	ByteArrayInputStream input = new ByteArrayInputStream(xmlStringBuilder.toString().getBytes("UTF-8")); Used if inputting a new file or something
+    	Document doc = builder.parse(f);
+    	Element root = doc.getDocumentElement();
+    	Element people = doc.getElementById("people");
+    	NodeList listPersons = people.getElementsByTagName("person");
+    	
+    	for(int i = 0 ; i < listPersons.getLength() ; i++){    	
+    		Node curr = listPersons.item(i);
+    		if(curr.getNodeType() == Node.ELEMENT_NODE){
+    			Element person = (Element) curr;
+    			//Broke it up into these lines for readability's sake
+    			String party 		= person.getAttribute("party");
+    			String lname 		= person.getAttribute("last");
+    			String fname 		= person.getAttribute("first");
+    			String sname 		= person.getAttribute("sname");
+    			String snum  		= person.getAttribute("snum");
+        		String notes 		= person.getAttribute("notes");
+        		String rank	 		= person.getAttribute("rank");
+        		String precinct 	= person.getAttribute("precinct");
+        		String timesVoted 	= person.getAttribute("timesVoted");
+        		String phone	 	= person.getAttribute("number");
+        		 
+        		//make new person and add em to the list
+    			returnList.add(new Person(party, lname, fname, snum, sname, rank, timesVoted, precinct, notes, phone));
+    		}
+    	}
+    	root.getElementsByTagName("people");
+    	
+		return returnList;
+    	
     }
     
     
