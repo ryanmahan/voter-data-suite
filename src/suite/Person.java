@@ -27,6 +27,14 @@ public class Person {
         this.ID = counter;
         counter++;
     }
+    
+    public Person(String f, String l, String num){
+    	this.first = f;
+        this.last = l;
+        this.num = num;
+        this.ID = counter;
+        counter++;
+    }
 
     public Person(String p, String f, String l, String stNum, String stName){
     	this.party = p;

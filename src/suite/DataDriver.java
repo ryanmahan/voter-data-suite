@@ -19,7 +19,25 @@ public class DataDriver {
 	
     public static File phoneBankMaker(File fileName, Gui UX) throws IOException {
     	
-        LinkedList<Person> voters = tokenizer(fileName);
+    	LinkedList<Person> voters = null;
+    	
+    	if(fileName.getName().endsWith(".txt")){
+    		voters = tokenizer(fileName);
+    	} else if(fileName.getName().endsWith(".xml")){
+    		try {
+				voters = xmlParse(fileName);
+			} catch (ParserConfigurationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (SAXException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+    	} else {
+    		throw new IllegalArgumentException("File not a .xml or .txt");
+    	}
+    	 
+    	
         SimpleDateFormat df = new SimpleDateFormat("dd-MM-yy-hh-mm-ss");
         String date = df.format(new Date());
         System.out.println("File is named: Phonebank "+ date + ".txt");
@@ -57,25 +75,41 @@ public class DataDriver {
     public static File phoneFromFile(File f, Gui UX) throws IOException{
     	
     	File have = new File("masterlist.txt");
-    	
-    	LinkedList<Person> need = tokenizer(f);
     	LinkedList<Person> master = tokenizer(have);
+    	
+    	
+    	LinkedList<Person> need = null;
+    	if(f.getName().endsWith(".txt")){
+    		need = tokenizer(f);
+    	} else if(f.getName().endsWith(".xml")){
+    		try {
+				need = xmlParse(f);
+			} catch (ParserConfigurationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (SAXException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+    	} else {
+    		throw new IllegalArgumentException("File not a .xml or .txt");
+    	}
+    	
+    	
     	
     	
     	for(Person p : need){
     		p.num = "No phone number";
     		
     		for(Person p2 : master){
-    			System.out.println("Run no math" + p.first + p2.first);
+    			System.out.println("Run no match" + p.first + p2.first);
     			if((p.first).equals(p2.first) && (p.last).equals(p2.last)){
-    				System.out.println("Match found for" + p.first + p.last);
     				p.num = p2.num;
-    				master.remove(p2);
     			}
     		}
     		
     	}
-    	
+    	System.out.println("Done with for loop");
     	 SimpleDateFormat df = new SimpleDateFormat("dd-MM-yy-hh-mm-ss");
          String date = df.format(new Date());
          System.out.println("File is named: Phonebank "+ date + ".txt");
@@ -88,10 +122,10 @@ public class DataDriver {
     	for(Person p : need){
     		String text = p.first + " " + p.last + " " + p.num + "\n";
             all = all.concat(text);
-            UX.setTextArea(all);
             out.print(text);
             out.flush();
     	}
+    	UX.setTextArea(all);
     	out.close();
 		return output;
     	
@@ -120,6 +154,9 @@ public class DataDriver {
             String[] splits = curr.split("\t");
             if(splits.length == 2){
             	list.add(new Person(splits[0], splits[1]));
+            }
+            else if(splits.length == 3){
+            	list.add(new Person(splits[0], splits[1], splits[2]));
             }
             else if(splits.length == 5){
             	list.add(new Person(splits[0], splits[2], splits[1], splits[3], splits[4]));
@@ -277,7 +314,7 @@ public class DataDriver {
     
     }
    
-    //START XML R/W
+    //START XML R/W Helpers
     
     public static void xmlWrite(LinkedList<Person> list) {
     	
@@ -371,7 +408,7 @@ public class DataDriver {
     	
     }
     
-    static void displayXML(File xmlFile, Gui UX){
+    public static void displayXML(File xmlFile, Gui UX){
     	
     	LinkedList<Person> list = null;
     	
