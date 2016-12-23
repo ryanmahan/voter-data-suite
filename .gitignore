@@ -50,3 +50,6 @@ Temporary Items
 *.txt
 
 *.xml
+
+# Used for backing up Legacy Java Files
+*.bak
