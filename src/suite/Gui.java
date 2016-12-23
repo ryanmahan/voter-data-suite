@@ -141,6 +141,7 @@ public class Gui extends JFrame implements ActionListener {
 	  
 	  String cmd = e.getActionCommand();
 	  File read = null;
+	 
 	  
 	  
 	  if(cmd != null){
@@ -157,7 +158,7 @@ public class Gui extends JFrame implements ActionListener {
     	  }
 	  }
 	  
-
+	  XMLHandler xmlIO = new XMLHandler(read);
 	  
       switch(cmd){
       
@@ -167,7 +168,7 @@ public class Gui extends JFrame implements ActionListener {
     		  break; 
     	  }
     	  if(read.getName().endsWith(".xml")){
-    		  DataDriver.displayXML(read, this);
+    		  xmlIO.displayXML(this);
     		  break;
     	  }
     	 
@@ -247,13 +248,13 @@ public class Gui extends JFrame implements ActionListener {
       case "POPfile" :
     	  
     	
-    	  File output = null;
+    	
     		try {
-    			output = DataDriver.phoneFromFile(read, this);
+    			DataDriver.phoneFromFile(read, this);
     		} catch (Exception except) {
     			except.printStackTrace();
     		}
-        	fileOutput.setText(fileToString(output));
+        	
         	popUp.setVisible(false);
           	popUp.dispose();
         	  
@@ -263,13 +264,13 @@ public class Gui extends JFrame implements ActionListener {
       case "POPnet" : //if phonebank -> net finder
     	 
     	
-    	File output1 = null;
+    	
   		try {
-  			output1 = DataDriver.phoneBankMaker(read, this);
+  			DataDriver.phoneBankMaker(read, this);
   		} catch (Exception except) {
   			except.printStackTrace();
   		}
-      	fileOutput.setText(fileToString(output1));
+      	
       	
       	popUp.setVisible(false);
     	popUp.dispose();
@@ -298,7 +299,6 @@ public class Gui extends JFrame implements ActionListener {
 	  
 	  phonebankBar.setMaximum(100);
 	  phonebankBar.setMinimum(0);
-	  System.out.println(i);
 	  phonebankBar.setValue(i);
 	  
 	  phonebankBar.setString(Integer.toString(i) + "%");

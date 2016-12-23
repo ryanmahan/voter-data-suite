@@ -1,17 +1,12 @@
 package suite;
 
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+
 import java.util.LinkedList;
 import java.util.Scanner;
 import org.jsoup.Jsoup;
-import org.w3c.dom.*;
 import org.xml.sax.SAXException;
 import javax.xml.parsers.*;
-import javax.xml.transform.*;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 import java.io.*;
 
 
@@ -20,12 +15,13 @@ public class DataDriver {
     public static File phoneBankMaker(File fileName, Gui UX) throws IOException {
     	
     	LinkedList<Person> voters = null;
+    	XMLHandler xmlIO = new XMLHandler(fileName);
     	
     	if(fileName.getName().endsWith(".txt")){
     		voters = tokenizer(fileName);
     	} else if(fileName.getName().endsWith(".xml")){
     		try {
-				voters = xmlParse(fileName);
+				voters = xmlIO.xmlParse();
 			} catch (ParserConfigurationException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -36,16 +32,6 @@ public class DataDriver {
     	} else {
     		throw new IllegalArgumentException("File not a .xml or .txt");
     	}
-    	 
-    	
-        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yy-hh-mm-ss");
-        String date = df.format(new Date());
-        System.out.println("File is named: Phonebank "+ date + ".txt");
-        File output = new File("PhoneBank " + date + ".txt");
-        PrintWriter out = null;
-      
-		output.createNewFile();
-		out = new PrintWriter(output);
         
 		double total = voters.size();
 		double counter = 0;
@@ -62,13 +48,10 @@ public class DataDriver {
             all = all.concat(text);
             UX.progressBar((int) ((counter/total)*100.0));
             UX.setTextArea(all);
-            out.print(text);
-            out.flush();
             num = "No phone number";
         }
-        
-        out.close();
-        return output;
+       
+        return xmlIO.xmlWrite(voters);
         
     }
     
@@ -76,6 +59,7 @@ public class DataDriver {
     	
     	File have = new File("masterlist.txt");
     	LinkedList<Person> master = tokenizer(have);
+    	XMLHandler xmlIO = new XMLHandler(f);
     	
     	
     	LinkedList<Person> need = null;
@@ -83,7 +67,7 @@ public class DataDriver {
     		need = tokenizer(f);
     	} else if(f.getName().endsWith(".xml")){
     		try {
-				need = xmlParse(f);
+				need = xmlIO.xmlParse();
 			} catch (ParserConfigurationException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -97,37 +81,36 @@ public class DataDriver {
     	
     	
     	
-    	
+    	double total = need.size();
+        double counter = 0;
     	for(Person p : need){
     		p.num = "No phone number";
+    		counter++;
     		
     		for(Person p2 : master){
-    			System.out.println("Run no match" + p.first + p2.first);
+    			//System.out.println("Run no match" + p.first + p2.first);
     			if((p.first).equals(p2.first) && (p.last).equals(p2.last)){
     				p.num = p2.num;
     			}
     		}
     		
+    		UX.progressBar((int) ((counter/total)*100.0));
+    		
     	}
-    	System.out.println("Done with for loop");
-    	 SimpleDateFormat df = new SimpleDateFormat("dd-MM-yy-hh-mm-ss");
-         String date = df.format(new Date());
-         System.out.println("File is named: Phonebank "+ date + ".txt");
-         File output = new File("PhoneBank " + date + ".txt");
-         PrintWriter out = null;
-         output.createNewFile();
-         out = new PrintWriter(output);
+    	
+    	//Output to TextArea
          
          String all = "";
+         
     	for(Person p : need){
     		String text = p.first + " " + p.last + " " + p.num + "\n";
             all = all.concat(text);
-            out.print(text);
-            out.flush();
+
     	}
     	UX.setTextArea(all);
-    	out.close();
-		return output;
+    	
+    	//Write to XML file and return said file
+		return xmlIO.xmlWrite(need);
     	
     }
     /* Tokenizer
@@ -314,130 +297,5 @@ public class DataDriver {
     
     }
    
-    //START XML R/W Helpers
-    
-    public static void xmlWrite(LinkedList<Person> list) {
-    	
-    	
-    	
-    	try{
-    		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-    		DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-    		
-    		Document doc = docBuilder.newDocument();
-    		Element rootElement = doc.createElement("auburn");
-    		doc.appendChild(rootElement);
-    		
-    		Element people = doc.createElement("people");
-    		rootElement.appendChild(people);
-    		
-    		for(Person p : list){
-    			Element person = doc.createElement("person"); //create element
-        		person.setAttribute("first", p.first); //give it data
-        		person.setAttribute("last", p.last);
-        		person.setAttribute("number", p.num);
-        		person.setAttribute("sname", p.sname);
-        		person.setAttribute("snum", p.snum);
-        		person.setAttribute("notes", p.notes);
-        		person.setAttribute("rank", Integer.toString(p.rank));
-        		person.setAttribute("precinct", Integer.toString(p.precinct));
-        		person.setAttribute("timesVoted", Integer.toString(p.timesVoted));
-        		person.setAttribute("party", p.party);
-        	
-        		people.appendChild(person); //finalize element
-    		}
-    		
-    		SimpleDateFormat df = new SimpleDateFormat("dd-MM-yy-hh-mm-ss");
-            String date = df.format(new Date());
-    		
-    		TransformerFactory transformerFactory = TransformerFactory.newInstance();
-    		Transformer transformer = transformerFactory.newTransformer();
-    		DOMSource source = new DOMSource(doc);
-    		System.out.println("Writing: " + "list+"+date+".xml");
-    		StreamResult result = new StreamResult(new File("list+"+date+".xml"));
-    		
-    		transformer.transform(source, result);
-    		System.out.println("file");
-    		
-    	}catch (Exception e){
-    		System.out.println("XML WRITE ERROR");
-    		e.printStackTrace();
-    	}
-    		
-    		
-    }
-    
-    //literally learned from tutorialpoint.com shoutout to them
-    public static LinkedList<Person> xmlParse(File f) throws ParserConfigurationException, SAXException, IOException{
-    	
-    	LinkedList<Person> returnList = new LinkedList<Person>();
-    	
-    	DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-    	DocumentBuilder builder = factory.newDocumentBuilder();
-    	
-    	StringBuilder xmlStringBuilder = new StringBuilder();
-    	xmlStringBuilder.append("<?xml version=\"1.0\"?> <class> </class>");
-//    	ByteArrayInputStream input = new ByteArrayInputStream(xmlStringBuilder.toString().getBytes("UTF-8")); Used if inputting a new file or something
-    	Document doc = builder.parse(f);
-    	Element root = doc.getDocumentElement();
-    	NodeList listPersons = root.getElementsByTagName("person");
-    	
-    	for(int i = 0 ; i < listPersons.getLength() ; i++){    	
-    		Node curr = listPersons.item(i);
-    		if(curr.getNodeType() == Node.ELEMENT_NODE){
-    			Element person = (Element) curr;
-    			//Broke it up into these lines for readability's sake
-    			String party 		= person.getAttribute("party");
-    			String lname 		= person.getAttribute("last");
-    			String fname 		= person.getAttribute("first");
-    			String sname 		= person.getAttribute("sname");
-    			String snum  		= person.getAttribute("snum");
-        		String notes 		= person.getAttribute("notes");
-        		String rank	 		= person.getAttribute("rank");
-        		String precinct 	= person.getAttribute("precinct");
-        		String timesVoted 	= person.getAttribute("timesVoted");
-        		String phone	 	= person.getAttribute("number");
-        		 
-        		//make new person and add em to the list
-    			returnList.add(new Person(party, lname, fname, snum, sname, rank, timesVoted, precinct, notes, phone));
-    		}
-    	}
-    	
-    	
-		return returnList;
-    	
-    }
-    
-    public static void displayXML(File xmlFile, Gui UX){
-    	
-    	LinkedList<Person> list = null;
-    	
-    	try {
-			list = xmlParse(xmlFile);
-		} catch (ParserConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SAXException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-    	
-    	String display = "Party\tFirst Name\tLast Name\tSt Num\tSt Name\tPhone Num\tRank\tTimes Voted\tPrecinct\tNotes\n"; //Header
-    	
-    	for (Person p : list){
-    		String temp = p.getAllAvail();
-    		temp += "\n";
-    		display += temp;
-    	}
-    	
-    	UX.setTextArea(display);
-    	return;
-    	
-    }
-    
-    //END XML R/W
-    
 }
+    
