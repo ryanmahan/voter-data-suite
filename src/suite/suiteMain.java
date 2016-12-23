@@ -9,7 +9,6 @@ import java.io.PrintWriter;
 
 public class suiteMain {
 	
-	//TODO: Create Home ID's
 	//TODO: Create a method to compile data using Home ID's and Notes
 	//TODO: Create a method to display Not Homes
 	

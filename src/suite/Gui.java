@@ -263,8 +263,6 @@ public class Gui extends JFrame implements ActionListener {
     	  
       case "POPnet" : //if phonebank -> net finder
     	 
-    	
-    	
   		try {
   			DataDriver.phoneBankMaker(read, this);
   		} catch (Exception except) {

@@ -1,14 +1,11 @@
 package suite;
 
-
-
 import java.util.LinkedList;
 import java.util.Scanner;
 import org.jsoup.Jsoup;
 import org.xml.sax.SAXException;
 import javax.xml.parsers.*;
 import java.io.*;
-
 
 public class DataDriver {
 	
@@ -291,8 +288,7 @@ public class DataDriver {
     		}
     		
     	} 
-    	
-    	
+
     	return;
     
     }

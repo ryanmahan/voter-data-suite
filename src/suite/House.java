@@ -9,12 +9,19 @@ public class House {
 	Person head;
 	String landline;
 	int ID;
+	int counter = 0;
+	boolean wasHome;
 	
-	public House(){} //empty constructor
+	public House(){
+		this.ID = counter;
+		counter++;
+	} //empty constructor
 	
 	public House(Person head){
 		members.add(head);
 		this.head = head;
+		this.ID = counter;
+		counter++;
 	}
 	
 	public void removeMember(Person delete){
