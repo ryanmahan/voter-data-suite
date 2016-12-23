@@ -4,23 +4,24 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.text.DefaultCaret;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.nio.charset.Charset;
 import java.util.LinkedList;
 import java.util.Scanner;
-import suite.*;
 
 public class Gui extends JFrame implements ActionListener {
 
+	private static final long serialVersionUID = 1L;
+
+	private final Color darkBlue = new Color(17,14,111);
 	
 	private JFrame mainFrame;
 	private JMenuBar menuBar;
 	private JTextField textField;
 	private JTextArea fileOutput;
+	private JProgressBar phonebankBar;
 	
 	public Gui(){
 		prepareGUI();
@@ -86,6 +87,7 @@ public class Gui extends JFrame implements ActionListener {
     caret.setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
     JPanel outputPanel = new JPanel(new BorderLayout());
     outputPanel.add(fileOutput, BorderLayout.CENTER);
+    outputPanel.setVisible(true);
     
     
     //make scrollable
@@ -95,6 +97,7 @@ public class Gui extends JFrame implements ActionListener {
     scroll.getVerticalScrollBar().setValue(0);
     outputPanel.add(scroll);
     mainFrame.add(outputPanel);
+    scroll.setVisible(true);
     
     GridLayout buttonPanelLayout = new GridLayout(10,1);
     buttonPanelLayout.setVgap(15);
@@ -105,7 +108,7 @@ public class Gui extends JFrame implements ActionListener {
 	readFile.addActionListener(this);
 	readFile.setActionCommand("input");
 	buttonPanel.add(readFile);
-	readFile.setBackground(new Color(17,14,111));
+	readFile.setBackground(darkBlue);
 	readFile.setForeground(Color.WHITE);
 	  
 	JButton phoneBankBut = new JButton("Phone Bank");
@@ -137,7 +140,6 @@ public class Gui extends JFrame implements ActionListener {
   public void actionPerformed(ActionEvent e) {
 	  
 	  String cmd = e.getActionCommand();
-	  Scanner s = null;
 	  File read = null;
 	  
 	  
@@ -160,25 +162,56 @@ public class Gui extends JFrame implements ActionListener {
       switch(cmd){
       
       case "input" :
-    	  fileOutput.setText(fileToString(read));
-    	  break;
+    	  if (read.getName().endsWith(".txt")){
+    		  fileOutput.setText(fileToString(read));
+    		  break; 
+    	  }
+    	  if(read.getName().endsWith(".xml")){
+    		  DataDriver.displayXML(read, this);
+    		  break;
+    	  }
+    	 
       
-      case "Phone Bank" :
+      case "Phone Bank" : 
     	  
+    	//create popUp questioning File or Net
     	popUp = new JFrame("Phone Bank from File or Net");
+    	popUp.setFont(new Font("Serif", Font.PLAIN, 20));
     	popUp.setLayout(new BorderLayout());
-    	popUp.setSize(250,100);
+    	popUp.setSize(350,150);
+    	
+    	//tell them what to do
     	JLabel instructions = new JLabel("Do you want to grab numbers from file or Net?");
     	popUp.add(instructions, BorderLayout.NORTH);
+    	instructions.setFont(new Font("Serif", Font.PLAIN, 20));
+    	
+    	//create button for File find
     	JButton file = new JButton("File");
+    	file.setFont(new Font("Serif", Font.PLAIN, 20));
     	file.addActionListener(this);
     	file.setActionCommand("POPfile");
+    	file.setBackground(darkBlue);
+    	file.setForeground(Color.WHITE);
+    	file.setOpaque(true);
     	popUp.add(file, BorderLayout.EAST);
+    	
+    	//create button for Net Finder
     	JButton net = new JButton("Net");
+    	net.setFont(new Font("Serif", Font.PLAIN, 20));
+    	net.setBackground(darkBlue);
+    	net.setForeground(Color.WHITE);
     	net.addActionListener(this);
     	net.setActionCommand("POPnet");
     	popUp.add(net, BorderLayout.WEST);
+    	
+    	//create progress bar for % done finding
+    	phonebankBar = new JProgressBar();
+    	phonebankBar.setForeground(darkBlue);
+    	phonebankBar.setStringPainted(true);
+    	phonebankBar.setOpaque(true);
+    	popUp.add(phonebankBar, BorderLayout.SOUTH);
     	popUp.setVisible(true);
+    	
     	break;
       
       
@@ -213,30 +246,35 @@ public class Gui extends JFrame implements ActionListener {
 			
       case "POPfile" :
     	  
-    	  popUp.setVisible(false);
-    	  popUp.dispose();
+    	
     	  File output = null;
     		try {
     			output = DataDriver.phoneFromFile(read, this);
     		} catch (Exception except) {
     			except.printStackTrace();
     		}
-        	  fileOutput.setText(fileToString(output));
-        	  break;
+        	fileOutput.setText(fileToString(output));
+        	popUp.setVisible(false);
+          	popUp.dispose();
+        	  
+        	break;
+        	  
     	  
-      case "POPnet" : 
+      case "POPnet" : //if phonebank -> net finder
     	 
-    	popUp.setVisible(false);
-    	popUp.dispose();
+    	
     	File output1 = null;
   		try {
   			output1 = DataDriver.phoneBankMaker(read, this);
   		} catch (Exception except) {
   			except.printStackTrace();
   		}
-      	  fileOutput.setText(fileToString(output1));
-      	  break;
-    	  
+      	fileOutput.setText(fileToString(output1));
+      	
+      	popUp.setVisible(false);
+    	popUp.dispose();
+    	
+    	break;
       }
   }
   
@@ -256,7 +294,21 @@ public class Gui extends JFrame implements ActionListener {
 	  return contents;
   }
   
+  public void progressBar(int i){
+	  
+	  phonebankBar.setMaximum(100);
+	  phonebankBar.setMinimum(0);
+	  System.out.println(i);
+	  phonebankBar.setValue(i);
+	  
+	  phonebankBar.setString(Integer.toString(i) + "%");
+	  phonebankBar.update(phonebankBar.getGraphics());
+
+	  
+  }
+  
   public void setTextArea(String text){
 	  fileOutput.setText(text);
+	  fileOutput.update(fileOutput.getGraphics());
   }
 }

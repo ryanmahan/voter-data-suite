@@ -2,13 +2,8 @@ package suite;
 
 import java.util.LinkedList;
 import java.util.Scanner;
-
-import javax.swing.*;
-
 import suite.DataDriver;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.PrintWriter;
 
 
@@ -19,6 +14,8 @@ public class suiteMain {
 	//TODO: Create a method to display Not Homes
 	
 	public static void main(String args[]) throws Exception{
+		//LinkedList<Person> list = DataDriver.tokenizer(new File("original.txt"));
+		//DataDriver.xmlWrite(list);
 		visualGUI();
 		//commandlineGUI();
 	}
@@ -48,9 +45,10 @@ public class suiteMain {
 			f = new File(textFile);
 		} catch (Error e){
 			System.out.println("File Error: " + e);
+			input.close();
 			return;
 		}
-		
+		input.close();
 		
 		switch(command){
 		

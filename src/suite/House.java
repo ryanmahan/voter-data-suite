@@ -36,7 +36,5 @@ public class House {
 	public LinkedList<Person> getMembers(){
 		return members;
 	}
-	
-	
-	
+
 }

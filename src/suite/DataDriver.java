@@ -4,18 +4,14 @@ package suite;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
-
 import java.util.Scanner;
 import org.jsoup.Jsoup;
-import suite.*;
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
-
 import javax.xml.parsers.*;
 import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-
 import java.io.*;
 
 
@@ -30,21 +26,25 @@ public class DataDriver {
         File output = new File("PhoneBank " + date + ".txt");
         PrintWriter out = null;
       
-			output.createNewFile();
-			out = new PrintWriter(output);
-		
+		output.createNewFile();
+		out = new PrintWriter(output);
         
+		double total = voters.size();
+		double counter = 0;
         
         String HTML, num = "No phone number";
         String all = "";
+        
         for (Person p : voters) {
+        	counter++;
             HTML = HTMLGet(p);
             num = recursivePhoneFinder(HTML, num);
             p.num = num;
-            String text = p.getFirst() + " " + p.getLast() + " " + num + "\n";
+            String text = p.first + " " + p.last + " " + num + "\n";
             all = all.concat(text);
+            UX.progressBar((int) ((counter/total)*100.0));
             UX.setTextArea(all);
-            out.println(text);
+            out.print(text);
             out.flush();
             num = "No phone number";
         }
@@ -86,7 +86,7 @@ public class DataDriver {
          
          String all = "";
     	for(Person p : need){
-    		String text = p.getFirst() + " " + p.getLast() + " " + p.num + "\n";
+    		String text = p.first + " " + p.last + " " + p.num + "\n";
             all = all.concat(text);
             UX.setTextArea(all);
             out.print(text);
@@ -123,6 +123,8 @@ public class DataDriver {
             }
             else if(splits.length == 5){
             	list.add(new Person(splits[0], splits[2], splits[1], splits[3], splits[4]));
+            } else if(splits.length == 10){
+            	list.add(new Person(splits[0], splits[1], splits[2], splits[3], splits[4], splits[5], splits[6], splits[7], splits[8], splits[9]));
             }
             
             
@@ -132,91 +134,7 @@ public class DataDriver {
         return list;
     }
     	
-    	
-//        Scanner names = null;
-//		try {
-//			names = new Scanner(f);
-//		} catch (FileNotFoundException e) {
-//			e.printStackTrace();
-//		}
-//        LinkedList<Person> list = new LinkedList<Person>();
-//        
-//        int[] positions = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
-//        
-//        String firstLine = names.nextLine();
-//        String[] catagories = firstLine.split("\t");
-//        
-//        for(int i = 0 ; i < catagories.length ; i++){
-//        	
-//        	catagories[i] = catagories[i].toLowerCase();
-//        	//System.out.println(catagories[i]);
-//        	
-//        	switch (catagories[i]){
-//        		case "party" : 
-//        			positions[0] = i;
-//        			break;
-//        		case "last" :
-//        			positions[1] = i;
-//        			break;
-//        		case "first" :
-//        			positions[2] = i;
-//        			break;
-//        		case "snum" :
-//        			positions[3] = i;
-//        			break;
-//        		case "sname" :
-//        			positions[4] = i;
-//        			break;
-//        		case "rank" :
-//        			positions[5] = i;
-//        			break;
-//        		case "precinct" : 
-//        			positions[6] = i;
-//        			break;
-//        		case "voted" : 
-//        			positions[7] = i;
-//        			break;
-//        		case "notes" :
-//        			positions[8] = i;
-//        			break;
-//        		case "number" :
-//        			positions[9] = i;
-//        			break;
-//        		default : 
-//        			break;
-//        	}
-//        	
-//        }
-//        
-//        while(names.hasNextLine()){
-//        	
-//            String curr = names.nextLine();
-//            String[] split;
-//            split = curr.split("\t");
-//            String[] splits = {"","","","","","","","","","",};
-//            int[] tempPos = new int[10];
-//            
-//            
-//            System.out.println(split[1]);
-//            
-//            for(int i = 0 ; i < split.length ; i++){
-//            	if(positions[i] == -1){
-//            		tempPos[i] = i;
-//            	} else {
-//            		tempPos[i] = positions[i];
-//            		splits[i] = split[i];
-//            	}
-//            }
-           
-            
-//            list.add(new Person(splits[tempPos[0]], splits[tempPos[1]], splits[tempPos[2]], splits[tempPos[3]], splits[tempPos[4]], splits[tempPos[5]], splits[tempPos[6]],
-//            		splits[tempPos[7]], splits[tempPos[8]], splits[tempPos[9]]));
-//            
-//            //System.out.println(tempPos[1] + " Something " + splits[tempPos[1]]);
-//        }
-//        
-//        names.close();
-//        return list;
+
    // }
     /* HTMLGet
      * @returns a large HTML file formatted as a string
@@ -358,15 +276,9 @@ public class DataDriver {
     	return;
     
     }
-    	/*System.out.println("Test print");
-    	
-    	for(House test : houses){
-    		System.out.println("NEW HOUSE");
-    		for(Person p : test.getMembers()){
-        		System.out.println("\t" + p.first);
-        	}
-    	}*/
    
+    //START XML R/W
+    
     public static void xmlWrite(LinkedList<Person> list) {
     	
     	
@@ -392,7 +304,7 @@ public class DataDriver {
         		person.setAttribute("notes", p.notes);
         		person.setAttribute("rank", Integer.toString(p.rank));
         		person.setAttribute("precinct", Integer.toString(p.precinct));
-        		person.setAttribute("timesVoted", p.timesVoted);
+        		person.setAttribute("timesVoted", Integer.toString(p.timesVoted));
         		person.setAttribute("party", p.party);
         	
         		people.appendChild(person); //finalize element
@@ -431,8 +343,7 @@ public class DataDriver {
 //    	ByteArrayInputStream input = new ByteArrayInputStream(xmlStringBuilder.toString().getBytes("UTF-8")); Used if inputting a new file or something
     	Document doc = builder.parse(f);
     	Element root = doc.getDocumentElement();
-    	Element people = doc.getElementById("people");
-    	NodeList listPersons = people.getElementsByTagName("person");
+    	NodeList listPersons = root.getElementsByTagName("person");
     	
     	for(int i = 0 ; i < listPersons.getLength() ; i++){    	
     		Node curr = listPersons.item(i);
@@ -454,11 +365,42 @@ public class DataDriver {
     			returnList.add(new Person(party, lname, fname, snum, sname, rank, timesVoted, precinct, notes, phone));
     		}
     	}
-    	root.getElementsByTagName("people");
+    	
     	
 		return returnList;
     	
     }
     
+    static void displayXML(File xmlFile, Gui UX){
+    	
+    	LinkedList<Person> list = null;
+    	
+    	try {
+			list = xmlParse(xmlFile);
+		} catch (ParserConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SAXException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	
+    	String display = "Party\tFirst Name\tLast Name\tSt Num\tSt Name\tPhone Num\tRank\tTimes Voted\tPrecinct\tNotes\n"; //Header
+    	
+    	for (Person p : list){
+    		String temp = p.getAllAvail();
+    		temp += "\n";
+    		display += temp;
+    	}
+    	
+    	UX.setTextArea(display);
+    	return;
+    	
+    }
+    
+    //END XML R/W
     
 }
