@@ -3,32 +3,31 @@ package suite;
 import java.util.LinkedList;
 import java.util.Scanner;
 import org.jsoup.Jsoup;
+import org.jsoup.helper.W3CDom;
+import org.jsoup.nodes.Attributes;
+import org.jsoup.select.Elements;
 import org.xml.sax.SAXException;
 import javax.xml.parsers.*;
 import java.io.*;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 public class DataDriver {
 	
     public static File phoneBankMaker(File fileName, Gui UX) throws IOException {
     	
-    	LinkedList<Person> voters = null;
-    	XMLHandler xmlIO = new XMLHandler(fileName);
-    	
-    	if(fileName.getName().endsWith(".txt")){
-    		voters = tokenizer(fileName);
-    	} else if(fileName.getName().endsWith(".xml")){
-    		try {
-				voters = xmlIO.xmlParse();
-			} catch (ParserConfigurationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (SAXException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-    	} else {
-    		throw new IllegalArgumentException("File not a .xml or .txt");
-    	}
+    	FileHandler inputFileHandler = new FileHandler(fileName);
+    	LinkedList<Person> voters = inputFileHandler.getList();
         
 		double total = voters.size();
 		double counter = 0;
@@ -48,35 +47,17 @@ public class DataDriver {
             num = "No phone number";
         }
        
-        return xmlIO.xmlWrite(voters);
+        return inputFileHandler.xmlWrite(voters);
         
     }
     
     public static File phoneFromFile(File f, Gui UX) throws IOException{
     	
-    	File have = new File("masterlist.txt");
-    	LinkedList<Person> master = tokenizer(have);
-    	XMLHandler xmlIO = new XMLHandler(f);
+    	FileHandler needFileIO = new FileHandler(f);
+    	FileHandler masterFileIO = new FileHandler(new File("masterlist.txt"));
     	
-    	
-    	LinkedList<Person> need = null;
-    	if(f.getName().endsWith(".txt")){
-    		need = tokenizer(f);
-    	} else if(f.getName().endsWith(".xml")){
-    		try {
-				need = xmlIO.xmlParse();
-			} catch (ParserConfigurationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (SAXException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-    	} else {
-    		throw new IllegalArgumentException("File not a .xml or .txt");
-    	}
-    	
-    	
+    	LinkedList<Person> need = needFileIO.getList(); 
+    	LinkedList<Person> master = masterFileIO.getList();
     	
     	double total = need.size();
         double counter = 0;
@@ -107,7 +88,7 @@ public class DataDriver {
     	UX.setTextArea(all);
     	
     	//Write to XML file and return said file
-		return xmlIO.xmlWrite(need);
+		return needFileIO.xmlWrite(need);
     	
     }
     /* Tokenizer
@@ -117,39 +98,7 @@ public class DataDriver {
      * Runs through every line in the file, splitting the line on tabs, then creates a new person object
      * and adds person object to the list
      */
-    public static LinkedList<Person> tokenizer(File f)  {
-    	
-    	
-        Scanner names = null;
-		try {
-			names = new Scanner(f);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-        LinkedList<Person> list = new LinkedList<Person>();
-        
-        while (names.hasNextLine()) {
-        	
-            String curr = names.nextLine();
-            String[] splits = curr.split("\t");
-            if(splits.length == 2){
-            	list.add(new Person(splits[0], splits[1]));
-            }
-            else if(splits.length == 3){
-            	list.add(new Person(splits[0], splits[1], splits[2]));
-            }
-            else if(splits.length == 5){
-            	list.add(new Person(splits[0], splits[2], splits[1], splits[3], splits[4]));
-            } else if(splits.length == 10){
-            	list.add(new Person(splits[0], splits[1], splits[2], splits[3], splits[4], splits[5], splits[6], splits[7], splits[8], splits[9]));
-            }
-            
-            
-        }
-        
-        names.close();
-        return list;
-    }
+
     	
 
    // }
@@ -190,6 +139,44 @@ public class DataDriver {
         return html;
     }
     
+    
+    public static void getLatLong(Person p){
+    	 org.jsoup.nodes.Document JsoupDoc = null;
+        try {
+        	p.sname = "Arrow Head Ave";
+        	p.snum = "1";
+        	String address = p.getAddress().replace(' ', '+');
+        	String link = "https://maps.googleapis.com/maps/api/geocode/xml?address=" + address + " +,+Auburn,+MA";
+        	System.out.println(link);
+            JsoupDoc = Jsoup.connect((String)(link)).timeout(2000).get();
+            W3CDom w3cDom = new W3CDom();
+            org.w3c.dom.Document xmlDoc = w3cDom.fromJsoup(JsoupDoc);
+            Element e = xmlDoc.getDocumentElement();
+            Node n = e.getFirstChild();
+            n.getNodeName();
+            Element root = xmlDoc.getDocumentElement();
+            NodeList lats = root.getElementsByTagName("lat");
+            System.out.println(lats.getLength());
+            String curr = lats.item(0).getTextContent();
+            System.out.println(curr);
+           
+            
+          
+
+        }
+        catch (Exception e) {
+        	System.out.println("error? " + e);
+    		try {
+    			Thread.sleep(2000);
+    			getLatLong(new Person(null,null));
+    		} catch (InterruptedException e1) {
+    			e1.printStackTrace();
+    		}
+    		
+        }
+       
+        
+    }
     /* recursivePhoneFinder
      * @returns String of the phone number of the HTML provided as a param
      * @param String Text - the HTML file as string provided by HTMLGet or a string to search through
@@ -232,7 +219,9 @@ public class DataDriver {
     
     public static LinkedList<House> houseMaker(File fin) {
     	
-    	LinkedList<Person> voters = tokenizer(fin);
+    	FileHandler handler = new FileHandler(fin);
+    	LinkedList<Person> voters = handler.getList();
+       
     	
     	LinkedList<House> houses = new LinkedList<House>();
     	String curr = null;

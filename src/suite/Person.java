@@ -1,5 +1,10 @@
 package suite;
 
+import org.jsoup.Jsoup;
+import org.jsoup.helper.W3CDom;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+
 public class Person {
 	
 	
@@ -125,6 +130,43 @@ public class Person {
     	
     	return ret;
     	
+    }
+    
+    public String[] getLatLong(){
+    	org.jsoup.nodes.Document JsoupDoc = null;
+        try {
+        	String address = this.getAddress().replace(' ', '+');
+        	String link = "https://maps.googleapis.com/maps/api/geocode/xml?address=" + address + " +,+Auburn,+MA";
+        	System.out.println(link);
+            JsoupDoc = Jsoup.connect((String)(link)).timeout(2000).get();
+            W3CDom w3cDom = new W3CDom();
+            org.w3c.dom.Document xmlDoc = w3cDom.fromJsoup(JsoupDoc);
+            Element e = xmlDoc.getDocumentElement();
+            Node n = e.getFirstChild();
+            n.getNodeName();
+            Element root = xmlDoc.getDocumentElement();
+            //get first instance of elements text values, latitude and longitude
+            String[] location = new String[2];
+            location[0] = root.getElementsByTagName("lat").item(0).getTextContent();
+            location[1] = root.getElementsByTagName("lng").item(0).getTextContent();
+            
+            return location;
+            
+        }
+        catch (Exception e) {
+        	System.out.println("error? " + e);
+    		try {
+    			//recursion to reattempt if connection is lost
+    			Thread.sleep(2000);
+    			this.getLatLong();
+    		} catch (InterruptedException e1) {
+    			e1.printStackTrace();
+    		}
+    		
+        }
+		return null;
+       
+        
     }
     
 }

@@ -1,10 +1,12 @@
 package suite;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
+import java.util.Scanner;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -20,13 +22,41 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-public class XMLHandler {
+public class FileHandler {
 	
-	File xmlFile;
+	File file;
 	
-	public XMLHandler(File f){
-		xmlFile = f;
+	public FileHandler(File f){
+		file = f;
 	}
+	
+	public LinkedList<Person> getList() {
+
+     	
+    	LinkedList<Person> list = null;
+    	if(file.getName().endsWith(".txt")){
+    		list = this.txtParse();
+    	} else if(file.getName().endsWith(".xml")){
+    		try {
+				list = this.xmlParse();
+			} catch (ParserConfigurationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (SAXException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+    	} else {
+    		throw new IllegalArgumentException("File not a .xml or .txt");
+    	}
+    	
+    	return list;
+    	
+	}
+	
 	
 	public File xmlWrite(LinkedList<Person> list) {
 		
@@ -93,7 +123,7 @@ public class XMLHandler {
 		StringBuilder xmlStringBuilder = new StringBuilder();
 		xmlStringBuilder.append("<?xml version=\"1.0\"?> <class> </class>");
 //		ByteArrayInputStream input = new ByteArrayInputStream(xmlStringBuilder.toString().getBytes("UTF-8")); Used if inputting a new file or something
-		Document doc = builder.parse(xmlFile);
+		Document doc = builder.parse(file);
 		Element root = doc.getDocumentElement();
 		NodeList listPersons = root.getElementsByTagName("person");
 		
@@ -155,5 +185,39 @@ public class XMLHandler {
 
 	//END XML R/W
 
+	public LinkedList<Person> txtParse(){
+	    
+		Scanner names = null;
+		try {
+			names = new Scanner(file);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+        LinkedList<Person> list = new LinkedList<Person>();
+        
+        while (names.hasNextLine()) {
+        	
+            String curr = names.nextLine();
+            String[] splits = curr.split("\t");
+            if(splits.length == 2){
+            	list.add(new Person(splits[0], splits[1]));
+            }
+            else if(splits.length == 3){
+            	list.add(new Person(splits[0], splits[1], splits[2]));
+            }
+            else if(splits.length == 5){
+            	list.add(new Person(splits[0], splits[2], splits[1], splits[3], splits[4]));
+            } else if(splits.length == 10){
+            	list.add(new Person(splits[0], splits[1], splits[2], splits[3], splits[4], splits[5], splits[6], splits[7], splits[8], splits[9]));
+            }
+            
+            
+        }	
+	    
+	        
+	    names.close();
+	    return list;
+	}
+	
 }
 

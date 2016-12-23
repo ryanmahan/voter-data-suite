@@ -127,6 +127,14 @@ public class Gui extends JFrame implements ActionListener {
 	houseMake.setOpaque(true);
 	buttonPanel.add(houseMake);
 	
+	JButton showNotHome = new JButton("Not Homes");
+	showNotHome.addActionListener(this);
+	showNotHome.setActionCommand("notHome");
+	showNotHome.setBackground(new Color(17, 14 ,111));
+	showNotHome.setForeground(Color.WHITE);
+	showNotHome.setOpaque(true);
+	buttonPanel.add(showNotHome);
+	
 	
 	
 	mainFrame.add(buttonPanel, BorderLayout.WEST);
@@ -158,7 +166,7 @@ public class Gui extends JFrame implements ActionListener {
     	  }
 	  }
 	  
-	  XMLHandler xmlIO = new XMLHandler(read);
+	  FileHandler fileIO = new FileHandler(read);
 	  
       switch(cmd){
       
@@ -168,7 +176,7 @@ public class Gui extends JFrame implements ActionListener {
     		  break; 
     	  }
     	  if(read.getName().endsWith(".xml")){
-    		  xmlIO.displayXML(this);
+    		  fileIO.displayXML(this);
     		  break;
     	  }
     	 
@@ -218,32 +226,42 @@ public class Gui extends JFrame implements ActionListener {
       
       case "Houses" : 
     	  LinkedList<House> list = DataDriver.houseMaker(read);
-			//DataDriver.houseNumbers(list);
-			
-			
-			//TEST PRINT
-			File worker = new File("HousesList.txt");
-			PrintWriter out = null;
-		try {
-			worker.createNewFile();
-			out = new PrintWriter(worker);
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+		
+    	  String all = "";
+    	  
+    	  for (House h : list) {
+              String text = h.head.getAllAvail();
+              text += "\n";
+              all = all.concat(text);
+    	  }
 			 
-			for (House info : list){
-				
-				out.println("NEW HOUSE");
-				out.println("\t" + info.head.first + info.head.last);
-				out.println("\t" + info.head.getAddress());
-				out.flush();
-			}
-			out.close();
-			
-			fileOutput.setText(fileToString(worker));
+    	  this.setTextArea(all);
 			
 			break;
+			
+      case "notHome" :
+    	  
+    	  LinkedList<House> homeList = DataDriver.houseMaker(read);
+    	  System.out.println(homeList.size());
+    	  for (House h : homeList){
+    		  h.setNotHome();
+    	  }
+    	  
+    	  all = "";
+    	  
+    	  for (House h : homeList) {
+    		  if(h.notHome){
+    			String text = h.head.getAllAvail();
+              	text += "\n";
+              	all = all.concat(text);
+    	  		}
+          }
+    	  if(all.length() == 0){
+    		  all = "No Not Homes found";
+    	  }
+    	  this.setTextArea(all);
+    	  
+    	  break;
 			
       case "POPfile" :
     	  
@@ -277,8 +295,9 @@ public class Gui extends JFrame implements ActionListener {
       }
   }
   
-  @SuppressWarnings("resource")
-  private static String fileToString(File f) {
+
+  @SuppressWarnings("resource") //I totally close this right? Stop being a dummy eclipse
+private static String fileToString(File f) {
 	  String contents; 
 	  
 	Scanner s = null;
@@ -286,6 +305,7 @@ public class Gui extends JFrame implements ActionListener {
 	try {
 		s = new Scanner(f).useDelimiter("\\Z");
 	} catch (FileNotFoundException e) {
+		
 		return "Please enter a valid file";
 	}
 	  contents = s.next();

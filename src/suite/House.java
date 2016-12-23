@@ -10,7 +10,7 @@ public class House {
 	String landline;
 	int ID;
 	int counter = 0;
-	boolean wasHome;
+	boolean notHome;
 	
 	public House(){
 		this.ID = counter;
@@ -42,6 +42,19 @@ public class House {
 	
 	public LinkedList<Person> getMembers(){
 		return members;
+	}
+	
+	public void setNotHome(){
+		
+		boolean test = false;
+		
+		for(Person p : this.getMembers()){
+			if(p.notes.contains("Not Home") || p.notes.contains("NH")){
+				test = true;
+			}
+		}
+		notHome = test;
+		
 	}
 
 }
