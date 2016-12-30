@@ -6,8 +6,6 @@ import javax.swing.*;
 import javax.swing.text.DefaultCaret;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.LinkedList;
 import java.util.Scanner;
 
@@ -28,37 +26,37 @@ public class Gui extends JFrame implements ActionListener {
 	}
 	
 	//Needs so much reorganization and commenting, but well do that later, right?
-  private void prepareGUI()  {
+	private void prepareGUI()  {
 	  
-	Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-	double width = screenSize.getWidth();
-	double height = screenSize.getHeight();
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		double width = screenSize.getWidth();
+		double height = screenSize.getHeight();
 	  
-	//initialize the window/frame
-    mainFrame = new JFrame("Voter Data Suite"); 
-    mainFrame.setSize((int) (width/1.5), (int) (height/1.5));
-    BorderLayout mainFrameLayout = new BorderLayout();
-    mainFrameLayout.setHgap(5);
-    mainFrameLayout.setVgap(5);
-    mainFrame.getContentPane().setBackground(Color.WHITE);
-    mainFrame.setLayout(mainFrameLayout);
-    mainFrame.setDefaultCloseOperation(EXIT_ON_CLOSE);
+		//initialize the window/frame
+		mainFrame = new JFrame("Voter Data Suite"); 
+		mainFrame.setSize((int) (width/1.5), (int) (height/1.5));
+		BorderLayout mainFrameLayout = new BorderLayout();
+		mainFrameLayout.setHgap(5);
+		mainFrameLayout.setVgap(5);
+		mainFrame.getContentPane().setBackground(Color.WHITE);
+		mainFrame.setLayout(mainFrameLayout);
+		mainFrame.setDefaultCloseOperation(EXIT_ON_CLOSE);
     
-    //create menu bar
-    menuBar = new JMenuBar();
-    mainFrame.setJMenuBar(menuBar);
+		//create menu bar
+		menuBar = new JMenuBar();
+		mainFrame.setJMenuBar(menuBar);
     
     
-    //create menu in menubar
-    JMenu actions = new JMenu("Actions");
-    menuBar.add(actions);
-    actions.setMnemonic(KeyEvent.VK_A);
+		//create menu in menubar
+		JMenu actions = new JMenu("Actions");
+		menuBar.add(actions);
+		actions.setMnemonic(KeyEvent.VK_A);
     
-    //add items to menu bar
-    JMenuItem phoneBank = new JMenuItem("Create Phone Bank File");
-    phoneBank.addActionListener(this);
-    phoneBank.setActionCommand("Phone Bank");
-    actions.add(phoneBank);
+		//add items to menu bar
+		JMenuItem phoneBank = new JMenuItem("Create Phone Bank File");
+		phoneBank.addActionListener(this);
+		phoneBank.setActionCommand("Phone Bank");
+		actions.add(phoneBank);
     
     JMenuItem inputFile = new JMenuItem("Read File");
     inputFile.addActionListener(this);
@@ -113,7 +111,10 @@ public class Gui extends JFrame implements ActionListener {
 	  
 	JButton phoneBankBut = new JButton("Phone Bank");
 	phoneBankBut.addActionListener(this);
-	phoneBankBut.setActionCommand("Phone Bank");
+	
+	phoneBankBut.setAction(new Actions.phoneBank());
+	phoneBankBut.setText("Phone Bank");
+
 	buttonPanel.add(phoneBankBut);
 	phoneBankBut.setBackground(new Color(17, 14 ,111));
 	phoneBankBut.setForeground(Color.WHITE);
@@ -135,6 +136,14 @@ public class Gui extends JFrame implements ActionListener {
 	showNotHome.setOpaque(true);
 	buttonPanel.add(showNotHome);
 	
+	JButton sortByDist = new JButton("Sort By Dist");
+	sortByDist.addActionListener(this);
+	sortByDist.setActionCommand("sortByDist");
+	sortByDist.setBackground(new Color(17, 14 ,111));
+	sortByDist.setForeground(Color.WHITE);
+	sortByDist.setOpaque(true);
+	buttonPanel.add(sortByDist);
+	
 	
 	
 	mainFrame.add(buttonPanel, BorderLayout.WEST);
@@ -150,6 +159,8 @@ public class Gui extends JFrame implements ActionListener {
 	  String cmd = e.getActionCommand();
 	  File read = null;
 	 
+	  
+	  System.out.println("Action Command: " + e.getActionCommand());
 	  
 	  
 	  if(cmd != null){
@@ -226,6 +237,7 @@ public class Gui extends JFrame implements ActionListener {
       
       case "Houses" : 
     	  LinkedList<House> list = DataDriver.houseMaker(read);
+    	  System.out.println("Made a list of Houses: " + list.size());
 		
     	  String all = "";
     	  
@@ -262,11 +274,32 @@ public class Gui extends JFrame implements ActionListener {
     	  this.setTextArea(all);
     	  
     	  break;
+    	  
+      case "sortByDist" :
+    	  
+    	  	System.out.println("Button Pressed!");
+    	  	LinkedList<House> sortList = DataDriver.houseMaker(read);
+    	  	System.out.println("List Made: " + sortList.size());
+    	  	
+    	  	if(sortList.peek().head.precinct == -1){
+    	  		this.setTextArea("No Precincts found, please enter file with Precincts!");
+    	  		return;
+    	  	}
+    	  	if(sortList.size() == 0){
+    	  		this.setTextArea("No Homes Found");
+    	  		return;
+    	  	}
+    	  	
+    	  	sortList = DataDriver.sortByDist(sortList);
+    	  	System.out.println("Recieved List of Houses: " + sortList.size());
+    	  	
+    	  	FileHandler fhSort = new FileHandler(read);
+        	fhSort.xmlHouseWrite(sortList);
+  
+    	  	break;
 			
       case "POPfile" :
-    	  
-    	
-    	
+    
     		try {
     			DataDriver.phoneFromFile(read, this);
     		} catch (Exception except) {
