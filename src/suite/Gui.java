@@ -111,7 +111,10 @@ public class Gui extends JFrame implements ActionListener {
 	  
 	JButton phoneBankBut = new JButton("Phone Bank");
 	phoneBankBut.addActionListener(this);
-	phoneBankBut.setActionCommand("Phone Bank");
+	
+	phoneBankBut.setAction(new Actions.phoneBank());
+	phoneBankBut.setText("Phone Bank");
+
 	buttonPanel.add(phoneBankBut);
 	phoneBankBut.setBackground(new Color(17, 14 ,111));
 	phoneBankBut.setForeground(Color.WHITE);
@@ -288,6 +291,8 @@ public class Gui extends JFrame implements ActionListener {
     	  	}
     	  	
     	  	sortList = DataDriver.sortByDist(sortList);
+    	  	System.out.println("Recieved List of Houses: " + sortList.size());
+    	  	
     	  	FileHandler fhSort = new FileHandler(read);
         	fhSort.xmlHouseWrite(sortList);
   

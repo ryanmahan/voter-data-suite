@@ -234,9 +234,12 @@ public class DataDriver {
      * @param LinkedList<House> a list of houses probably made by houseMaker
      * @returns 
      * 
-     * Sorts through houses by determining length to each other and then sorting by that factor in a pqueue
-     * first by using getLatLong
+     * Breaks list into precincts since thats a huge efficiency increase but a minimal impact on final product
+     * Runs through lists in recursiveSortHelper
+     * Combines the list into a larger list used to compile the precincts back together
+     * 
      */
+    
 	public static LinkedList<House> sortByDist(LinkedList<House> list){
 		
 		
@@ -245,35 +248,66 @@ public class DataDriver {
 		for(int i = 0 ; i < 5 ; i++){
 			precincts[i] = new LinkedList<House>();
 		}
-		LinkedList<House> output = new LinkedList<House>();
 		
 		for(House h : list){
 			precincts[h.head.precinct].add(h);
 			h.getLatLong();
 		}
 		
-		LinkedList<House> ret = new LinkedList<House>();
+		LinkedList<House> output = new LinkedList<House>();
+		
 		for(LinkedList<House> pre : precincts){
-			pre = recursiveSortHelper(pre.poll(), pre);
-			ret.addAll(pre);
-			
+			LinkedList<House> preOut = new LinkedList<House>();
+			preOut = recursiveSortHelper(pre.peek(), pre, preOut);
+			output.addAll(preOut);
 		}
 		
-		return ret;
+		for(House h : output){
+			if(h != null){
+				System.out.println(h.getAddress());
+			} else {
+				System.out.println("null house found");
+			}
+		}
+		
+		return output;
 		
 
 	}
-	//What am I even trying to do here
-	private static LinkedList<House> recursiveSortHelper(House curr, LinkedList<House> list){
+
+	/*recursiveSortHelper
+	 * @param House curr - the current house we are using as a node in our LL of houses
+	 * @param LLHouse input - the list we used as input, also contains the list of unvisited houses
+	 * @param LLHouse output - the list we used as output, containing the list of visited houses, in order of distance
+	 * 		from the first curr, by default the first house in the precinct
+	 * @returns LLHouse - the houses visited in the order of distance
+	 * 
+	 * Runs through the input list recursively until there is no more curr->next, at which point curr must be the closest
+	 * 		to the previous node
+	 * Remove the current node, so it doesnt return it being closest to itself
+	 * Find the closest next node
+	 * Add our current node to the output list
+	 * Run on the next node
+	 * 
+	 */
+	private static LinkedList<House> recursiveSortHelper(House curr, LinkedList<House> input, LinkedList<House> output){
 		
-		if(list.size() > 1){
-			House next = findClosestSortHelper(curr, list);
-			list = recursiveSortHelper(next, list);
-			list.remove(curr);
+		if(input.size() > 1){
+			
+			input.remove(curr);
+			House next = findClosestSortHelper(curr, input);
+			output.add(curr);
+			/* Debug!
+			System.out.println(input.size() + " " + output.size());
+			System.out.println(curr.getAddress());
+			System.out.println(next.getAddress() + "\n");
+			*/
+			output = recursiveSortHelper(next, input, output);
+			
 		} else {
-			return list;
+			return output;
 		}
-		return list;
+		return output;
 		
 	}
 	
@@ -282,8 +316,6 @@ public class DataDriver {
 		
 		Comparator<HouseDist> comp = new HouseDist();
 		PriorityQueue<HouseDist> pqueue = new PriorityQueue<HouseDist>(comp);
-		
-		System.out.println("FCSH List length: " + list.size());
 		
 		for(House h : list){
 			HouseDist temp = new HouseDist(h, getDist(from, h));

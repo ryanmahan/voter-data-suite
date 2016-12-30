@@ -71,7 +71,7 @@ public class House {
         	String address = this.getAddress().replace(' ', '+');
         	
         	String link = "https://maps.googleapis.com/maps/api/geocode/xml?address=" + address + " +,+Auburn,+MA";
-        	System.out.println(link);
+        	//System.out.println(link);
             JsoupDoc = Jsoup.connect((String)(link)).timeout(2000).get();
             W3CDom w3cDom = new W3CDom();
             org.w3c.dom.Document xmlDoc = w3cDom.fromJsoup(JsoupDoc);
