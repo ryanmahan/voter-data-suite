@@ -108,6 +108,9 @@ public class FileHandler {
 			e.printStackTrace();
 		}
 		return output;
+		
+		
+
 			
 			
 	}
@@ -152,6 +155,59 @@ public class FileHandler {
 		return returnList;
 		
 	}
+	
+	public File xmlHouseWrite(LinkedList<House> houseList){
+		
+		File output = null;
+		
+		try{
+			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+			
+			Document doc = docBuilder.newDocument();
+			Element rootElement = doc.createElement("auburn");
+			doc.appendChild(rootElement);
+			
+			Element people = doc.createElement("people");
+			rootElement.appendChild(people);
+			
+			for(House h : houseList){
+				Element person = doc.createElement("person"); //create element
+	    		person.setAttribute("first", h.head.first); //give it data
+	    		person.setAttribute("last", h.head.last);
+	    		person.setAttribute("number", h.head.num);
+	    		person.setAttribute("sname", h.head.sname);
+	    		person.setAttribute("snum", h.head.snum);
+	    		person.setAttribute("notes", h.head.notes);
+	    		person.setAttribute("rank", Integer.toString(h.head.rank));
+	    		person.setAttribute("precinct", Integer.toString(h.head.precinct));
+	    		person.setAttribute("timesVoted", Integer.toString(h.head.timesVoted));
+	    		person.setAttribute("party", h.head.party);
+	    	
+	    		people.appendChild(person); //finalize element
+			}
+			
+			SimpleDateFormat df = new SimpleDateFormat("dd-MM-yy-hh-mm-ss");
+	        String date = df.format(new Date());
+			
+			TransformerFactory transformerFactory = TransformerFactory.newInstance();
+			Transformer transformer = transformerFactory.newTransformer();
+			DOMSource source = new DOMSource(doc);
+			//System.out.println("Writing: " + "list+"+date+".xml");
+			output = new File("list+"+date+".xml");
+			StreamResult result = new StreamResult(output);
+			
+			
+			transformer.transform(source, result);
+		
+			
+		}catch (Exception e){
+			System.out.println("XML WRITE ERROR");
+			e.printStackTrace();
+		}
+		return output;
+
+	}
 
 	public void displayXML(Gui UX){
 		
@@ -184,7 +240,14 @@ public class FileHandler {
 	}
 
 	//END XML R/W
-
+	
+	
+	/* textParse()
+	 * Also known as the hard-code-iest code Ive ever written intentionally
+	 * 
+	 * PLease forgive me, Ill figure out a way to make this legacy code one day
+	 * The idea is to basically only make this a dev-only function
+	 */
 	public LinkedList<Person> txtParse(){
 	    
 		Scanner names = null;
@@ -207,7 +270,11 @@ public class FileHandler {
             }
             else if(splits.length == 5){
             	list.add(new Person(splits[0], splits[2], splits[1], splits[3], splits[4]));
-            } else if(splits.length == 10){
+            }
+            else if(splits.length == 9){
+            	list.add(new Person(splits[0], splits[1], splits[2], splits[3], splits[4], "-1", splits[6], splits[5], splits[7], "1"));
+            }
+            else if(splits.length == 10){
             	list.add(new Person(splits[0], splits[1], splits[2], splits[3], splits[4], splits[5], splits[6], splits[7], splits[8], splits[9]));
             }
             

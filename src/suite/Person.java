@@ -22,6 +22,8 @@ public class Person {
     int ID;
 
     int counter = 0;
+    double lat;
+    double lng;
     
 
     
@@ -149,6 +151,9 @@ public class Person {
             String[] location = new String[2];
             location[0] = root.getElementsByTagName("lat").item(0).getTextContent();
             location[1] = root.getElementsByTagName("lng").item(0).getTextContent();
+            
+            lat = Double.parseDouble(location[0]);
+            lng = Double.parseDouble(location[1]);
             
             return location;
             
