@@ -4,6 +4,9 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.text.DefaultCaret;
+
+import actions.*;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.LinkedList;
@@ -14,12 +17,12 @@ public class Gui extends JFrame implements ActionListener {
 	private static final long serialVersionUID = 1L;
 
 	private final Color darkBlue = new Color(17,14,111);
-	
+	private final Font menuFont = new Font("Arial", Font.PLAIN, 12);
 	private JFrame mainFrame;
-	private JMenuBar menuBar;
 	private JTextField textField;
 	private JTextArea fileOutput;
 	private JProgressBar phonebankBar;
+	private JFrame popUp = null;
 	
 	public Gui(){
 		prepareGUI();
@@ -41,118 +44,181 @@ public class Gui extends JFrame implements ActionListener {
 		mainFrame.getContentPane().setBackground(Color.WHITE);
 		mainFrame.setLayout(mainFrameLayout);
 		mainFrame.setDefaultCloseOperation(EXIT_ON_CLOSE);
-    
-		//create menu bar
-		menuBar = new JMenuBar();
-		mainFrame.setJMenuBar(menuBar);
-    
-    
-		//create menu in menubar
-		JMenu actions = new JMenu("Actions");
-		menuBar.add(actions);
-		actions.setMnemonic(KeyEvent.VK_A);
-    
-		//add items to menu bar
-		JMenuItem phoneBank = new JMenuItem("Create Phone Bank File");
-		phoneBank.addActionListener(this);
-		phoneBank.setActionCommand("Phone Bank");
-		actions.add(phoneBank);
-    
-		JMenuItem inputFile = new JMenuItem("Read File");
-    	inputFile.addActionListener(this);
-    	inputFile.setActionCommand("input");
-    	actions.add(inputFile);
-    
-    	//initialize text field
-    	textField = new JTextField(40);
-    	textField.setHorizontalAlignment(JTextField.LEFT);
-    	textField.setFont(new Font("Serif", Font.PLAIN, 20));
-    	JPanel inputPanel = new JPanel(new BorderLayout());
-    	JLabel label = new JLabel("File: ");
-    	mainFrame.add(inputPanel, BorderLayout.NORTH);
-    	label.setDisplayedMnemonic(KeyEvent.VK_N);
-    	label.setLabelFor(textField);
-    	label.setFont(new Font("Serif", Font.PLAIN, 20));
-    	inputPanel.add(label, BorderLayout.WEST);
-    	inputPanel.add(textField, BorderLayout.CENTER);
 
-    	//initialize text area
-    	fileOutput = new JTextArea(" Enter a Text File above", 20, 5);
-    	fileOutput.setFont(new Font("Serif", Font.PLAIN, 20));
-    	fileOutput.setEditable(false);
-
-    	DefaultCaret caret = (DefaultCaret) fileOutput.getCaret(); //keeps scrollbar at top when file is read
-    	caret.setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
-    	JPanel outputPanel = new JPanel(new BorderLayout());
-    	outputPanel.add(fileOutput, BorderLayout.CENTER);
-    	outputPanel.setVisible(true);
-
-
-    	//make scrollable
-    	JScrollPane scroll = new JScrollPane(fileOutput);
-    	scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-    	scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-    	scroll.getVerticalScrollBar().setValue(0);
-    	outputPanel.add(scroll);
-    	mainFrame.add(outputPanel);
-    	scroll.setVisible(true);
-
-    	GridLayout buttonPanelLayout = new GridLayout(10,1);
-    	buttonPanelLayout.setVgap(15);
-    	JPanel buttonPanel = new JPanel(buttonPanelLayout);
-    	buttonPanel.setBackground(Color.WHITE);
-
-    	JButton readFile = new JButton("Read File");
-    	readFile.addActionListener(this);
-    	readFile.setActionCommand("input");
-    	buttonPanel.add(readFile);
-    	readFile.setBackground(darkBlue);
-    	readFile.setForeground(Color.WHITE);
-
-    	JButton phoneBankBut = new JButton("Phone Bank");
-    	phoneBankBut.addActionListener(this);
-
-    	phoneBankBut.setAction(new Actions.phoneBank());
-    	phoneBankBut.setText("Phone Bank");
-
-    	buttonPanel.add(phoneBankBut);
-    	phoneBankBut.setBackground(new Color(17, 14 ,111));
-    	phoneBankBut.setForeground(Color.WHITE);
-    	phoneBankBut.setOpaque(true);
-
-    	JButton houseMake = new JButton("Make Houses");
-    	houseMake.addActionListener(this);
-    	houseMake.setActionCommand("Houses");
-    	houseMake.setBackground(new Color(17, 14 ,111));
-    	houseMake.setForeground(Color.WHITE);
-    	houseMake.setOpaque(true);
-    	buttonPanel.add(houseMake);
-
-    	JButton showNotHome = new JButton("Not Homes");
-    	showNotHome.addActionListener(this);
-    	showNotHome.setActionCommand("notHome");
-    	showNotHome.setBackground(new Color(17, 14 ,111));
-    	showNotHome.setForeground(Color.WHITE);
-    	showNotHome.setOpaque(true);
-    	buttonPanel.add(showNotHome);
-
-    	JButton sortByDist = new JButton("Sort By Dist");
-    	sortByDist.addActionListener(this);
-    	sortByDist.setActionCommand("sortByDist");
-    	sortByDist.setBackground(new Color(17, 14 ,111));
-    	sortByDist.setForeground(Color.WHITE);
-    	sortByDist.setOpaque(true);
-    	buttonPanel.add(sortByDist);
-
-
-
-    	mainFrame.add(buttonPanel, BorderLayout.WEST);
-
+		JMenuBar menus = this.menuBar();
+    	JPanel buttons = this.createButtons();
+    	JPanel textAreaPanel = this.textArea();
+    	JPanel textFieldPanel = this.textField();
+    	
+    	mainFrame.setJMenuBar(menus);
+    	mainFrame.add(textFieldPanel, BorderLayout.NORTH);
+    	mainFrame.add(textAreaPanel);
+    	mainFrame.add(buttons, BorderLayout.WEST);
+    	
     	mainFrame.setVisible(true);
+    	
  
   }
   
-  JFrame popUp = null;
+  
+  //creates the menuBar
+  private JMenuBar menuBar(){
+	  
+	  JMenuBar menuBar = new JMenuBar();
+	  
+	  //create menu bar
+	  menuBar = new JMenuBar();
+	  mainFrame.setJMenuBar(menuBar);
+  
+		//create menu item
+	  JMenu file = fileMenuItem();
+	  menuBar.add(file);
+		
+	  return menuBar;
+  }
+  
+  private JMenu fileMenuItem(){
+	  
+	  JMenu file = new JMenu("File");
+	  file.setMnemonic(KeyEvent.VK_A);
+	  
+	  JMenuItem save = new JMenuItem();
+	  save.setAction(new MenuActions.Save());
+	  save.setText("Save");
+	  save.addActionListener(this);
+	  save.setVisible(true);
+
+	  
+	  JMenuItem open = new JMenuItem();
+	  open.setAction(new MenuActions.Open());
+	  open.setText("Open");
+	  open.addActionListener(this);
+	  
+	  
+	  JMenuItem saveAs = new JMenuItem();
+	  saveAs.setAction(new MenuActions.SaveAs());
+	  saveAs.setText("Save As");
+	  saveAs.addActionListener(this);
+	 
+	  
+	  JMenuItem export = new JMenuItem();
+	  export.setAction(new MenuActions.Export());
+	  export.setText("Export to Excel");
+	  export.addActionListener(this);
+	 
+	  
+	  JMenuItem imp = new JMenuItem();
+	  imp.setAction(new MenuActions.Import());
+	  imp.setText("Import");
+	  imp.addActionListener(this);
+	  
+	  file.add(open);
+	  file.add(save);
+	  file.add(saveAs);
+	  file.add(export);
+	  file.add(imp);
+	  file.setFont(menuFont);
+	  
+	  Component[] fileMenuItems = file.getMenuComponents();
+	  
+	  for(Component c : fileMenuItems){
+		  c.setFont(menuFont);
+	  }
+	  
+	  file.setVisible(true);
+
+	  return file;
+  }
+  
+  private JPanel textField(){
+	  
+	  textField = new JTextField(40);
+	  textField.setHorizontalAlignment(JTextField.LEFT);
+	  textField.setFont(new Font("Serif", Font.PLAIN, 20));
+	  JPanel inputPanel = new JPanel(new BorderLayout());
+	  JLabel label = new JLabel("File: ");
+
+	  label.setDisplayedMnemonic(KeyEvent.VK_N);
+	  label.setLabelFor(textField);
+	  label.setFont(new Font("Serif", Font.PLAIN, 20));
+	  inputPanel.add(label, BorderLayout.WEST);
+	  inputPanel.add(textField, BorderLayout.CENTER);
+
+	  return inputPanel;
+	  
+  }
+  
+  private JPanel textArea(){
+	  //initialize text area
+	  fileOutput = new JTextArea(" Enter a Text File above", 20, 5);
+	  fileOutput.setFont(new Font("Serif", Font.PLAIN, 20));
+	  fileOutput.setEditable(false);
+
+	  DefaultCaret caret = (DefaultCaret) fileOutput.getCaret(); //keeps scrollbar at top when file is read
+	  caret.setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
+	  JPanel outputPanel = new JPanel(new BorderLayout());
+	  outputPanel.add(fileOutput, BorderLayout.CENTER);
+	  outputPanel.setVisible(true);
+
+
+	  //make scrollable
+	  JScrollPane scroll = new JScrollPane(fileOutput);
+	  scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+	  scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+	  scroll.getVerticalScrollBar().setValue(0);
+	  outputPanel.add(scroll);
+	  scroll.setVisible(true);
+
+	  return outputPanel;
+  }
+  
+  private JPanel createButtons(){
+	  
+	  GridLayout buttonPanelLayout = new GridLayout(10,1);
+	  buttonPanelLayout.setVgap(15);
+	  JPanel buttonPanel = new JPanel(buttonPanelLayout);
+	  buttonPanel.setBackground(Color.WHITE);
+	  //create buttons
+	  
+	  JButton phoneBankBut = new JButton("Phone Bank");
+	  phoneBankBut.addActionListener(this);
+	  phoneBankBut.setText("Phone Bank");
+	  phoneBankBut.setAction(new ButtonActions.PhoneBank());
+	  phoneBankBut.setText("Phone Bank");
+
+	  JButton houseMake = new JButton("Make Houses");
+	  houseMake.addActionListener(this);
+	  houseMake.setActionCommand("Houses");
+	  houseMake.setAction(new ButtonActions.HouseMake());
+	  houseMake.setText("Make Houses");
+
+	  JButton showNotHome = new JButton();
+	  showNotHome.addActionListener(this);
+	  showNotHome.setActionCommand("notHome");
+	  showNotHome.setAction(new ButtonActions.NotHome());
+	  showNotHome.setText("Not Home");
+
+	  JButton sortByDist = new JButton();
+	  sortByDist.addActionListener(this);
+	  sortByDist.setActionCommand("sortByDist");
+	  sortByDist.setAction(new ButtonActions.Distance());
+	  sortByDist.setText("Sort");
+
+	  buttonPanel.add(phoneBankBut);
+	  buttonPanel.add(houseMake);
+	  buttonPanel.add(showNotHome);
+	  buttonPanel.add(sortByDist);
+	  
+	  Component[] buttons = buttonPanel.getComponents();
+	  
+	  for(Component c : buttons){
+		  c.setBackground(new Color(17, 14 ,111));
+		  c.setForeground(Color.WHITE);
+		  ((JButton) c).setOpaque(true);
+	  }
+	  
+	  return buttonPanel;
+  }
   
   public void actionPerformed(ActionEvent e) {
 	  
@@ -194,48 +260,49 @@ public class Gui extends JFrame implements ActionListener {
       
       case "Phone Bank" : 
     	  
-    	//create popUp questioning File or Net
-    	popUp = new JFrame("Phone Bank from File or Net");
-    	popUp.setFont(new Font("Serif", Font.PLAIN, 20));
-    	popUp.setLayout(new BorderLayout());
-    	popUp.setSize(350,150);
-    	
-    	//tell them what to do
-    	JLabel instructions = new JLabel("Do you want to grab numbers from file or Net?");
-    	popUp.add(instructions, BorderLayout.NORTH);
-    	instructions.setFont(new Font("Serif", Font.PLAIN, 20));
-    	
-    	//create button for File find
-    	JButton file = new JButton("File");
-    	file.setFont(new Font("Serif", Font.PLAIN, 20));
-    	file.addActionListener(this);
-    	file.setActionCommand("POPfile");
-    	file.setBackground(darkBlue);
-    	file.setForeground(Color.WHITE);
-    	file.setOpaque(true);
-    	popUp.add(file, BorderLayout.EAST);
-    	
-    	//create button for Net Finder
-    	JButton net = new JButton("Net");
-    	net.setFont(new Font("Serif", Font.PLAIN, 20));
-    	net.setBackground(darkBlue);
-    	net.setForeground(Color.WHITE);
-    	net.addActionListener(this);
-    	net.setActionCommand("POPnet");
-    	popUp.add(net, BorderLayout.WEST);
-    	
-    	//create progress bar for % done finding
-    	phonebankBar = new JProgressBar();
-    	phonebankBar.setForeground(darkBlue);
-    	phonebankBar.setStringPainted(true);
-    	phonebankBar.setOpaque(true);
-    	popUp.add(phonebankBar, BorderLayout.SOUTH);
-    	popUp.setVisible(true);
-    	
-    	break;
+    	  //create popUp questioning File or Net
+    	  popUp = new JFrame("Phone Bank from File or Net");
+    	  popUp.setFont(new Font("Serif", Font.PLAIN, 20));
+    	  popUp.setLayout(new BorderLayout());
+    	  popUp.setSize(350,150);
+
+    	  //tell them what to do
+    	  JLabel instructions = new JLabel("Do you want to grab numbers from file or Net?");
+    	  popUp.add(instructions, BorderLayout.NORTH);
+    	  instructions.setFont(new Font("Serif", Font.PLAIN, 20));
+
+    	  //create button for File find
+    	  JButton file = new JButton("File");
+    	  file.setFont(new Font("Serif", Font.PLAIN, 20));
+    	  file.addActionListener(this);
+    	  file.setActionCommand("POPfile");
+    	  file.setBackground(darkBlue);
+    	  file.setForeground(Color.WHITE);
+    	  file.setOpaque(true);
+    	  popUp.add(file, BorderLayout.EAST);
+
+    	  //create button for Net Finder
+    	  JButton net = new JButton("Net");
+    	  net.setFont(new Font("Serif", Font.PLAIN, 20));
+    	  net.setBackground(darkBlue);
+    	  net.setForeground(Color.WHITE);
+    	  net.addActionListener(this);
+    	  net.setActionCommand("POPnet");
+    	  popUp.add(net, BorderLayout.WEST);
+
+    	  //create progress bar for % done finding
+    	  phonebankBar = new JProgressBar();
+    	  phonebankBar.setForeground(darkBlue);
+    	  phonebankBar.setStringPainted(true);
+    	  phonebankBar.setOpaque(true);
+    	  popUp.add(phonebankBar, BorderLayout.SOUTH);
+    	  popUp.setVisible(true);
+	    	
+    	  break;
       
       
       case "Houses" : 
+    	  
     	  LinkedList<House> list = DataDriver.houseMaker(read);
     	  System.out.println("Made a list of Houses: " + list.size());
 		
@@ -277,7 +344,6 @@ public class Gui extends JFrame implements ActionListener {
     	  
       case "sortByDist" :
     	  
-    	  	System.out.println("Button Pressed!");
     	  	LinkedList<House> sortList = DataDriver.houseMaker(read);
     	  	System.out.println("List Made: " + sortList.size());
     	  	
@@ -296,6 +362,14 @@ public class Gui extends JFrame implements ActionListener {
     	  	FileHandler fhSort = new FileHandler(read);
         	fhSort.xmlHouseWrite(sortList);
   
+        	all = "";
+        	
+        	for(House h : sortList){
+        		all.concat(h.head.getAllAvail() + "\n");
+        	}
+        	
+        	this.setTextArea(all);
+        	
     	  	break;
 			
       case "POPfile" : //if phonebank -> file finder
@@ -329,9 +403,8 @@ public class Gui extends JFrame implements ActionListener {
       }
   }
   
-
   @SuppressWarnings("resource") //I totally close this right? Stop being a dummy eclipse
-private static String fileToString(File f) {
+  private static String fileToString(File f) {
 	  String contents; 
 	  
 	Scanner s = null;
