@@ -1,6 +1,7 @@
 package suite;
 
 import java.util.LinkedList;
+import java.util.NoSuchElementException;
 
 import org.jsoup.Jsoup;
 import org.jsoup.helper.W3CDom;
@@ -17,8 +18,8 @@ public class House {
 	int ID;
 	int counter = 0;
 	boolean notHome;
-	double lat;
-	double lng;
+	double lat=0;
+	double lng=0;
 	
 	
 	public House(){
@@ -65,12 +66,13 @@ public class House {
 		notHome = test;
 	}
 	
-    public String[] getLatLong(){
+    public boolean getLatLong(){
     	org.jsoup.nodes.Document JsoupDoc = null;
+    	String link = null;
         try {
         	String address = this.getAddress().replace(' ', '+');
         	
-        	String link = "https://maps.googleapis.com/maps/api/geocode/xml?address=" + address + " +,+Auburn,+MA";
+        	link = "https://maps.googleapis.com/maps/api/geocode/xml?address=" + address + "+,+Auburn,+MA";
         	//System.out.println(link);
             JsoupDoc = Jsoup.connect((String)(link)).timeout(2000).get();
             W3CDom w3cDom = new W3CDom();
@@ -87,8 +89,20 @@ public class House {
             lat = Double.parseDouble(location[0]);
             lng = Double.parseDouble(location[1]);
             
-            return location;
+            return true;
             
+        }
+        catch (NullPointerException e){
+        	lat = 0;
+        	lng = 0;
+        	System.out.println(link);
+        	return false;
+        }
+        catch (NoSuchElementException e) {
+        	lat = 0;
+        	lng = 0;
+        	System.out.println(link);
+        	return false;
         }
         catch (Exception e) {
         	System.out.println("error? " + e);
@@ -98,10 +112,11 @@ public class House {
     			this.getLatLong();
     		} catch (InterruptedException e1) {
     			e1.printStackTrace();
-    		} 
+    			
+    		}
     		
         }
-		return null;
+		return false;
        
         
     }

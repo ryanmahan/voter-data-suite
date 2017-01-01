@@ -6,6 +6,11 @@ public class suiteMain {
 	// I forgot what I meant when I wrote that ^
 	
 	//TODO: Refactor gui.java
+	//TODO: Convert to XML
+	//TODO: Save/Load functions
+		//plus a way to name save files
+	//TODO: Save on exit
+	
 	
 	
 	public static void main(String args[]) throws Exception{

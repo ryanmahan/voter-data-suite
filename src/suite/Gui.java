@@ -58,97 +58,97 @@ public class Gui extends JFrame implements ActionListener {
 		phoneBank.setActionCommand("Phone Bank");
 		actions.add(phoneBank);
     
-    JMenuItem inputFile = new JMenuItem("Read File");
-    inputFile.addActionListener(this);
-    inputFile.setActionCommand("input");
-    actions.add(inputFile);
+		JMenuItem inputFile = new JMenuItem("Read File");
+    	inputFile.addActionListener(this);
+    	inputFile.setActionCommand("input");
+    	actions.add(inputFile);
     
-    //initialize text field
-    textField = new JTextField(40);
-    textField.setHorizontalAlignment(JTextField.LEFT);
-    textField.setFont(new Font("Serif", Font.PLAIN, 20));
-    JPanel inputPanel = new JPanel(new BorderLayout());
-    JLabel label = new JLabel("File: ");
-    mainFrame.add(inputPanel, BorderLayout.NORTH);
-    label.setDisplayedMnemonic(KeyEvent.VK_N);
-    label.setLabelFor(textField);
-    label.setFont(new Font("Serif", Font.PLAIN, 20));
-    inputPanel.add(label, BorderLayout.WEST);
-    inputPanel.add(textField, BorderLayout.CENTER);
-    
-    //initialize text area
-    fileOutput = new JTextArea(" Enter a Text File above", 20, 5);
-    fileOutput.setFont(new Font("Serif", Font.PLAIN, 20));
-    fileOutput.setEditable(false);
-    
-    DefaultCaret caret = (DefaultCaret) fileOutput.getCaret(); //keeps scrollbar at top when file is read
-    caret.setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
-    JPanel outputPanel = new JPanel(new BorderLayout());
-    outputPanel.add(fileOutput, BorderLayout.CENTER);
-    outputPanel.setVisible(true);
-    
-    
-    //make scrollable
-    JScrollPane scroll = new JScrollPane(fileOutput);
-    scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-    scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-    scroll.getVerticalScrollBar().setValue(0);
-    outputPanel.add(scroll);
-    mainFrame.add(outputPanel);
-    scroll.setVisible(true);
-    
-    GridLayout buttonPanelLayout = new GridLayout(10,1);
-    buttonPanelLayout.setVgap(15);
-    JPanel buttonPanel = new JPanel(buttonPanelLayout);
-    buttonPanel.setBackground(Color.WHITE);
-    
-	JButton readFile = new JButton("Read File");
-	readFile.addActionListener(this);
-	readFile.setActionCommand("input");
-	buttonPanel.add(readFile);
-	readFile.setBackground(darkBlue);
-	readFile.setForeground(Color.WHITE);
-	  
-	JButton phoneBankBut = new JButton("Phone Bank");
-	phoneBankBut.addActionListener(this);
-	
-	phoneBankBut.setAction(new Actions.phoneBank());
-	phoneBankBut.setText("Phone Bank");
+    	//initialize text field
+    	textField = new JTextField(40);
+    	textField.setHorizontalAlignment(JTextField.LEFT);
+    	textField.setFont(new Font("Serif", Font.PLAIN, 20));
+    	JPanel inputPanel = new JPanel(new BorderLayout());
+    	JLabel label = new JLabel("File: ");
+    	mainFrame.add(inputPanel, BorderLayout.NORTH);
+    	label.setDisplayedMnemonic(KeyEvent.VK_N);
+    	label.setLabelFor(textField);
+    	label.setFont(new Font("Serif", Font.PLAIN, 20));
+    	inputPanel.add(label, BorderLayout.WEST);
+    	inputPanel.add(textField, BorderLayout.CENTER);
 
-	buttonPanel.add(phoneBankBut);
-	phoneBankBut.setBackground(new Color(17, 14 ,111));
-	phoneBankBut.setForeground(Color.WHITE);
-	phoneBankBut.setOpaque(true);
-	
-	JButton houseMake = new JButton("Make Houses");
-	houseMake.addActionListener(this);
-	houseMake.setActionCommand("Houses");
-	houseMake.setBackground(new Color(17, 14 ,111));
-	houseMake.setForeground(Color.WHITE);
-	houseMake.setOpaque(true);
-	buttonPanel.add(houseMake);
-	
-	JButton showNotHome = new JButton("Not Homes");
-	showNotHome.addActionListener(this);
-	showNotHome.setActionCommand("notHome");
-	showNotHome.setBackground(new Color(17, 14 ,111));
-	showNotHome.setForeground(Color.WHITE);
-	showNotHome.setOpaque(true);
-	buttonPanel.add(showNotHome);
-	
-	JButton sortByDist = new JButton("Sort By Dist");
-	sortByDist.addActionListener(this);
-	sortByDist.setActionCommand("sortByDist");
-	sortByDist.setBackground(new Color(17, 14 ,111));
-	sortByDist.setForeground(Color.WHITE);
-	sortByDist.setOpaque(true);
-	buttonPanel.add(sortByDist);
-	
-	
-	
-	mainFrame.add(buttonPanel, BorderLayout.WEST);
-   
-    mainFrame.setVisible(true);
+    	//initialize text area
+    	fileOutput = new JTextArea(" Enter a Text File above", 20, 5);
+    	fileOutput.setFont(new Font("Serif", Font.PLAIN, 20));
+    	fileOutput.setEditable(false);
+
+    	DefaultCaret caret = (DefaultCaret) fileOutput.getCaret(); //keeps scrollbar at top when file is read
+    	caret.setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
+    	JPanel outputPanel = new JPanel(new BorderLayout());
+    	outputPanel.add(fileOutput, BorderLayout.CENTER);
+    	outputPanel.setVisible(true);
+
+
+    	//make scrollable
+    	JScrollPane scroll = new JScrollPane(fileOutput);
+    	scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+    	scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+    	scroll.getVerticalScrollBar().setValue(0);
+    	outputPanel.add(scroll);
+    	mainFrame.add(outputPanel);
+    	scroll.setVisible(true);
+
+    	GridLayout buttonPanelLayout = new GridLayout(10,1);
+    	buttonPanelLayout.setVgap(15);
+    	JPanel buttonPanel = new JPanel(buttonPanelLayout);
+    	buttonPanel.setBackground(Color.WHITE);
+
+    	JButton readFile = new JButton("Read File");
+    	readFile.addActionListener(this);
+    	readFile.setActionCommand("input");
+    	buttonPanel.add(readFile);
+    	readFile.setBackground(darkBlue);
+    	readFile.setForeground(Color.WHITE);
+
+    	JButton phoneBankBut = new JButton("Phone Bank");
+    	phoneBankBut.addActionListener(this);
+
+    	phoneBankBut.setAction(new Actions.phoneBank());
+    	phoneBankBut.setText("Phone Bank");
+
+    	buttonPanel.add(phoneBankBut);
+    	phoneBankBut.setBackground(new Color(17, 14 ,111));
+    	phoneBankBut.setForeground(Color.WHITE);
+    	phoneBankBut.setOpaque(true);
+
+    	JButton houseMake = new JButton("Make Houses");
+    	houseMake.addActionListener(this);
+    	houseMake.setActionCommand("Houses");
+    	houseMake.setBackground(new Color(17, 14 ,111));
+    	houseMake.setForeground(Color.WHITE);
+    	houseMake.setOpaque(true);
+    	buttonPanel.add(houseMake);
+
+    	JButton showNotHome = new JButton("Not Homes");
+    	showNotHome.addActionListener(this);
+    	showNotHome.setActionCommand("notHome");
+    	showNotHome.setBackground(new Color(17, 14 ,111));
+    	showNotHome.setForeground(Color.WHITE);
+    	showNotHome.setOpaque(true);
+    	buttonPanel.add(showNotHome);
+
+    	JButton sortByDist = new JButton("Sort By Dist");
+    	sortByDist.addActionListener(this);
+    	sortByDist.setActionCommand("sortByDist");
+    	sortByDist.setBackground(new Color(17, 14 ,111));
+    	sortByDist.setForeground(Color.WHITE);
+    	sortByDist.setOpaque(true);
+    	buttonPanel.add(sortByDist);
+
+
+
+    	mainFrame.add(buttonPanel, BorderLayout.WEST);
+
+    	mainFrame.setVisible(true);
  
   }
   
@@ -298,7 +298,7 @@ public class Gui extends JFrame implements ActionListener {
   
     	  	break;
 			
-      case "POPfile" :
+      case "POPfile" : //if phonebank -> file finder
     
     		try {
     			DataDriver.phoneFromFile(read, this);
@@ -314,17 +314,18 @@ public class Gui extends JFrame implements ActionListener {
     	  
       case "POPnet" : //if phonebank -> net finder
     	 
-  		try {
-  			DataDriver.phoneBankMaker(read, this);
-  		} catch (Exception except) {
-  			except.printStackTrace();
-  		}
-      	
-      	
-      	popUp.setVisible(false);
-    	popUp.dispose();
-    	
-    	break;
+    	  	try {
+    	  		DataDriver.phoneBankMaker(read, this);
+    	  	} catch (Exception except) {
+    	  		except.printStackTrace();
+    	  	}
+
+
+    	  	popUp.setVisible(false);
+    	  	popUp.dispose();
+
+    	  	break;
+    	  	
       }
   }
   

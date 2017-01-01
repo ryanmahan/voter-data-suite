@@ -183,6 +183,9 @@ public class FileHandler {
 	    		person.setAttribute("precinct", Integer.toString(h.head.precinct));
 	    		person.setAttribute("timesVoted", Integer.toString(h.head.timesVoted));
 	    		person.setAttribute("party", h.head.party);
+	    		if(h.lat != 0){
+	    			
+	    		}
 	    	
 	    		people.appendChild(person); //finalize element
 			}
@@ -236,6 +239,15 @@ public class FileHandler {
 		
 		UX.setTextArea(display);
 		return;
+		
+	}
+	
+	public File convertToXML(){
+		
+		LinkedList<Person> list = this.getList();
+		this.xmlWrite(list);
+		
+		return file;
 		
 	}
 

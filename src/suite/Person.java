@@ -22,8 +22,8 @@ public class Person {
     int ID;
 
     int counter = 0;
-    double lat;
-    double lng;
+    double lat=0;
+    double lng=0;
     
 
     

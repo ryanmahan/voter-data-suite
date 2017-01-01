@@ -238,10 +238,15 @@ public class DataDriver {
      * Runs through lists in recursiveSortHelper
      * Combines the list into a larger list used to compile the precincts back together
      * 
+     * But why break them into precincts?
+     * Well, if I run 2500 houses through a list here, I have to run it at O(n^2) but if I break it into the precincts
+     * 		first, I end up running (500^2)*5, which is 5 times more efficient!
+     * 
      */
     
 	public static LinkedList<House> sortByDist(LinkedList<House> list){
 		
+		double progress = 0;
 		
 		@SuppressWarnings("unchecked")
 		LinkedList<House> precincts[] = new LinkedList[5];
@@ -250,9 +255,22 @@ public class DataDriver {
 		}
 		
 		for(House h : list){
-			precincts[h.head.precinct].add(h);
-			h.getLatLong();
+			if(h.head.precinct > 5){
+				precincts[4].add(h);
+			} else {
+				precincts[h.head.precinct-1].add(h);
+			}
+			
+			if(!h.getLatLong()){
+				System.out.println(h.getAddress());
+				precincts[h.head.precinct-1].remove(h);
+			}
+			progress++;
+			System.out.println(progress);
+			//UX.progressBar((int) progress/list.size()/2); 
 		}
+		
+		System.out.println("Got all lat long, moving on");
 		
 		LinkedList<House> output = new LinkedList<House>();
 		
@@ -260,6 +278,8 @@ public class DataDriver {
 			LinkedList<House> preOut = new LinkedList<House>();
 			preOut = recursiveSortHelper(pre.peek(), pre, preOut);
 			output.addAll(preOut);
+			progress++;
+			//UX.progressBar((int) progress/list.size()/2); 
 		}
 		
 		for(House h : output){
