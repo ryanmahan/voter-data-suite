@@ -28,8 +28,7 @@ public class Gui extends JFrame implements ActionListener {
 		prepareGUI();
 	}
 	
-	//Needs so much reorganization and commenting, but well do that later, right?
-	private void prepareGUI()  {
+private void prepareGUI()  {
 	  
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		double width = screenSize.getWidth();
@@ -88,24 +87,20 @@ public class Gui extends JFrame implements ActionListener {
 	  save.addActionListener(this);
 	  save.setVisible(true);
 
-	  
 	  JMenuItem open = new JMenuItem();
 	  open.setAction(new MenuActions.Open());
 	  open.setText("Open");
 	  open.addActionListener(this);
 	  
-	  
 	  JMenuItem saveAs = new JMenuItem();
 	  saveAs.setAction(new MenuActions.SaveAs());
 	  saveAs.setText("Save As");
 	  saveAs.addActionListener(this);
-	 
 	  
 	  JMenuItem export = new JMenuItem();
 	  export.setAction(new MenuActions.Export());
 	  export.setText("Export to Excel");
 	  export.addActionListener(this);
-	 
 	  
 	  JMenuItem imp = new JMenuItem();
 	  imp.setAction(new MenuActions.Import());
@@ -149,7 +144,7 @@ public class Gui extends JFrame implements ActionListener {
   }
   
   private JPanel textArea(){
-	  //initialize text area
+
 	  fileOutput = new JTextArea(" Enter a Text File above", 20, 5);
 	  fileOutput.setFont(new Font("Serif", Font.PLAIN, 20));
 	  fileOutput.setEditable(false);
@@ -160,8 +155,6 @@ public class Gui extends JFrame implements ActionListener {
 	  outputPanel.add(fileOutput, BorderLayout.CENTER);
 	  outputPanel.setVisible(true);
 
-
-	  //make scrollable
 	  JScrollPane scroll = new JScrollPane(fileOutput);
 	  scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 	  scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -173,17 +166,16 @@ public class Gui extends JFrame implements ActionListener {
   }
   
   private JPanel createButtons(){
-	  
+
 	  GridLayout buttonPanelLayout = new GridLayout(10,1);
 	  buttonPanelLayout.setVgap(15);
 	  JPanel buttonPanel = new JPanel(buttonPanelLayout);
 	  buttonPanel.setBackground(Color.WHITE);
-	  //create buttons
-	  
+	 
 	  JButton phoneBankBut = new JButton("Phone Bank");
 	  phoneBankBut.addActionListener(this);
 	  phoneBankBut.setText("Phone Bank");
-	  phoneBankBut.setAction(new ButtonActions.PhoneBank());
+	  phoneBankBut.setAction(new ButtonActions.PhoneBank(this));
 	  phoneBankBut.setText("Phone Bank");
 
 	  JButton houseMake = new JButton("Make Houses");
@@ -208,230 +200,183 @@ public class Gui extends JFrame implements ActionListener {
 	  buttonPanel.add(houseMake);
 	  buttonPanel.add(showNotHome);
 	  buttonPanel.add(sortByDist);
-	  
+
 	  Component[] buttons = buttonPanel.getComponents();
-	  
+
 	  for(Component c : buttons){
-		  c.setBackground(new Color(17, 14 ,111));
+		  c.setBackground(darkBlue);
 		  c.setForeground(Color.WHITE);
 		  ((JButton) c).setOpaque(true);
 	  }
-	  
+
 	  return buttonPanel;
   }
-  
+
   public void actionPerformed(ActionEvent e) {
-	  
+
 	  String cmd = e.getActionCommand();
 	  File read = null;
-	 
-	  
+
+
 	  System.out.println("Action Command: " + e.getActionCommand());
-	  
-	  
+
+
 	  if(cmd != null){
 		  try{
-			 read = new File(textField.getText());  
+			  read = new File(textField.getText());  
 		  }
 		  catch (Exception except){
 			  fileOutput.setText("Invalid File, please try again");
 			  return;
 		  }
 		  if(textField.getText() == null){
-    		  fileOutput.setText("Please insert a file in the field above");
-    		  return;
-    	  }
+			  fileOutput.setText("Please insert a file in the field above");
+			  return;
+		  }
 	  }
-	  
+
 	  FileHandler fileIO = new FileHandler(read);
-	  
-      switch(cmd){
-      
-      case "input" :
-    	  if (read.getName().endsWith(".txt")){
-    		  fileOutput.setText(fileToString(read));
-    		  break; 
-    	  }
-    	  if(read.getName().endsWith(".xml")){
-    		  fileIO.displayXML(this);
-    		  break;
-    	  }
-    	 
-      
-      case "Phone Bank" : 
-    	  
-    	  //create popUp questioning File or Net
-    	  popUp = new JFrame("Phone Bank from File or Net");
-    	  popUp.setFont(new Font("Serif", Font.PLAIN, 20));
-    	  popUp.setLayout(new BorderLayout());
-    	  popUp.setSize(350,150);
 
-    	  //tell them what to do
-    	  JLabel instructions = new JLabel("Do you want to grab numbers from file or Net?");
-    	  popUp.add(instructions, BorderLayout.NORTH);
-    	  instructions.setFont(new Font("Serif", Font.PLAIN, 20));
+	  switch(cmd){
 
-    	  //create button for File find
-    	  JButton file = new JButton("File");
-    	  file.setFont(new Font("Serif", Font.PLAIN, 20));
-    	  file.addActionListener(this);
-    	  file.setActionCommand("POPfile");
-    	  file.setBackground(darkBlue);
-    	  file.setForeground(Color.WHITE);
-    	  file.setOpaque(true);
-    	  popUp.add(file, BorderLayout.EAST);
+	  case "input" :
+		  if (read.getName().endsWith(".txt")){
+			  fileOutput.setText(fileToString(read));
+			  break; 
+		  }
+		  if(read.getName().endsWith(".xml")){
+			  fileIO.displayXML(this);
+			  break;
+		  }
 
-    	  //create button for Net Finder
-    	  JButton net = new JButton("Net");
-    	  net.setFont(new Font("Serif", Font.PLAIN, 20));
-    	  net.setBackground(darkBlue);
-    	  net.setForeground(Color.WHITE);
-    	  net.addActionListener(this);
-    	  net.setActionCommand("POPnet");
-    	  popUp.add(net, BorderLayout.WEST);
+	  case "Houses" : 
 
-    	  //create progress bar for % done finding
-    	  phonebankBar = new JProgressBar();
-    	  phonebankBar.setForeground(darkBlue);
-    	  phonebankBar.setStringPainted(true);
-    	  phonebankBar.setOpaque(true);
-    	  popUp.add(phonebankBar, BorderLayout.SOUTH);
-    	  popUp.setVisible(true);
-	    	
-    	  break;
-      
-      
-      case "Houses" : 
-    	  
-    	  LinkedList<House> list = DataDriver.houseMaker(read);
-    	  System.out.println("Made a list of Houses: " + list.size());
-		
-    	  String all = "";
-    	  
-    	  for (House h : list) {
-              String text = h.head.getAllAvail();
-              text += "\n";
-              all = all.concat(text);
-    	  }
-			 
-    	  this.setTextArea(all);
-			
-			break;
-			
-      case "notHome" :
-    	  
-    	  LinkedList<House> homeList = DataDriver.houseMaker(read);
-    	  System.out.println(homeList.size());
-    	  for (House h : homeList){
-    		  h.setNotHome();
-    	  }
-    	  
-    	  all = "";
-    	  
-    	  for (House h : homeList) {
-    		  if(h.notHome){
-    			String text = h.head.getAllAvail();
-              	text += "\n";
-              	all = all.concat(text);
-    	  		}
-          }
-    	  if(all.length() == 0){
-    		  all = "No Not Homes found";
-    	  }
-    	  this.setTextArea(all);
-    	  
-    	  break;
-    	  
-      case "sortByDist" :
-    	  
-    	  	LinkedList<House> sortList = DataDriver.houseMaker(read);
-    	  	System.out.println("List Made: " + sortList.size());
-    	  	
-    	  	if(sortList.peek().head.precinct == -1){
-    	  		this.setTextArea("No Precincts found, please enter file with Precincts!");
-    	  		return;
-    	  	}
-    	  	if(sortList.size() == 0){
-    	  		this.setTextArea("No Homes Found");
-    	  		return;
-    	  	}
-    	  	
-    	  	sortList = DataDriver.sortByDist(sortList);
-    	  	System.out.println("Recieved List of Houses: " + sortList.size());
-    	  	
-    	  	FileHandler fhSort = new FileHandler(read);
-        	fhSort.xmlHouseWrite(sortList);
-  
-        	all = "";
-        	
-        	for(House h : sortList){
-        		all.concat(h.head.getAllAvail() + "\n");
-        	}
-        	
-        	this.setTextArea(all);
-        	
-    	  	break;
-			
-      case "POPfile" : //if phonebank -> file finder
-    
-    		try {
-    			DataDriver.phoneFromFile(read, this);
-    		} catch (Exception except) {
-    			except.printStackTrace();
-    		}
-        	
-        	popUp.setVisible(false);
-          	popUp.dispose();
-        	  
-        	break;
-        	  
-    	  
-      case "POPnet" : //if phonebank -> net finder
-    	 
-    	  	try {
-    	  		DataDriver.phoneBankMaker(read, this);
-    	  	} catch (Exception except) {
-    	  		except.printStackTrace();
-    	  	}
+		  LinkedList<House> list = DataDriver.houseMaker(read);
+		  System.out.println("Made a list of Houses: " + list.size());
+
+		  String all = "";
+
+		  for (House h : list) {
+			  String text = h.head.getAllAvail();
+			  text += "\n";
+			  all = all.concat(text);
+		  }
+
+		  this.setTextArea(all);
+
+		  break;
+
+	  case "notHome" :
+
+		  LinkedList<House> homeList = DataDriver.houseMaker(read);
+		  System.out.println(homeList.size());
+		  for (House h : homeList){
+			  h.setNotHome();
+		  }
+
+		  all = "";
+
+		  for (House h : homeList) {
+			  if(h.notHome){
+				  String text = h.head.getAllAvail();
+				  text += "\n";
+				  all = all.concat(text);
+			  }
+		  }
+		  if(all.length() == 0){
+			  all = "No Not Homes found";
+		  }
+		  this.setTextArea(all);
+
+		  break;
+
+	  case "sortByDist" :
+
+		  LinkedList<House> sortList = DataDriver.houseMaker(read);
+		  System.out.println("List Made: " + sortList.size());
+
+		  if(sortList.peek().head.precinct == -1){
+			  this.setTextArea("No Precincts found, please enter file with Precincts!");
+			  return;
+		  }
+		  if(sortList.size() == 0){
+			  this.setTextArea("No Homes Found");
+			  return;
+		  }
+
+		  sortList = DataDriver.sortByDist(sortList);
+		  System.out.println("Recieved List of Houses: " + sortList.size());
+
+		  FileHandler fhSort = new FileHandler(read);
+		  fhSort.xmlHouseWrite(sortList);
+
+		  all = "";
+
+		  for(House h : sortList){
+			  all.concat(h.head.getAllAvail() + "\n");
+		  }
+
+		  this.setTextArea(all);
+
+		  break;
+
+	  case "POPfile" : //if phonebank -> file finder
+
+		  try {
+			  DataDriver.phoneFromFile(read, this);
+		  } catch (Exception except) {
+			  except.printStackTrace();
+		  }
+
+		  popUp.setVisible(false);
+		  popUp.dispose();
+
+		  break;
 
 
-    	  	popUp.setVisible(false);
-    	  	popUp.dispose();
+	  case "POPnet" : //if phonebank -> net finder
 
-    	  	break;
-    	  	
-      }
+		 
+
+		  break;
+
+	  }
   }
-  
+
   @SuppressWarnings("resource") //I totally close this right? Stop being a dummy eclipse
   private static String fileToString(File f) {
 	  String contents; 
-	  
-	Scanner s = null;
 
-	try {
-		s = new Scanner(f).useDelimiter("\\Z");
-	} catch (FileNotFoundException e) {
-		
-		return "Please enter a valid file";
-	}
+	  Scanner s = null;
+
+	  try {
+		  s = new Scanner(f).useDelimiter("\\Z");
+	  } catch (FileNotFoundException e) {
+
+		  return "Please enter a valid file";
+	  }
 	  contents = s.next();
 	  s.close();
 	  return contents;
   }
+
+  public String getTextField(){
+	  return textField.getText();
+  }
+  
   
   public void progressBar(int i){
-	  
+
 	  phonebankBar.setMaximum(100);
 	  phonebankBar.setMinimum(0);
 	  phonebankBar.setValue(i);
-	  
+
 	  phonebankBar.setString(Integer.toString(i) + "%");
 	  phonebankBar.update(phonebankBar.getGraphics());
 
-	  
+
   }
-  
+
   public void setTextArea(String text){
 	  fileOutput.setText(text);
 	  fileOutput.update(fileOutput.getGraphics());

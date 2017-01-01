@@ -1,9 +1,7 @@
 package suite;
 
-import java.util.Comparator;
-import java.util.LinkedList;
-import java.util.PriorityQueue;
 
+import java.util.LinkedList;
 import org.jsoup.Jsoup;
 import java.io.*;
 
@@ -333,16 +331,17 @@ public class DataDriver {
 	
 	
 	private static House findClosestSortHelper(House from, LinkedList<House> list){
-		
-		Comparator<HouseDist> comp = new HouseDist();
-		PriorityQueue<HouseDist> pqueue = new PriorityQueue<HouseDist>(comp);
-		
+		HouseDist ret = null;
+		double low = 100000;
 		for(House h : list){
 			HouseDist temp = new HouseDist(h, getDist(from, h));
-			pqueue.add(temp);
+			if(temp.distance < low){
+				ret = temp;
+				low = temp.distance;
+			}
 		}
 		
-		return pqueue.poll().toHouse;
+		return ret.toHouse;
 	}
 	
 	

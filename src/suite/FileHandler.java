@@ -29,6 +29,7 @@ public class FileHandler {
 	public FileHandler(File f){
 		file = f;
 	}
+
 	
 	public LinkedList<Person> getList() {
 
@@ -40,13 +41,10 @@ public class FileHandler {
     		try {
 				list = this.xmlParse();
 			} catch (ParserConfigurationException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (SAXException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
     	} else {
@@ -219,13 +217,10 @@ public class FileHandler {
 		try {
 			list = this.xmlParse();
 		} catch (ParserConfigurationException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (SAXException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
