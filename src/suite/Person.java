@@ -53,21 +53,6 @@ public class Person {
     	counter++;
     }
     
-    public Person(String p, String f, String l, String stNum, String stName, String precinct){
-    	this.party = p;
-    	this.first = f;
-    	this.last = l;
-    	this.snum = stNum;
-    	this.sname = stName;
-    	this.ID = counter;
-    	counter++;
-    	if(precinct.equals("")){
-    		this.precinct 	= -1;
-    	} else {
-    		this.precinct	= Integer.parseInt(precinct);
-    	}
-    }
-    
     public Person(String p, String l, String f, String stNum, String stName, String rank, String timesVoted, String precinct, String notes, String phone){
     	if(first.equals("First Name")){
     		return;
