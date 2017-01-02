@@ -7,7 +7,11 @@ import java.util.PriorityQueue;
 import org.jsoup.Jsoup;
 import java.io.*;
 
-
+/* DataDriver
+ * 
+ * clusterfuck of a class
+ * 
+ */
 public class DataDriver {
 	
     public static File phoneBankMaker(File fileName, Gui UX) throws IOException {
@@ -237,9 +241,7 @@ public class DataDriver {
      * Breaks list into precincts since thats a huge efficiency increase but a minimal impact on final product
      * Runs through lists in recursiveSortHelper
      * Combines the list into a larger list used to compile the precincts back together
-     * 
      */
-    
 	public static LinkedList<House> sortByDist(LinkedList<House> list){
 		
 		
@@ -274,7 +276,7 @@ public class DataDriver {
 		
 
 	}
-
+ 
 	/*recursiveSortHelper
 	 * @param House curr - the current house we are using as a node in our LL of houses
 	 * @param LLHouse input - the list we used as input, also contains the list of unvisited houses
@@ -311,7 +313,14 @@ public class DataDriver {
 		
 	}
 	
-	
+	/* findClosestSortHelper
+	 * @param House from - the house to test dist to every house on the list
+	 * @param LLHouse list - the list to test from the param from
+	 * @retruns the closest house to the from house
+	 * 
+	 * runs through the list and finds the distances using the distance formula, adding them to the priority queue
+	 * polls the first (closest) house in the priority queue, returns it
+	 */
 	private static House findClosestSortHelper(House from, LinkedList<House> list){
 		
 		Comparator<HouseDist> comp = new HouseDist();
@@ -325,7 +334,11 @@ public class DataDriver {
 		return pqueue.poll().toHouse;
 	}
 	
-	
+	/*getDist
+	 * @param House h1 - one house
+	 * @param House h2 - another house
+	 * @returns the dist between them
+	 */
     private static double getDist(House h1, House h2){
 	   double xdif = h1.lat - h2.lat;
 	   double ydif = h1.lng - h2.lng;

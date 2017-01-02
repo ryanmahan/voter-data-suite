@@ -271,6 +271,9 @@ public class FileHandler {
             else if(splits.length == 5){
             	list.add(new Person(splits[0], splits[2], splits[1], splits[3], splits[4]));
             }
+            else if(splits.length == 6){
+            	list.add(new Person(splits[0], splits[2], splits[1], splits[3], splits[4], splits[5]));
+            }
             else if(splits.length == 9){
             	list.add(new Person(splits[0], splits[1], splits[2], splits[3], splits[4], "-1", splits[6], splits[5], splits[7], "1"));
             }

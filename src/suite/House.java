@@ -65,13 +65,13 @@ public class House {
 		notHome = test;
 	}
 	
-    public String[] getLatLong(){
+    public boolean getLatLong(){
     	org.jsoup.nodes.Document JsoupDoc = null;
         try {
         	String address = this.getAddress().replace(' ', '+');
         	
         	String link = "https://maps.googleapis.com/maps/api/geocode/xml?address=" + address + " +,+Auburn,+MA";
-        	//System.out.println(link);
+        	System.out.println(link);
             JsoupDoc = Jsoup.connect((String)(link)).timeout(2000).get();
             W3CDom w3cDom = new W3CDom();
             org.w3c.dom.Document xmlDoc = w3cDom.fromJsoup(JsoupDoc);
@@ -87,8 +87,13 @@ public class House {
             lat = Double.parseDouble(location[0]);
             lng = Double.parseDouble(location[1]);
             
-            return location;
+            return true;
             
+        }
+        catch (NullPointerException e){
+        	lat = 0;
+        	lng = 0;
+        	return false;
         }
         catch (Exception e) {
         	System.out.println("error? " + e);
@@ -101,7 +106,7 @@ public class House {
     		} 
     		
         }
-		return null;
+		return false;
        
         
     }
