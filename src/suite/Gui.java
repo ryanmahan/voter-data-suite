@@ -8,9 +8,8 @@ import javax.swing.text.DefaultCaret;
 import actions.*;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.LinkedList;
-import java.util.Scanner;
+
 
 public class Gui extends JFrame implements ActionListener {
 
@@ -19,7 +18,6 @@ public class Gui extends JFrame implements ActionListener {
 	private final Color darkBlue = new Color(17,14,111);
 	private final Font menuFont = new Font("Arial", Font.PLAIN, 12);
 	private JFrame mainFrame;
-	private JTextField textField;
 	private JTextArea fileOutput;
 	private JProgressBar phonebankBar;
 	private JFrame popUp = null;
@@ -47,10 +45,8 @@ private void prepareGUI()  {
 		JMenuBar menus = this.menuBar();
     	JPanel buttons = this.createButtons();
     	JPanel textAreaPanel = this.textArea();
-    	JPanel textFieldPanel = this.textField();
     	
     	mainFrame.setJMenuBar(menus);
-    	mainFrame.add(textFieldPanel, BorderLayout.NORTH);
     	mainFrame.add(textAreaPanel);
     	mainFrame.add(buttons, BorderLayout.WEST);
     	
@@ -80,20 +76,14 @@ private void prepareGUI()  {
 	  
 	  JMenu file = new JMenu("File");
 	  file.setMnemonic(KeyEvent.VK_A);
-	  
-	  JMenuItem save = new JMenuItem();
-	  save.setAction(new MenuActions.Save());
-	  save.setText("Save");
-	  save.addActionListener(this);
-	  save.setVisible(true);
 
 	  JMenuItem open = new JMenuItem();
-	  open.setAction(new MenuActions.Open());
+	  open.setAction(new MenuActions.Open(this));
 	  open.setText("Open");
 	  open.addActionListener(this);
 	  
 	  JMenuItem saveAs = new JMenuItem();
-	  saveAs.setAction(new MenuActions.SaveAs());
+	  saveAs.setAction(new MenuActions.SaveAs(this));
 	  saveAs.setText("Save As");
 	  saveAs.addActionListener(this);
 	  
@@ -108,7 +98,6 @@ private void prepareGUI()  {
 	  imp.addActionListener(this);
 	  
 	  file.add(open);
-	  file.add(save);
 	  file.add(saveAs);
 	  file.add(export);
 	  file.add(imp);
@@ -124,28 +113,11 @@ private void prepareGUI()  {
 
 	  return file;
   }
-  
-  private JPanel textField(){
-	  
-	  textField = new JTextField(40);
-	  textField.setHorizontalAlignment(JTextField.LEFT);
-	  textField.setFont(new Font("Serif", Font.PLAIN, 20));
-	  JPanel inputPanel = new JPanel(new BorderLayout());
-	  JLabel label = new JLabel("File: ");
 
-	  label.setDisplayedMnemonic(KeyEvent.VK_N);
-	  label.setLabelFor(textField);
-	  label.setFont(new Font("Serif", Font.PLAIN, 20));
-	  inputPanel.add(label, BorderLayout.WEST);
-	  inputPanel.add(textField, BorderLayout.CENTER);
-
-	  return inputPanel;
-	  
-  }
   
   private JPanel textArea(){
 
-	  fileOutput = new JTextArea(" Enter a Text File above", 20, 5);
+	  fileOutput = new JTextArea(" Welcome to Ryan's Voter Data Suite 2000\n Please go to File > Open to open a file", 20, 5);
 	  fileOutput.setFont(new Font("Serif", Font.PLAIN, 20));
 	  fileOutput.setEditable(false);
 
@@ -180,8 +152,9 @@ private void prepareGUI()  {
 
 	  JButton houseMake = new JButton("Make Houses");
 	  houseMake.addActionListener(this);
-	  houseMake.setActionCommand("Houses");
+	  
 	  houseMake.setAction(new ButtonActions.HouseMake());
+	  houseMake.setActionCommand("Houses");
 	  houseMake.setText("Make Houses");
 
 	  JButton showNotHome = new JButton();
@@ -220,38 +193,13 @@ private void prepareGUI()  {
 
 	  System.out.println("Action Command: " + e.getActionCommand());
 
-
-	  if(cmd != null){
-		  try{
-			  read = new File(textField.getText());  
-		  }
-		  catch (Exception except){
-			  fileOutput.setText("Invalid File, please try again");
-			  return;
-		  }
-		  if(textField.getText() == null){
-			  fileOutput.setText("Please insert a file in the field above");
-			  return;
-		  }
-	  }
-
-	  FileHandler fileIO = new FileHandler(read);
+	 
 
 	  switch(cmd){
 
-	  case "input" :
-		  if (read.getName().endsWith(".txt")){
-			  fileOutput.setText(fileToString(read));
-			  break; 
-		  }
-		  if(read.getName().endsWith(".xml")){
-			  fileIO.displayXML(this);
-			  break;
-		  }
-
 	  case "Houses" : 
 
-		  LinkedList<House> list = DataDriver.houseMaker(read);
+		  LinkedList<House> list = DataDriver.houseMaker(new File("data/temp.xml"));
 		  System.out.println("Made a list of Houses: " + list.size());
 
 		  String all = "";
@@ -342,28 +290,6 @@ private void prepareGUI()  {
 
 	  }
   }
-
-  @SuppressWarnings("resource") //I totally close this right? Stop being a dummy eclipse
-  private static String fileToString(File f) {
-	  String contents; 
-
-	  Scanner s = null;
-
-	  try {
-		  s = new Scanner(f).useDelimiter("\\Z");
-	  } catch (FileNotFoundException e) {
-
-		  return "Please enter a valid file";
-	  }
-	  contents = s.next();
-	  s.close();
-	  return contents;
-  }
-
-  public String getTextField(){
-	  return textField.getText();
-  }
-  
   
   public void progressBar(int i){
 
@@ -377,6 +303,11 @@ private void prepareGUI()  {
 
   }
 
+  public String getTextArea(){
+	  return fileOutput.getText();
+  }
+  
+  
   public void setTextArea(String text){
 	  fileOutput.setText(text);
 	  fileOutput.update(fileOutput.getGraphics());

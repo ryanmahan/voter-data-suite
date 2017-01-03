@@ -31,7 +31,7 @@ public class DataDriver {
             num = "No phone number";
         }
        
-        return inputFileHandler.xmlWrite(voters);
+        return inputFileHandler.xmlWrite(null, voters);
         
     }
     
@@ -71,7 +71,7 @@ public class DataDriver {
     	UX.setTextArea(all);
     	
     	//Write to XML file and return said file
-		return needFileIO.xmlWrite(need);
+		return needFileIO.xmlWrite(null, need);
     	
     }
 

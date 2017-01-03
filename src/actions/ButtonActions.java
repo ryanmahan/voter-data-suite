@@ -25,19 +25,19 @@ public class ButtonActions {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			
-			Object[] options = {"File" , "Net" , "Cancel"};
+			Object[] options = {"Cancel" , "Net" , "Cancel"};
 			JFrame popUp = new JFrame("Pop Up");
 			int n = JOptionPane.showOptionDialog(popUp, "Would you like to phonebank from the masterlist or net?",
 					"File or Net?", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE,
 					null, options, options[2]);
 			if(n == 0){//net
 				try {
-					DataDriver.phoneBankMaker(new File(UX.getTextField()), UX);
+					DataDriver.phoneBankMaker(new File("data/temp.xml"), UX);
 				} catch (Exception except) {
 					except.printStackTrace();
 				}
 			} else if(n == 1){//file
-				
+				//TODO: Make Masterlist
 			} 
 		}
 		
@@ -47,7 +47,7 @@ public class ButtonActions {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// TODO Auto-generated method stub
+			// TODO Write over House Make function from GUI
 			
 		}
 		
@@ -57,7 +57,7 @@ public class ButtonActions {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// TODO Auto-generated method stub
+			// TODO Write over Not Home function from GUI
 			
 		}
 		
@@ -67,7 +67,7 @@ public class ButtonActions {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// TODO Auto-generated method stub
+			// TODO Write over Distance Function from GUI
 			
 		}
 		

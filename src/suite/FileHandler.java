@@ -26,8 +26,8 @@ public class FileHandler {
 	
 	File file;
 	
-	public FileHandler(File f){
-		file = f;
+	public FileHandler(File file){
+		this.file = file;
 	}
 
 	
@@ -55,15 +55,13 @@ public class FileHandler {
     	
 	}
 	
-	
-	public File xmlWrite(LinkedList<Person> list) {
-		
+	public File xmlCreate (String filename, LinkedList<Person> list) {
 		File output = null;
 		
 		try{
 			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-			
+	
 			Document doc = docBuilder.newDocument();
 			Element rootElement = doc.createElement("auburn");
 			doc.appendChild(rootElement);
@@ -86,30 +84,76 @@ public class FileHandler {
 	    	
 	    		people.appendChild(person); //finalize element
 			}
+			if(filename == null){
+				SimpleDateFormat df = new SimpleDateFormat("dd-MM-yy-hh-mm-ss");
+		        String date = df.format(new Date());
+		        output = new File("list+"+date+".xml");
+			} else {
+				output = new File(filename);
+			}
 			
-			SimpleDateFormat df = new SimpleDateFormat("dd-MM-yy-hh-mm-ss");
-	        String date = df.format(new Date());
+		}catch (Exception e){
+			System.out.println("XML CREATION ERROR");
+			e.printStackTrace();
+		}
+		return output;
+	}
+	
+	public File xmlWrite(String filename, LinkedList<Person> list) {
+		
+		File output = null;
+		
+		try{
+			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+	
+			Document doc = docBuilder.newDocument();
+			Element rootElement = doc.createElement("auburn");
+			doc.appendChild(rootElement);
 			
+			Element people = doc.createElement("people");
+			rootElement.appendChild(people);
+			
+			for(Person p : list){
+				Element person = doc.createElement("person"); //create element
+	    		person.setAttribute("first", p.first); //give it data
+	    		person.setAttribute("last", p.last);
+	    		person.setAttribute("number", p.num);
+	    		person.setAttribute("sname", p.sname);
+	    		person.setAttribute("snum", p.snum);
+	    		person.setAttribute("notes", p.notes);
+	    		person.setAttribute("rank", Integer.toString(p.rank));
+	    		person.setAttribute("precinct", Integer.toString(p.precinct));
+	    		person.setAttribute("timesVoted", Integer.toString(p.timesVoted));
+	    		person.setAttribute("party", p.party);
+	    	
+	    		people.appendChild(person); //finalize element
+			}
+			if(filename == null){
+				SimpleDateFormat df = new SimpleDateFormat("dd-MM-yy-hh-mm-ss");
+		        String date = df.format(new Date());
+		        output = new File("list+"+date+".xml");
+			} else {
+				output = new File(filename);
+			}
+			
+			
+			
+			//System.out.println("Writing: " + "list+"+date+".xml");
+			
+			StreamResult result = new StreamResult(output);
 			TransformerFactory transformerFactory = TransformerFactory.newInstance();
 			Transformer transformer = transformerFactory.newTransformer();
 			DOMSource source = new DOMSource(doc);
-			//System.out.println("Writing: " + "list+"+date+".xml");
-			output = new File("list+"+date+".xml");
-			StreamResult result = new StreamResult(output);
-			
-			
 			transformer.transform(source, result);
 		
 			
 		}catch (Exception e){
-			System.out.println("XML WRITE ERROR");
+			System.out.println("XML CREATION ERROR");
 			e.printStackTrace();
 		}
+		
 		return output;
-		
-		
-
-			
 			
 	}
 
@@ -210,7 +254,7 @@ public class FileHandler {
 
 	}
 
-	public void displayXML(Gui UX){
+	public String xmlToString(){
 		
 		LinkedList<Person> list = null;
 		
@@ -232,22 +276,16 @@ public class FileHandler {
 			display += temp;
 		}
 		
-		UX.setTextArea(display);
-		return;
+		return display;
 		
 	}
 	
-	public File convertToXML(){
-		
-		LinkedList<Person> list = this.getList();
-		this.xmlWrite(list);
-		
-		return file;
-		
+	public File convertToXML(String filename){
+		file = (this.xmlCreate(filename, this.getList()));
+		return (this.xmlCreate(filename, this.getList()));
 	}
 
 	//END XML R/W
-	
 	
 	/* textParse()
 	 * Also known as the hard-code-iest code Ive ever written intentionally
@@ -293,5 +331,32 @@ public class FileHandler {
 	    return list;
 	}
 	
+	public LinkedList<Person> getCurrentList(Gui UX){
+		String text = UX.getTextArea();
+		String[] lines = text.split("/n");
+		LinkedList<Person> list = new LinkedList<Person>();
+		for(String curr : lines) {
+			
+			String[] splits = curr.split("\t");
+			if(splits.length == 2){
+				list.add(new Person(splits[0], splits[1]));
+			}
+			else if(splits.length == 3){
+	            list.add(new Person(splits[0], splits[1], splits[2]));
+	        }
+	        else if(splits.length == 5){
+	        	list.add(new Person(splits[0], splits[2], splits[1], splits[3], splits[4]));
+	        }
+	        else if(splits.length == 9){
+	        	list.add(new Person(splits[0], splits[1], splits[2], splits[3], splits[4], "-1", splits[6], splits[5], splits[7], "1"));
+	        }
+	        else if(splits.length == 10){
+	        	list.add(new Person(splits[0], splits[1], splits[2], splits[3], splits[4], splits[5], splits[6], splits[7], splits[8], splits[9]));
+	        }
+		}
+	
+		return list;
+		
+	}
+	
 }
-
