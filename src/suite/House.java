@@ -13,7 +13,7 @@ import suite.Person;
 public class House {
 
 	LinkedList<Person> members = new LinkedList<Person>();
-	Person head;
+	private Person head;
 	String landline;
 	int ID;
 	int counter = 0;
@@ -29,7 +29,7 @@ public class House {
 	
 	public House(Person head){
 		members.add(head);
-		this.head = head;
+		this.setHead(head);
 		this.ID = counter;
 		counter++;
 	}
@@ -43,13 +43,21 @@ public class House {
 	}
 	
 	public String getAddress(){
-		return (head.snum + " " + head.sname);
+		return (getHead().snum + " " + getHead().sname);
 	}
 	
 	public int getSize(){
 		return members.size();
 	}
 	
+	public Person getHead() {
+		return head;
+	}
+
+	public void setHead(Person head) {
+		this.head = head;
+	}
+
 	public LinkedList<Person> getMembers(){
 		return members;
 	}

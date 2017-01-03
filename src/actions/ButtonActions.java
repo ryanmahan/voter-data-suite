@@ -2,6 +2,7 @@ package actions;
 
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.util.LinkedList;
 
 import javax.swing.AbstractAction;
 import javax.swing.JFrame;
@@ -9,7 +10,9 @@ import javax.swing.JOptionPane;
 
 
 import suite.DataDriver;
+import suite.FileHandler;
 import suite.Gui;
+import suite.House;
 
 @SuppressWarnings("serial")
 public class ButtonActions {
@@ -44,11 +47,28 @@ public class ButtonActions {
 	}
 	
 	public static class HouseMake extends AbstractAction{
-
+		Gui UX;
+		public HouseMake(Gui UX){
+			this.UX = UX;
+		}
+		
+		
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// TODO Write over House Make function from GUI
 			
+			LinkedList<House> list = DataDriver.houseMaker(new File("data/temp.xml"));
+			System.out.println("Made a list of Houses: " + list.size());
+
+			String all = list.size() + " Houses in list\n";
+
+			for (House h : list) {
+				String text = h.getHead().getAllAvail();
+				text += "\n";
+				all = all.concat(text);
+			}
+
+			//TODO: UX.setTextArea(all);
+		
 		}
 		
 	}

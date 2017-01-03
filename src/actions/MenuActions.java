@@ -102,7 +102,10 @@ public class MenuActions {
 				
 				fh.xmlWrite("data/temp.xml", fh.getList());
 				FileHandler internal = new FileHandler(appFile);
-				UX.setTextArea(internal.xmlToString());
+				//UX.setTextArea(internal.xmlToString());
+				String[][] display = internal.to2DArray();
+				String[] columns = new String[]{"Party", "Name", "Last", "St. Number", "St. Name"};
+				UX.setTable(display, columns);
 			}
 			
 	    	

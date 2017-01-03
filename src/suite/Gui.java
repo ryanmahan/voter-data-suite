@@ -3,7 +3,6 @@ package suite;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import javax.swing.text.DefaultCaret;
 
 import actions.*;
 
@@ -18,9 +17,9 @@ public class Gui extends JFrame implements ActionListener {
 	private final Color darkBlue = new Color(17,14,111);
 	private final Font menuFont = new Font("Arial", Font.PLAIN, 12);
 	private JFrame mainFrame;
-	private JTextArea fileOutput;
 	private JProgressBar phonebankBar;
 	private JFrame popUp = null;
+	private JPanel tablePanel = new JPanel(new GridLayout(1,1));
 	
 	public Gui(){
 		prepareGUI();
@@ -42,20 +41,28 @@ private void prepareGUI()  {
 		mainFrame.setLayout(mainFrameLayout);
 		mainFrame.setDefaultCloseOperation(EXIT_ON_CLOSE);
 
+		JPanel tableTest = this.initTablePanel();
 		JMenuBar menus = this.menuBar();
     	JPanel buttons = this.createButtons();
-    	JPanel textAreaPanel = this.textArea();
+    	//Panel textAreaPanel = this.textArea();
     	
     	mainFrame.setJMenuBar(menus);
-    	mainFrame.add(textAreaPanel);
+    	mainFrame.add(tableTest);
     	mainFrame.add(buttons, BorderLayout.WEST);
     	
     	mainFrame.setVisible(true);
     	
  
   }
-  
-  
+	
+	private JPanel initTablePanel(){
+		
+		JLabel init = new JLabel("Please open a file using File>Open");
+		tablePanel.add(init);
+		
+		return tablePanel;
+	}
+
   //creates the menuBar
   private JMenuBar menuBar(){
 	  
@@ -115,28 +122,6 @@ private void prepareGUI()  {
   }
 
   
-  private JPanel textArea(){
-
-	  fileOutput = new JTextArea(" Welcome to Ryan's Voter Data Suite 2000\n Please go to File > Open to open a file", 20, 5);
-	  fileOutput.setFont(new Font("Serif", Font.PLAIN, 20));
-	  fileOutput.setEditable(false);
-
-	  DefaultCaret caret = (DefaultCaret) fileOutput.getCaret(); //keeps scrollbar at top when file is read
-	  caret.setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
-	  JPanel outputPanel = new JPanel(new BorderLayout());
-	  outputPanel.add(fileOutput, BorderLayout.CENTER);
-	  outputPanel.setVisible(true);
-
-	  JScrollPane scroll = new JScrollPane(fileOutput);
-	  scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-	  scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-	  scroll.getVerticalScrollBar().setValue(0);
-	  outputPanel.add(scroll);
-	  scroll.setVisible(true);
-
-	  return outputPanel;
-  }
-  
   private JPanel createButtons(){
 
 	  GridLayout buttonPanelLayout = new GridLayout(10,1);
@@ -153,9 +138,9 @@ private void prepareGUI()  {
 	  JButton houseMake = new JButton("Make Houses");
 	  houseMake.addActionListener(this);
 	  
-	  houseMake.setAction(new ButtonActions.HouseMake());
+	  houseMake.setAction(new ButtonActions.HouseMake(this));
 	  houseMake.setActionCommand("Houses");
-	  houseMake.setText("Make Houses");
+	  houseMake.setText("Show Houses");
 
 	  JButton showNotHome = new JButton();
 	  showNotHome.addActionListener(this);
@@ -199,18 +184,7 @@ private void prepareGUI()  {
 
 	  case "Houses" : 
 
-		  LinkedList<House> list = DataDriver.houseMaker(new File("data/temp.xml"));
-		  System.out.println("Made a list of Houses: " + list.size());
-
-		  String all = "";
-
-		  for (House h : list) {
-			  String text = h.head.getAllAvail();
-			  text += "\n";
-			  all = all.concat(text);
-		  }
-
-		  this.setTextArea(all);
+		  
 
 		  break;
 
@@ -221,12 +195,12 @@ private void prepareGUI()  {
 		  for (House h : homeList){
 			  h.setNotHome();
 		  }
-
+		  String all;
 		  all = "";
 
 		  for (House h : homeList) {
 			  if(h.notHome){
-				  String text = h.head.getAllAvail();
+				  String text = h.getHead().getAllAvail();
 				  text += "\n";
 				  all = all.concat(text);
 			  }
@@ -234,7 +208,7 @@ private void prepareGUI()  {
 		  if(all.length() == 0){
 			  all = "No Not Homes found";
 		  }
-		  this.setTextArea(all);
+		  //this.setTextArea(all);
 
 		  break;
 
@@ -243,12 +217,12 @@ private void prepareGUI()  {
 		  LinkedList<House> sortList = DataDriver.houseMaker(read);
 		  System.out.println("List Made: " + sortList.size());
 
-		  if(sortList.peek().head.precinct == -1){
-			  this.setTextArea("No Precincts found, please enter file with Precincts!");
+		  if(sortList.peek().getHead().precinct == -1){
+			  //this.setTextArea("No Precincts found, please enter file with Precincts!");
 			  return;
 		  }
 		  if(sortList.size() == 0){
-			  this.setTextArea("No Homes Found");
+			  //this.setTextArea("No Homes Found");
 			  return;
 		  }
 
@@ -261,10 +235,10 @@ private void prepareGUI()  {
 		  all = "";
 
 		  for(House h : sortList){
-			  all.concat(h.head.getAllAvail() + "\n");
+			  all.concat(h.getHead().getAllAvail() + "\n");
 		  }
 
-		  this.setTextArea(all);
+		  //this.setTextArea(all);
 
 		  break;
 
@@ -290,6 +264,32 @@ private void prepareGUI()  {
 
 	  }
   }
+  private JTable table;
+  public void setTable(String[][] display, String[] columnNames){
+	  table = new JTable(display, columnNames);
+	  table.setEnabled(false);
+	  
+	  if(tablePanel != null)
+		  tablePanel.removeAll();
+	  tablePanel.add(table);
+	  tablePanel.revalidate();
+	  
+	  JScrollPane js=new JScrollPane(table);
+	  js.setVisible(true);
+	  tablePanel.add(js);
+	  
+  }
+  
+  public Object[][] getTableData(){
+	  Object[][] output = new Object[table.getRowCount()][table.getColumnCount()];
+	  
+	  for(int i = 0 ; i < table.getRowCount() ; i++){
+		  for(int j = 0 ; j < table.getColumnCount() ; j++){
+			  output[i][j] = table.getValueAt(i, j);
+		  }  
+	  }
+	  return output;
+  }
   
   public void progressBar(int i){
 
@@ -299,17 +299,8 @@ private void prepareGUI()  {
 
 	  phonebankBar.setString(Integer.toString(i) + "%");
 	  phonebankBar.update(phonebankBar.getGraphics());
+	  
 
-
-  }
-
-  public String getTextArea(){
-	  return fileOutput.getText();
-  }
-  
-  
-  public void setTextArea(String text){
-	  fileOutput.setText(text);
-	  fileOutput.update(fileOutput.getGraphics());
   }
 }
+

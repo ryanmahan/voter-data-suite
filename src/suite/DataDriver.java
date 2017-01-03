@@ -17,20 +17,16 @@ public class DataDriver {
 		double counter = 0;
         
         String HTML, num = "No phone number";
-        String all = "";
         
         for (Person p : voters) {
         	counter++;
             HTML = HTMLGet(p);
             num = recursivePhoneFinder(HTML, num);
             p.num = num;
-            String text = p.first + " " + p.last + " " + num + "\n";
-            all = all.concat(text);
             UX.progressBar((int) ((counter/total)*100.0));
-            UX.setTextArea(all);
             num = "No phone number";
         }
-       
+        //TODO: Output to dataTable
         return inputFileHandler.xmlWrite(null, voters);
         
     }
@@ -68,7 +64,7 @@ public class DataDriver {
             all = all.concat(text);
 
     	}
-    	UX.setTextArea(all);
+    	//TODO: UX.setTextArea(all);
     	
     	//Write to XML file and return said file
 		return needFileIO.xmlWrite(null, need);
@@ -253,15 +249,15 @@ public class DataDriver {
 		}
 		
 		for(House h : list){
-			if(h.head.precinct > 5){
+			if(h.getHead().precinct > 5){
 				precincts[4].add(h);
 			} else {
-				precincts[h.head.precinct-1].add(h);
+				precincts[h.getHead().precinct-1].add(h);
 			}
 			
 			if(!h.getLatLong()){
 				System.out.println(h.getAddress());
-				precincts[h.head.precinct-1].remove(h);
+				precincts[h.getHead().precinct-1].remove(h);
 			}
 			progress++;
 			System.out.println(progress);

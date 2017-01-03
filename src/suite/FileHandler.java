@@ -33,7 +33,6 @@ public class FileHandler {
 	
 	public LinkedList<Person> getList() {
 
-     	
     	LinkedList<Person> list = null;
     	if(file.getName().endsWith(".txt")){
     		list = this.txtParse();
@@ -215,16 +214,16 @@ public class FileHandler {
 			
 			for(House h : houseList){
 				Element person = doc.createElement("person"); //create element
-	    		person.setAttribute("first", h.head.first); //give it data
-	    		person.setAttribute("last", h.head.last);
-	    		person.setAttribute("number", h.head.num);
-	    		person.setAttribute("sname", h.head.sname);
-	    		person.setAttribute("snum", h.head.snum);
-	    		person.setAttribute("notes", h.head.notes);
-	    		person.setAttribute("rank", Integer.toString(h.head.rank));
-	    		person.setAttribute("precinct", Integer.toString(h.head.precinct));
-	    		person.setAttribute("timesVoted", Integer.toString(h.head.timesVoted));
-	    		person.setAttribute("party", h.head.party);
+	    		person.setAttribute("first", h.getHead().first); //give it data
+	    		person.setAttribute("last", h.getHead().last);
+	    		person.setAttribute("number", h.getHead().num);
+	    		person.setAttribute("sname", h.getHead().sname);
+	    		person.setAttribute("snum", h.getHead().snum);
+	    		person.setAttribute("notes", h.getHead().notes);
+	    		person.setAttribute("rank", Integer.toString(h.getHead().rank));
+	    		person.setAttribute("precinct", Integer.toString(h.getHead().precinct));
+	    		person.setAttribute("timesVoted", Integer.toString(h.getHead().timesVoted));
+	    		person.setAttribute("party", h.getHead().party);
 	    		if(h.lat != 0){
 	    			
 	    		}
@@ -284,6 +283,20 @@ public class FileHandler {
 		file = (this.xmlCreate(filename, this.getList()));
 		return (this.xmlCreate(filename, this.getList()));
 	}
+	
+	public String[][] to2DArray(){
+		LinkedList<Person> list = this.getList();
+		int personSize = list.peek().getAllAvail().split("/t").length;
+		String[][] output = new String[list.size()][personSize];
+		
+		for(int i = 0 ; i < output.length ; i++){
+			Person p = list.poll();
+			output[i] = p.toArray();
+		}
+		
+		return output;
+	
+	}
 
 	//END XML R/W
 	
@@ -329,34 +342,6 @@ public class FileHandler {
 	        
 	    names.close();
 	    return list;
-	}
-	
-	public LinkedList<Person> getCurrentList(Gui UX){
-		String text = UX.getTextArea();
-		String[] lines = text.split("/n");
-		LinkedList<Person> list = new LinkedList<Person>();
-		for(String curr : lines) {
-			
-			String[] splits = curr.split("\t");
-			if(splits.length == 2){
-				list.add(new Person(splits[0], splits[1]));
-			}
-			else if(splits.length == 3){
-	            list.add(new Person(splits[0], splits[1], splits[2]));
-	        }
-	        else if(splits.length == 5){
-	        	list.add(new Person(splits[0], splits[2], splits[1], splits[3], splits[4]));
-	        }
-	        else if(splits.length == 9){
-	        	list.add(new Person(splits[0], splits[1], splits[2], splits[3], splits[4], "-1", splits[6], splits[5], splits[7], "1"));
-	        }
-	        else if(splits.length == 10){
-	        	list.add(new Person(splits[0], splits[1], splits[2], splits[3], splits[4], splits[5], splits[6], splits[7], splits[8], splits[9]));
-	        }
-		}
-	
-		return list;
-		
 	}
 	
 }
