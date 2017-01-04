@@ -17,7 +17,7 @@ public class Person {
     String num = "";
     int rank = -1;
     int timesVoted = -1;
-    int precinct = -1;
+    private int precinct = -1;
     String notes = "";
     int ID;
 
@@ -68,9 +68,9 @@ public class Person {
     		this.rank		= Integer.parseInt(rank);
     	}
     	if(precinct.equals("")){
-    		this.precinct 	= -1;
+    		this.setPrecinct(-1);
     	} else {
-    		this.precinct	= Integer.parseInt(precinct);
+    		this.setPrecinct(Integer.parseInt(precinct));
     	}
     	if(timesVoted.length() > 0){
     		this.timesVoted	= timesVoted.length();
@@ -123,10 +123,10 @@ public class Person {
     	} else {
     		ret[7] = Integer.toString(this.timesVoted);
     	}
-    	if(precinct == -1){
+    	if(getPrecinct() == -1){
     		ret[8] = "";
     	} else {
-    		ret[8] = Integer.toString(this.precinct);
+    		ret[8] = Integer.toString(this.getPrecinct());
     	}
     	ret[9] = this.notes;
     	
@@ -173,5 +173,13 @@ public class Person {
        
         
     }
+
+	public int getPrecinct() {
+		return precinct;
+	}
+
+	public void setPrecinct(int precinct) {
+		this.precinct = precinct;
+	}
     
 }

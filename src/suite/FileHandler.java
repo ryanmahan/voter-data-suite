@@ -77,7 +77,7 @@ public class FileHandler {
 	    		person.setAttribute("snum", p.snum);
 	    		person.setAttribute("notes", p.notes);
 	    		person.setAttribute("rank", Integer.toString(p.rank));
-	    		person.setAttribute("precinct", Integer.toString(p.precinct));
+	    		person.setAttribute("precinct", Integer.toString(p.getPrecinct()));
 	    		person.setAttribute("timesVoted", Integer.toString(p.timesVoted));
 	    		person.setAttribute("party", p.party);
 	    	
@@ -122,7 +122,7 @@ public class FileHandler {
 	    		person.setAttribute("snum", p.snum);
 	    		person.setAttribute("notes", p.notes);
 	    		person.setAttribute("rank", Integer.toString(p.rank));
-	    		person.setAttribute("precinct", Integer.toString(p.precinct));
+	    		person.setAttribute("precinct", Integer.toString(p.getPrecinct()));
 	    		person.setAttribute("timesVoted", Integer.toString(p.timesVoted));
 	    		person.setAttribute("party", p.party);
 	    	
@@ -221,7 +221,7 @@ public class FileHandler {
 	    		person.setAttribute("snum", h.getHead().snum);
 	    		person.setAttribute("notes", h.getHead().notes);
 	    		person.setAttribute("rank", Integer.toString(h.getHead().rank));
-	    		person.setAttribute("precinct", Integer.toString(h.getHead().precinct));
+	    		person.setAttribute("precinct", Integer.toString(h.getHead().getPrecinct()));
 	    		person.setAttribute("timesVoted", Integer.toString(h.getHead().timesVoted));
 	    		person.setAttribute("party", h.getHead().party);
 	    		if(h.lat != 0){

@@ -249,15 +249,15 @@ public class DataDriver {
 		}
 		
 		for(House h : list){
-			if(h.getHead().precinct > 5){
+			if(h.getHead().getPrecinct() > 5){
 				precincts[4].add(h);
 			} else {
-				precincts[h.getHead().precinct-1].add(h);
+				precincts[h.getHead().getPrecinct()-1].add(h);
 			}
 			
 			if(!h.getLatLong()){
 				System.out.println(h.getAddress());
-				precincts[h.getHead().precinct-1].remove(h);
+				precincts[h.getHead().getPrecinct()-1].remove(h);
 			}
 			progress++;
 			System.out.println(progress);

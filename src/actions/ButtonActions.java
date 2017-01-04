@@ -17,9 +17,13 @@ import suite.House;
 @SuppressWarnings("serial")
 public class ButtonActions {
 	
+	private final static File internal = new File("data/temp.xml");
+	
 	public static class PhoneBank extends AbstractAction{
 
 		Gui UX;
+		
+		
 		
 		public PhoneBank(Gui g){
 			UX = g;
@@ -35,7 +39,7 @@ public class ButtonActions {
 					null, options, options[2]);
 			if(n == 0){//net
 				try {
-					DataDriver.phoneBankMaker(new File("data/temp.xml"), UX);
+					DataDriver.phoneBankMaker(internal, UX);
 				} catch (Exception except) {
 					except.printStackTrace();
 				}
@@ -56,7 +60,7 @@ public class ButtonActions {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			
-			LinkedList<House> list = DataDriver.houseMaker(new File("data/temp.xml"));
+			LinkedList<House> list = DataDriver.houseMaker(internal);
 			System.out.println("Made a list of Houses: " + list.size());
 
 			String all = list.size() + " Houses in list\n";
@@ -77,7 +81,12 @@ public class ButtonActions {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// TODO Write over Not Home function from GUI
+			LinkedList<House> homeList = DataDriver.houseMaker(internal);
+			  System.out.println(homeList.size());
+			  for (House h : homeList){
+				  h.setNotHome();
+			  }
+			  //TODO: Finish this
 			
 		}
 		
@@ -87,7 +96,25 @@ public class ButtonActions {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// TODO Write over Distance Function from GUI
+			 LinkedList<House> sortList = DataDriver.houseMaker(internal);
+			  System.out.println("List Made: " + sortList.size());
+
+			  if(sortList.peek().getHead().getPrecinct() == -1){
+				  //this.setTextArea("No Precincts found, please enter file with Precincts!");
+				  return;
+			  }
+			  if(sortList.size() == 0){
+				  //this.setTextArea("No Homes Found");
+				  return;
+			  }
+
+			  sortList = DataDriver.sortByDist(sortList);
+			  System.out.println("Recieved List of Houses: " + sortList.size());
+
+			  FileHandler fhSort = new FileHandler(internal);
+			  fhSort.xmlHouseWrite(sortList);
+
+			  //TODO: UX.setTextArea(all);
 			
 		}
 		

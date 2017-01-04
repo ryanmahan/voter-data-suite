@@ -6,8 +6,6 @@ import javax.swing.*;
 
 import actions.*;
 
-import java.io.File;
-import java.util.LinkedList;
 
 
 public class Gui extends JFrame implements ActionListener {
@@ -18,7 +16,6 @@ public class Gui extends JFrame implements ActionListener {
 	private final Font menuFont = new Font("Arial", Font.PLAIN, 12);
 	private JFrame mainFrame;
 	private JProgressBar phonebankBar;
-	private JFrame popUp = null;
 	private JPanel tablePanel = new JPanel(new GridLayout(1,1));
 	
 	public Gui(){
@@ -44,7 +41,6 @@ private void prepareGUI()  {
 		JPanel tableTest = this.initTablePanel();
 		JMenuBar menus = this.menuBar();
     	JPanel buttons = this.createButtons();
-    	//Panel textAreaPanel = this.textArea();
     	
     	mainFrame.setJMenuBar(menus);
     	mainFrame.add(tableTest);
@@ -77,6 +73,7 @@ private void prepareGUI()  {
 	  menuBar.add(file);
 		
 	  return menuBar;
+	  
   }
   
   private JMenu fileMenuItem(){
@@ -170,100 +167,6 @@ private void prepareGUI()  {
 	  return buttonPanel;
   }
 
-  public void actionPerformed(ActionEvent e) {
-
-	  String cmd = e.getActionCommand();
-	  File read = null;
-
-
-	  System.out.println("Action Command: " + e.getActionCommand());
-
-	 
-
-	  switch(cmd){
-
-	  case "Houses" : 
-
-		  
-
-		  break;
-
-	  case "notHome" :
-
-		  LinkedList<House> homeList = DataDriver.houseMaker(read);
-		  System.out.println(homeList.size());
-		  for (House h : homeList){
-			  h.setNotHome();
-		  }
-		  String all;
-		  all = "";
-
-		  for (House h : homeList) {
-			  if(h.notHome){
-				  String text = h.getHead().getAllAvail();
-				  text += "\n";
-				  all = all.concat(text);
-			  }
-		  }
-		  if(all.length() == 0){
-			  all = "No Not Homes found";
-		  }
-		  //this.setTextArea(all);
-
-		  break;
-
-	  case "sortByDist" :
-
-		  LinkedList<House> sortList = DataDriver.houseMaker(read);
-		  System.out.println("List Made: " + sortList.size());
-
-		  if(sortList.peek().getHead().precinct == -1){
-			  //this.setTextArea("No Precincts found, please enter file with Precincts!");
-			  return;
-		  }
-		  if(sortList.size() == 0){
-			  //this.setTextArea("No Homes Found");
-			  return;
-		  }
-
-		  sortList = DataDriver.sortByDist(sortList);
-		  System.out.println("Recieved List of Houses: " + sortList.size());
-
-		  FileHandler fhSort = new FileHandler(read);
-		  fhSort.xmlHouseWrite(sortList);
-
-		  all = "";
-
-		  for(House h : sortList){
-			  all.concat(h.getHead().getAllAvail() + "\n");
-		  }
-
-		  //this.setTextArea(all);
-
-		  break;
-
-	  case "POPfile" : //if phonebank -> file finder
-
-		  try {
-			  DataDriver.phoneFromFile(read, this);
-		  } catch (Exception except) {
-			  except.printStackTrace();
-		  }
-
-		  popUp.setVisible(false);
-		  popUp.dispose();
-
-		  break;
-
-
-	  case "POPnet" : //if phonebank -> net finder
-
-		 
-
-		  break;
-
-	  }
-  }
   private JTable table;
   public void setTable(String[][] display, String[] columnNames){
 	  table = new JTable(display, columnNames);
@@ -274,7 +177,7 @@ private void prepareGUI()  {
 	  tablePanel.add(table);
 	  tablePanel.revalidate();
 	  
-	  JScrollPane js=new JScrollPane(table);
+	  JScrollPane js = new JScrollPane(table);
 	  js.setVisible(true);
 	  tablePanel.add(js);
 	  
@@ -302,5 +205,9 @@ private void prepareGUI()  {
 	  
 
   }
+
+@Override
+public void actionPerformed(ActionEvent arg0){}
+
 }
 

@@ -17,7 +17,7 @@ public class House {
 	String landline;
 	int ID;
 	int counter = 0;
-	boolean notHome;
+	private boolean notHome;
 	double lat=0;
 	double lng=0;
 	
@@ -128,5 +128,13 @@ public class House {
        
         
     }
+
+	public boolean isNotHome() {
+		return notHome;
+	}
+
+	public void setNotHome(boolean notHome) {
+		this.notHome = notHome;
+	}
 
 }
