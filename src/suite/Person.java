@@ -80,7 +80,7 @@ public class Person {
     	String ret = "";
     	String[][] val = this.toArray();
     	
-    	for(int i = 0; i < 10 ; i++){
+    	for(int i = 0; i < val.length ; i++){
     		if(val[i][0] != "" && val[i][0] != "-1"){
     			ret += val[i] + "\t";  			
     		}
@@ -124,61 +124,61 @@ public class Person {
     	for(int i = 0 ; i < arraySize ; i++){
     		if(filledIn[0] && !visited[0]){
     			output[i][0] = ret[0];
-    			output[i][1] = "party";
+    			output[i][1] = "Party";
     			visited[0] = true;
     			continue;
     		}
     		else if(filledIn[1] && !visited[1]){
     			output[i][0] = ret[1];
-    			output[i][1] = "first";
+    			output[i][1] = "First";
     			visited[1] = true;
     			continue;
     		}                
     		else if(filledIn[2] && !visited[2]){
     			output[i][0] = ret[2];
-    			output[i][1] = "last";
+    			output[i][1] = "Last";
     			visited[2] = true;
     			continue;
     		}
     		else if(filledIn[3] && !visited[3]){
     			output[i][0] = ret[3];
-    			output[i][1] = "snum";
+    			output[i][1] = "St. Number";
     			visited[3] = true;
     			continue;
     		}
     		else if(filledIn[4] && !visited[4]){
     			output[i][0] = ret[4];
-    			output[i][1] = "sname";
+    			output[i][1] = "St. Name";
     			visited[4] = true;
     			continue;
     		}
     		else if(filledIn[5] && !visited[5]){
     			output[i][0] = ret[5];
-    			output[i][1] = "num";
+    			output[i][1] = "Phone";
     			visited[5] = true;
     			continue;
     		}
     		else if(filledIn[6] && !visited[6]){
     			output[i][0] = ret[6];
-    			output[i][1] = "rank";
+    			output[i][1] = "Rank";
     			visited[6] = true;
     			continue;
     		}
     		else if(filledIn[7] && !visited[7]){
     			output[i][0] = ret[7];
-    			output[i][1] = "voted";
+    			output[i][1] = "Voted";
     			visited[7] = true;
     			continue;
     		}
     		else if(filledIn[8] && !visited[8]){
     			output[i][0] = ret[8];
-    			output[i][1] = "precinct";
+    			output[i][1] = "Precinct";
     			visited[8] = true;
     			continue;
     		}
     		else if(filledIn[9] && !visited[9]){
     			output[i][0] = ret[9];
-    			output[i][1] = "notes";
+    			output[i][1] = "Notes";
     			visited[9] = true;
     			continue;
     		}

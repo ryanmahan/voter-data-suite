@@ -1,13 +1,13 @@
 package actions;
 
-import java.awt.event.ActionEvent;
+
 import java.io.File;
 import java.util.LinkedList;
 
+import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-
 
 import suite.DataDriver;
 import suite.FileHandler;
@@ -88,7 +88,12 @@ public class ButtonActions {
 	}
 	
 	public static class Distance extends AbstractAction{
-
+		Gui UX;
+		public Distance(Gui UX){
+			this.UX = UX;
+		}
+		
+		
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			 LinkedList<House> sortList = DataDriver.houseMaker(internal);
@@ -109,11 +114,22 @@ public class ButtonActions {
 
 			  FileHandler fhSort = new FileHandler(internal);
 			  fhSort.xmlHouseWrite(sortList);
-
-			  //TODO: UX.setTextArea(all);
+			  UX.setTableData(fhSort.to3DArray());
+			  
 			
 		}
 		
+	}
+	
+	
+	public static class Combine extends AbstractAction{
+		
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			// TODO Write a method to combine xml files
+
+		}
+
 	}
 	
 }

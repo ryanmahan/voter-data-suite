@@ -164,13 +164,19 @@ public class Gui extends JFrame implements ActionListener {
 		JButton sortByDist = new JButton();
 		sortByDist.addActionListener(this);
 		sortByDist.setActionCommand("sortByDist");
-		sortByDist.setAction(new ButtonActions.Distance());
+		sortByDist.setAction(new ButtonActions.Distance(this));
 		sortByDist.setText("Sort");
+		
+		JButton combineList = new JButton();
+		combineList.addActionListener(this);
+		combineList.setAction(new ButtonActions.Combine());
+		combineList.setText("Combine Lists");
 
 		buttonPanel.add(phoneBankBut);
 		buttonPanel.add(houseMake);
 		buttonPanel.add(showNotHome);
 		buttonPanel.add(sortByDist);
+		buttonPanel.add(combineList);
 
 		Component[] buttons = buttonPanel.getComponents();
 
