@@ -76,9 +76,9 @@ public class FileHandler {
 	    		person.setAttribute("sname", p.sname);
 	    		person.setAttribute("snum", p.snum);
 	    		person.setAttribute("notes", p.notes);
-	    		person.setAttribute("rank", Integer.toString(p.rank));
-	    		person.setAttribute("precinct", Integer.toString(p.getPrecinct()));
-	    		person.setAttribute("timesVoted", Integer.toString(p.timesVoted));
+	    		person.setAttribute("rank", p.rank);
+	    		person.setAttribute("precinct", p.getPrecinct());
+	    		person.setAttribute("timesVoted", p.timesVoted);
 	    		person.setAttribute("party", p.party);
 	    	
 	    		people.appendChild(person); //finalize element
@@ -121,9 +121,9 @@ public class FileHandler {
 	    		person.setAttribute("sname", p.sname);
 	    		person.setAttribute("snum", p.snum);
 	    		person.setAttribute("notes", p.notes);
-	    		person.setAttribute("rank", Integer.toString(p.rank));
-	    		person.setAttribute("precinct", Integer.toString(p.getPrecinct()));
-	    		person.setAttribute("timesVoted", Integer.toString(p.timesVoted));
+	    		person.setAttribute("rank", p.rank);
+	    		person.setAttribute("precinct", p.getPrecinct());
+	    		person.setAttribute("timesVoted", p.timesVoted);
 	    		person.setAttribute("party", p.party);
 	    	
 	    		people.appendChild(person); //finalize element
@@ -220,9 +220,9 @@ public class FileHandler {
 	    		person.setAttribute("sname", h.getHead().sname);
 	    		person.setAttribute("snum", h.getHead().snum);
 	    		person.setAttribute("notes", h.getHead().notes);
-	    		person.setAttribute("rank", Integer.toString(h.getHead().rank));
-	    		person.setAttribute("precinct", Integer.toString(h.getHead().getPrecinct()));
-	    		person.setAttribute("timesVoted", Integer.toString(h.getHead().timesVoted));
+	    		person.setAttribute("rank", h.getHead().rank);
+	    		person.setAttribute("precinct", h.getHead().getPrecinct());
+	    		person.setAttribute("timesVoted", h.getHead().timesVoted);
 	    		person.setAttribute("party", h.getHead().party);
 	    		if(h.lat != 0){
 	    			
@@ -284,10 +284,11 @@ public class FileHandler {
 		return (this.xmlCreate(filename, this.getList()));
 	}
 	
-	public String[][] to2DArray(){
+	public String[][][] to3DArray(){
+		
+		
 		LinkedList<Person> list = this.getList();
-		int personSize = list.peek().getAllAvail().split("/t").length;
-		String[][] output = new String[list.size()][personSize];
+		String[][][] output = new String[list.size()][list.peek().toArray().length][2];
 		
 		for(int i = 0 ; i < output.length ; i++){
 			Person p = list.poll();

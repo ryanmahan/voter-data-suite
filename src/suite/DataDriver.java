@@ -26,8 +26,10 @@ public class DataDriver {
             UX.progressBar((int) ((counter/total)*100.0));
             num = "No phone number";
         }
-        //TODO: Output to dataTable
-        return inputFileHandler.xmlWrite(null, voters);
+        File output = inputFileHandler.xmlWrite("data/temp.xml", voters);
+        UX.setTableData(inputFileHandler.to3DArray());
+        //TODO: Progress Bar
+        return output;
         
     }
     
@@ -55,19 +57,13 @@ public class DataDriver {
     		
     	}
     	
-    	//Output to TextArea
-         
-         String all = "";
-         
-    	for(Person p : need){
-    		String text = p.first + " " + p.last + " " + p.num + "\n";
-            all = all.concat(text);
+    	File output = needFileIO.xmlWrite("data/temp.xml", need);
+    	UX.setTableData(needFileIO.to3DArray());
+    	
 
-    	}
-    	//TODO: UX.setTextArea(all);
     	
     	//Write to XML file and return said file
-		return needFileIO.xmlWrite(null, need);
+		return output;
     	
     }
 
@@ -174,6 +170,8 @@ public class DataDriver {
     		}
     	}
     	
+    	handler.xmlHouseWrite(houses);
+    	
     	return houses;
     	
     }
@@ -240,7 +238,7 @@ public class DataDriver {
     
 	public static LinkedList<House> sortByDist(LinkedList<House> list){
 		
-		double progress = 0;
+		//double progress = 0;
 		
 		@SuppressWarnings("unchecked")
 		LinkedList<House> precincts[] = new LinkedList[5];
@@ -249,19 +247,19 @@ public class DataDriver {
 		}
 		
 		for(House h : list){
-			if(h.getHead().getPrecinct() > 5){
+			int precinct = Integer.parseInt(h.getHead().getPrecinct());
+			if(precinct > 5){
 				precincts[4].add(h);
 			} else {
-				precincts[h.getHead().getPrecinct()-1].add(h);
+				precincts[precinct-1].add(h);
 			}
 			
 			if(!h.getLatLong()){
 				System.out.println(h.getAddress());
-				precincts[h.getHead().getPrecinct()-1].remove(h);
+				precincts[precinct-1].remove(h);
 			}
-			progress++;
-			System.out.println(progress);
-			//UX.progressBar((int) progress/list.size()/2); 
+			//progress++;
+			//TODO: Progress bar
 		}
 		
 		System.out.println("Got all lat long, moving on");
@@ -272,7 +270,7 @@ public class DataDriver {
 			LinkedList<House> preOut = new LinkedList<House>();
 			preOut = recursiveSortHelper(pre.peek(), pre, preOut);
 			output.addAll(preOut);
-			progress++;
+			//progress++;
 			//UX.progressBar((int) progress/list.size()/2); 
 		}
 		

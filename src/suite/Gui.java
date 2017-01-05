@@ -2,7 +2,10 @@ package suite;
 
 import java.awt.*;
 import java.awt.event.*;
+
 import javax.swing.*;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumnModel;
 
 import actions.*;
 
@@ -14,15 +17,16 @@ public class Gui extends JFrame implements ActionListener {
 
 	private final Color darkBlue = new Color(17,14,111);
 	private final Font menuFont = new Font("Arial", Font.PLAIN, 12);
+	private JPanel tablePanel = new JPanel(new GridBagLayout());
 	private JFrame mainFrame;
 	private JProgressBar phonebankBar;
-	private JPanel tablePanel = new JPanel(new GridLayout(1,1));
+	private JTable table;
 	
 	public Gui(){
 		prepareGUI();
 	}
 	
-private void prepareGUI()  {
+	private void prepareGUI()  {
 	  
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		double width = screenSize.getWidth();
@@ -36,11 +40,20 @@ private void prepareGUI()  {
 		mainFrameLayout.setVgap(5);
 		mainFrame.getContentPane().setBackground(Color.WHITE);
 		mainFrame.setLayout(mainFrameLayout);
-		mainFrame.setDefaultCloseOperation(EXIT_ON_CLOSE);
-
+		
+		mainFrame.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+		mainFrame.addWindowListener(new WindowAdapter() {
+			   public void windowClosing(WindowEvent evt) {
+			     onExit();
+			   }
+			  });
+		
 		JPanel tableTest = this.initTablePanel();
 		JMenuBar menus = this.menuBar();
     	JPanel buttons = this.createButtons();
+    	
+    	ImageIcon img = new ImageIcon("data/icon.png");
+    	mainFrame.setIconImage(img.getImage());
     	
     	mainFrame.setJMenuBar(menus);
     	mainFrame.add(tableTest);
@@ -53,14 +66,17 @@ private void prepareGUI()  {
 	
 	private JPanel initTablePanel(){
 		
-		JLabel init = new JLabel("Please open a file using File>Open");
+		JLabel init = new JLabel("<html>Welcome to Voter Data Suite 2000! <br> Please open a file using File>Open <br> After doing so, use any of the buttons"
+				+ " on the sidebar to modify the list!<html>", SwingConstants.CENTER);
+		
+		init.setFont(new Font("Verdana", Font.PLAIN, 15));
 		tablePanel.add(init);
 		
 		return tablePanel;
 	}
 
-  //creates the menuBar
-  private JMenuBar menuBar(){
+	//creates the menuBar
+	private JMenuBar menuBar(){
 	  
 	  JMenuBar menuBar = new JMenuBar();
 	  
@@ -74,9 +90,9 @@ private void prepareGUI()  {
 		
 	  return menuBar;
 	  
-  }
+	}
   
-  private JMenu fileMenuItem(){
+	private JMenu fileMenuItem(){
 	  
 	  JMenu file = new JMenu("File");
 	  file.setMnemonic(KeyEvent.VK_A);
@@ -119,95 +135,154 @@ private void prepareGUI()  {
   }
 
   
-  private JPanel createButtons(){
+	private JPanel createButtons(){
 
-	  GridLayout buttonPanelLayout = new GridLayout(10,1);
-	  buttonPanelLayout.setVgap(15);
-	  JPanel buttonPanel = new JPanel(buttonPanelLayout);
-	  buttonPanel.setBackground(Color.WHITE);
-	 
-	  JButton phoneBankBut = new JButton("Phone Bank");
-	  phoneBankBut.addActionListener(this);
-	  phoneBankBut.setText("Phone Bank");
-	  phoneBankBut.setAction(new ButtonActions.PhoneBank(this));
-	  phoneBankBut.setText("Phone Bank");
+		GridLayout buttonPanelLayout = new GridLayout(10,1);
+		buttonPanelLayout.setVgap(15);
+		JPanel buttonPanel = new JPanel(buttonPanelLayout);
+		buttonPanel.setBackground(Color.WHITE);
 
-	  JButton houseMake = new JButton("Make Houses");
-	  houseMake.addActionListener(this);
-	  
-	  houseMake.setAction(new ButtonActions.HouseMake(this));
-	  houseMake.setActionCommand("Houses");
-	  houseMake.setText("Show Houses");
+		JButton phoneBankBut = new JButton("Phone Bank");
+		phoneBankBut.addActionListener(this);
+		phoneBankBut.setText("Phone Bank");
+		phoneBankBut.setAction(new ButtonActions.PhoneBank(this));
+		phoneBankBut.setText("Phone Bank");
 
-	  JButton showNotHome = new JButton();
-	  showNotHome.addActionListener(this);
-	  showNotHome.setActionCommand("notHome");
-	  showNotHome.setAction(new ButtonActions.NotHome());
-	  showNotHome.setText("Not Home");
+		JButton houseMake = new JButton("Make Houses");
+		houseMake.addActionListener(this);
 
-	  JButton sortByDist = new JButton();
-	  sortByDist.addActionListener(this);
-	  sortByDist.setActionCommand("sortByDist");
-	  sortByDist.setAction(new ButtonActions.Distance());
-	  sortByDist.setText("Sort");
+		houseMake.setAction(new ButtonActions.HouseMake(this));
+		houseMake.setActionCommand("Houses");
+		houseMake.setText("Show Houses");
 
-	  buttonPanel.add(phoneBankBut);
-	  buttonPanel.add(houseMake);
-	  buttonPanel.add(showNotHome);
-	  buttonPanel.add(sortByDist);
+		JButton showNotHome = new JButton();
+		showNotHome.addActionListener(this);
+		showNotHome.setActionCommand("notHome");
+		showNotHome.setAction(new ButtonActions.NotHome());
+		showNotHome.setText("Not Home");
 
-	  Component[] buttons = buttonPanel.getComponents();
+		JButton sortByDist = new JButton();
+		sortByDist.addActionListener(this);
+		sortByDist.setActionCommand("sortByDist");
+		sortByDist.setAction(new ButtonActions.Distance());
+		sortByDist.setText("Sort");
 
-	  for(Component c : buttons){
-		  c.setBackground(darkBlue);
-		  c.setForeground(Color.WHITE);
-		  ((JButton) c).setOpaque(true);
-	  }
+		buttonPanel.add(phoneBankBut);
+		buttonPanel.add(houseMake);
+		buttonPanel.add(showNotHome);
+		buttonPanel.add(sortByDist);
 
-	  return buttonPanel;
-  }
+		Component[] buttons = buttonPanel.getComponents();
 
-  private JTable table;
-  public void setTable(String[][] display, String[] columnNames){
-	  table = new JTable(display, columnNames);
-	  table.setEnabled(false);
-	  
-	  if(tablePanel != null)
-		  tablePanel.removeAll();
-	  tablePanel.add(table);
-	  tablePanel.revalidate();
-	  
-	  JScrollPane js = new JScrollPane(table);
-	  js.setVisible(true);
-	  tablePanel.add(js);
-	  
-  }
-  
-  public Object[][] getTableData(){
-	  Object[][] output = new Object[table.getRowCount()][table.getColumnCount()];
-	  
-	  for(int i = 0 ; i < table.getRowCount() ; i++){
-		  for(int j = 0 ; j < table.getColumnCount() ; j++){
-			  output[i][j] = table.getValueAt(i, j);
-		  }  
-	  }
-	  return output;
-  }
-  
-  public void progressBar(int i){
+		for(Component c : buttons){
+			c.setBackground(darkBlue);
+			c.setForeground(Color.WHITE);
+			((JButton) c).setOpaque(true);
+		}
 
-	  phonebankBar.setMaximum(100);
-	  phonebankBar.setMinimum(0);
-	  phonebankBar.setValue(i);
+		return buttonPanel;
+	}
 
-	  phonebankBar.setString(Integer.toString(i) + "%");
-	  phonebankBar.update(phonebankBar.getGraphics());
-	  
+	public void resizeColumnWidth(JTable table) {
+		final TableColumnModel columnModel = table.getColumnModel();
+		for (int column = 0; column < table.getColumnCount(); column++) {
+			int width = 0; 
+			for (int row = 0; row < table.getRowCount(); row++) {
+				TableCellRenderer renderer = table.getCellRenderer(row, column);
+				Component comp = table.prepareRenderer(renderer, row, column);
+				width = Math.max(comp.getPreferredSize().width +1 , width);
+			}
+			if(width > 300)
+				width = 300;
+			if(column == 0){
+				width = 0;
+			}
+			columnModel.getColumn(column).setPreferredWidth(width);
+		}
+	}
 
-  }
 
-@Override
-public void actionPerformed(ActionEvent arg0){}
+	private void setTable(String[][] display, String[] columnNames){
+		
+		tablePanel.setLayout(new GridLayout(1,1));
+
+		table = new JTable(display, columnNames);
+		table.setEnabled(false);
+
+		if(tablePanel != null)
+			tablePanel.removeAll();
+		tablePanel.add(table);
+		tablePanel.revalidate();
+		tablePanel.repaint();
+		resizeColumnWidth(table);
+
+		JScrollPane js = new JScrollPane(table);
+		js.setVisible(true);
+		tablePanel.add(js);
+
+	}
+
+	private void onExit(){
+		
+		int confirm = JOptionPane.showOptionDialog(
+	             null, "Do you want to save before closing?", 
+	             "Exit Confirmation", JOptionPane.YES_NO_CANCEL_OPTION, 
+	             JOptionPane.QUESTION_MESSAGE, null, null, null);
+		if(confirm == 0){
+			new MenuActions.SaveAs(this).actionPerformed(null);
+		} else if(confirm == 1){
+			System.exit(0);
+		}
+		
+	}
+	
+	public void setTableData(String[][][] from){
+
+		String[][] to = new String[from.length][from[0].length+1];
+		for(int i = 0 ; i < from.length ; i++){
+			for(int j = 0 ; j < from[0].length ; j++){
+				if(j == 0)
+					to[i][0] = Integer.toString(i+1);
+				to[i][j+1] = from[i][j][0];
+			}
+		}
+		String[] columns = new String[from[0].length+1];
+		columns[0] = "Row";
+		for(int i = 0 ; i < from[0].length ; i++){
+			columns[i+1] = from[0][i][1];
+		}
+
+		this.setTable(to, columns);
+	}
+
+
+	public Object[][] getTableData(){
+		Object[][] output = new Object[table.getRowCount()][table.getColumnCount()];
+
+		for(int i = 0 ; i < table.getRowCount() ; i++){
+			for(int j = 0 ; j < table.getColumnCount() ; j++){
+				output[i][j] = table.getValueAt(i, j);
+			}  
+		}
+		return output;
+	}
+
+	public void progressBar(int i){
+
+		phonebankBar.setMaximum(100);
+		phonebankBar.setMinimum(0);
+		phonebankBar.setValue(i);
+
+		phonebankBar.setString(Integer.toString(i) + "%");
+		phonebankBar.update(phonebankBar.getGraphics());
+
+
+	}
+
+	
+	
+  	@Override
+	public void actionPerformed(ActionEvent arg0){}
 
 }
 

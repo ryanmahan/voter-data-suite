@@ -60,18 +60,13 @@ public class ButtonActions {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			
+			@SuppressWarnings("unused")
 			LinkedList<House> list = DataDriver.houseMaker(internal);
-			System.out.println("Made a list of Houses: " + list.size());
+			FileHandler fh = new FileHandler(internal);
+			
+			//TODO: finish writing this
 
-			String all = list.size() + " Houses in list\n";
-
-			for (House h : list) {
-				String text = h.getHead().getAllAvail();
-				text += "\n";
-				all = all.concat(text);
-			}
-
-			//TODO: UX.setTextArea(all);
+			UX.setTableData(fh.to3DArray());
 		
 		}
 		
@@ -98,8 +93,9 @@ public class ButtonActions {
 		public void actionPerformed(ActionEvent e) {
 			 LinkedList<House> sortList = DataDriver.houseMaker(internal);
 			  System.out.println("List Made: " + sortList.size());
-
-			  if(sortList.peek().getHead().getPrecinct() == -1){
+			  
+			  //sorry for this line below
+			  if(Integer.parseInt(sortList.peek().getHead().getPrecinct()) == -1){
 				  //this.setTextArea("No Precincts found, please enter file with Precincts!");
 				  return;
 			  }

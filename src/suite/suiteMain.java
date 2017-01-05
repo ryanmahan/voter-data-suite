@@ -2,7 +2,7 @@ package suite;
 
 public class suiteMain {
 	
-	//TODO: Save on exit
+	
 
 	public static void main(String args[]) throws Exception{
 		visualGUI();

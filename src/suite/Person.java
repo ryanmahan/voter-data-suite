@@ -15,9 +15,9 @@ public class Person {
     String snum = "";//Street Number
     String sname = "";//Street Name
     String num = "";
-    int rank = -1;
-    int timesVoted = -1;
-    private int precinct = -1;
+    String rank = "";
+    String timesVoted = "";
+    private String precinct = "";
     String notes = "";
     int ID;
 
@@ -62,22 +62,9 @@ public class Person {
     	this.last 			= l;
     	this.snum 			= stNum;
     	this.sname 			= stName;
-    	if(rank.equals("")){
-    		this.rank 		= -1;
-    	} else {
-    		this.rank		= Integer.parseInt(rank);
-    	}
-    	if(precinct.equals("")){
-    		this.setPrecinct(-1);
-    	} else {
-    		this.setPrecinct(Integer.parseInt(precinct));
-    	}
-    	if(timesVoted.length() > 0){
-    		this.timesVoted	= timesVoted.length();
-    	} else {
-    		this.timesVoted = -1;
-    	}
-    	
+    	this.rank 			= rank;
+    	this.precinct 		= precinct;
+    	this.timesVoted 	= timesVoted;
     	this.notes 			= notes;
     	this.num 			= phone;
     	this.ID				= counter;
@@ -91,10 +78,10 @@ public class Person {
     public String getAllAvail(){
     	
     	String ret = "";
-    	String[] val = this.toArray();
+    	String[][] val = this.toArray();
     	
     	for(int i = 0; i < 10 ; i++){
-    		if(val[i] != "" && val[i] != "-1"){
+    		if(val[i][0] != "" && val[i][0] != "-1"){
     			ret += val[i] + "\t";  			
     		}
     	}
@@ -103,7 +90,7 @@ public class Person {
     	
     }
     
-    public String[] toArray(){
+    public String[][] toArray(){
     	
 
     	String[] ret = new String[10];
@@ -113,24 +100,91 @@ public class Person {
     	ret[3] = this.snum;
     	ret[4] = this.sname;
     	ret[5] = this.num;
-    	if(rank == -1){
-    		ret[6] = "";
-    	} else {
-    		ret[6] = Integer.toString(this.rank);
-    	}
-    	if(timesVoted == -1){
-    		ret[7] = "";
-    	} else {
-    		ret[7] = Integer.toString(this.timesVoted);
-    	}
-    	if(getPrecinct() == -1){
-    		ret[8] = "";
-    	} else {
-    		ret[8] = Integer.toString(this.getPrecinct());
-    	}
+    	ret[6] = this.rank;
+    	ret[7] = this.timesVoted;
+    	ret[8] = this.precinct;
     	ret[9] = this.notes;
     	
-    	return ret;
+    	boolean filledIn[] = new boolean[10];
+    	boolean visited[] = new boolean[10];
+    	for(int i = 0 ; i < 10 ; i++){
+    		filledIn[i] = false;
+    		visited[i] = false;
+    	}
+    	int arraySize = 0;
+    	for(int i = 0 ; i < 10 ; i++){
+  		  if(!ret[i].equals("") && ret[i] != null && !ret[i].equals("-1")){
+  			  filledIn[i] = true;
+  			  arraySize++;
+  		  }
+  	  	}
+    	
+    	String output[][] = new String[arraySize][2];
+
+    	for(int i = 0 ; i < arraySize ; i++){
+    		if(filledIn[0] && !visited[0]){
+    			output[i][0] = ret[0];
+    			output[i][1] = "party";
+    			visited[0] = true;
+    			continue;
+    		}
+    		else if(filledIn[1] && !visited[1]){
+    			output[i][0] = ret[1];
+    			output[i][1] = "first";
+    			visited[1] = true;
+    			continue;
+    		}                
+    		else if(filledIn[2] && !visited[2]){
+    			output[i][0] = ret[2];
+    			output[i][1] = "last";
+    			visited[2] = true;
+    			continue;
+    		}
+    		else if(filledIn[3] && !visited[3]){
+    			output[i][0] = ret[3];
+    			output[i][1] = "snum";
+    			visited[3] = true;
+    			continue;
+    		}
+    		else if(filledIn[4] && !visited[4]){
+    			output[i][0] = ret[4];
+    			output[i][1] = "sname";
+    			visited[4] = true;
+    			continue;
+    		}
+    		else if(filledIn[5] && !visited[5]){
+    			output[i][0] = ret[5];
+    			output[i][1] = "num";
+    			visited[5] = true;
+    			continue;
+    		}
+    		else if(filledIn[6] && !visited[6]){
+    			output[i][0] = ret[6];
+    			output[i][1] = "rank";
+    			visited[6] = true;
+    			continue;
+    		}
+    		else if(filledIn[7] && !visited[7]){
+    			output[i][0] = ret[7];
+    			output[i][1] = "voted";
+    			visited[7] = true;
+    			continue;
+    		}
+    		else if(filledIn[8] && !visited[8]){
+    			output[i][0] = ret[8];
+    			output[i][1] = "precinct";
+    			visited[8] = true;
+    			continue;
+    		}
+    		else if(filledIn[9] && !visited[9]){
+    			output[i][0] = ret[9];
+    			output[i][1] = "notes";
+    			visited[9] = true;
+    			continue;
+    		}
+    	}
+
+    	return output;
     	
     }
     
@@ -174,11 +228,11 @@ public class Person {
         
     }
 
-	public int getPrecinct() {
+	public String getPrecinct() {
 		return precinct;
 	}
 
-	public void setPrecinct(int precinct) {
+	public void setPrecinct(String precinct) {
 		this.precinct = precinct;
 	}
     
