@@ -1,8 +1,7 @@
 package suite;
 
-import java.util.Comparator;
 
-public class HouseDist implements Comparator<HouseDist>{
+public class HouseDist{
 	
 	House toHouse;
 	Double distance;
@@ -13,17 +12,5 @@ public class HouseDist implements Comparator<HouseDist>{
 		toHouse = h;
 		distance = dist;
 	}
-
-	@Override
-	public int compare(HouseDist one, HouseDist two) {
-		if(one.distance > two.distance)
-			return 1;
-		if(one.distance == two.distance)
-			return 0;
-		if(one.distance < two.distance)
-			return -1;
-		return 0;
-	}
-
 	
 }

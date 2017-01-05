@@ -1,9 +1,7 @@
 package suite;
 
-import java.util.Comparator;
-import java.util.LinkedList;
-import java.util.PriorityQueue;
 
+import java.util.LinkedList;
 import org.jsoup.Jsoup;
 import java.io.*;
 
@@ -19,21 +17,19 @@ public class DataDriver {
 		double counter = 0;
         
         String HTML, num = "No phone number";
-        String all = "";
         
         for (Person p : voters) {
         	counter++;
             HTML = HTMLGet(p);
             num = recursivePhoneFinder(HTML, num);
             p.num = num;
-            String text = p.first + " " + p.last + " " + num + "\n";
-            all = all.concat(text);
             UX.progressBar((int) ((counter/total)*100.0));
-            UX.setTextArea(all);
             num = "No phone number";
         }
-       
-        return inputFileHandler.xmlWrite(voters);
+        File output = inputFileHandler.xmlWrite("data/temp.xml", voters);
+        UX.setTableData(inputFileHandler.to3DArray());
+        //TODO: Progress Bar
+        return output;
         
     }
     
@@ -61,19 +57,13 @@ public class DataDriver {
     		
     	}
     	
-    	//Output to TextArea
-         
-         String all = "";
-         
-    	for(Person p : need){
-    		String text = p.first + " " + p.last + " " + p.num + "\n";
-            all = all.concat(text);
+    	File output = needFileIO.xmlWrite("data/temp.xml", need);
+    	UX.setTableData(needFileIO.to3DArray());
+    	
 
-    	}
-    	UX.setTextArea(all);
     	
     	//Write to XML file and return said file
-		return needFileIO.xmlWrite(need);
+		return output;
     	
     }
 
@@ -180,6 +170,8 @@ public class DataDriver {
     		}
     	}
     	
+    	handler.xmlHouseWrite(houses);
+    	
     	return houses;
     	
     }
@@ -238,10 +230,15 @@ public class DataDriver {
      * Runs through lists in recursiveSortHelper
      * Combines the list into a larger list used to compile the precincts back together
      * 
+     * But why break them into precincts?
+     * Well, if I run 2500 houses through a list here, I have to run it at O(n^2) but if I break it into the precincts
+     * 		first, I end up running (500^2)*5, which is 5 times more efficient!
+     * 
      */
     
 	public static LinkedList<House> sortByDist(LinkedList<House> list){
 		
+		//double progress = 0;
 		
 		@SuppressWarnings("unchecked")
 		LinkedList<House> precincts[] = new LinkedList[5];
@@ -250,9 +247,22 @@ public class DataDriver {
 		}
 		
 		for(House h : list){
-			precincts[h.head.precinct].add(h);
-			h.getLatLong();
+			int precinct = Integer.parseInt(h.getHead().getPrecinct());
+			if(precinct > 5){
+				precincts[4].add(h);
+			} else {
+				precincts[precinct-1].add(h);
+			}
+			
+			if(!h.getLatLong()){
+				System.out.println(h.getAddress());
+				precincts[precinct-1].remove(h);
+			}
+			//progress++;
+			//TODO: Progress bar
 		}
+		
+		System.out.println("Got all lat long, moving on");
 		
 		LinkedList<House> output = new LinkedList<House>();
 		
@@ -260,6 +270,8 @@ public class DataDriver {
 			LinkedList<House> preOut = new LinkedList<House>();
 			preOut = recursiveSortHelper(pre.peek(), pre, preOut);
 			output.addAll(preOut);
+			//progress++;
+			//UX.progressBar((int) progress/list.size()/2); 
 		}
 		
 		for(House h : output){
@@ -313,16 +325,17 @@ public class DataDriver {
 	
 	
 	private static House findClosestSortHelper(House from, LinkedList<House> list){
-		
-		Comparator<HouseDist> comp = new HouseDist();
-		PriorityQueue<HouseDist> pqueue = new PriorityQueue<HouseDist>(comp);
-		
+		HouseDist ret = null;
+		double low = 100000;
 		for(House h : list){
 			HouseDist temp = new HouseDist(h, getDist(from, h));
-			pqueue.add(temp);
+			if(temp.distance < low){
+				ret = temp;
+				low = temp.distance;
+			}
 		}
 		
-		return pqueue.poll().toHouse;
+		return ret.toHouse;
 	}
 	
 	

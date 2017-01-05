@@ -26,13 +26,13 @@ public class FileHandler {
 	
 	File file;
 	
-	public FileHandler(File f){
-		file = f;
+	public FileHandler(File file){
+		this.file = file;
 	}
+
 	
 	public LinkedList<Person> getList() {
 
-     	
     	LinkedList<Person> list = null;
     	if(file.getName().endsWith(".txt")){
     		list = this.txtParse();
@@ -40,13 +40,10 @@ public class FileHandler {
     		try {
 				list = this.xmlParse();
 			} catch (ParserConfigurationException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (SAXException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
     	} else {
@@ -57,15 +54,13 @@ public class FileHandler {
     	
 	}
 	
-	
-	public File xmlWrite(LinkedList<Person> list) {
-		
+	public File xmlCreate (String filename, LinkedList<Person> list) {
 		File output = null;
 		
 		try{
 			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-			
+	
 			Document doc = docBuilder.newDocument();
 			Element rootElement = doc.createElement("auburn");
 			doc.appendChild(rootElement);
@@ -81,37 +76,83 @@ public class FileHandler {
 	    		person.setAttribute("sname", p.sname);
 	    		person.setAttribute("snum", p.snum);
 	    		person.setAttribute("notes", p.notes);
-	    		person.setAttribute("rank", Integer.toString(p.rank));
-	    		person.setAttribute("precinct", Integer.toString(p.precinct));
-	    		person.setAttribute("timesVoted", Integer.toString(p.timesVoted));
+	    		person.setAttribute("rank", p.rank);
+	    		person.setAttribute("precinct", p.getPrecinct());
+	    		person.setAttribute("timesVoted", p.timesVoted);
 	    		person.setAttribute("party", p.party);
 	    	
 	    		people.appendChild(person); //finalize element
 			}
+			if(filename == null){
+				SimpleDateFormat df = new SimpleDateFormat("dd-MM-yy-hh-mm-ss");
+		        String date = df.format(new Date());
+		        output = new File("list+"+date+".xml");
+			} else {
+				output = new File(filename);
+			}
 			
-			SimpleDateFormat df = new SimpleDateFormat("dd-MM-yy-hh-mm-ss");
-	        String date = df.format(new Date());
+		}catch (Exception e){
+			System.out.println("XML CREATION ERROR");
+			e.printStackTrace();
+		}
+		return output;
+	}
+	
+	public File xmlWrite(String filename, LinkedList<Person> list) {
+		
+		File output = null;
+		
+		try{
+			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+	
+			Document doc = docBuilder.newDocument();
+			Element rootElement = doc.createElement("auburn");
+			doc.appendChild(rootElement);
 			
+			Element people = doc.createElement("people");
+			rootElement.appendChild(people);
+			
+			for(Person p : list){
+				Element person = doc.createElement("person"); //create element
+	    		person.setAttribute("first", p.first); //give it data
+	    		person.setAttribute("last", p.last);
+	    		person.setAttribute("number", p.num);
+	    		person.setAttribute("sname", p.sname);
+	    		person.setAttribute("snum", p.snum);
+	    		person.setAttribute("notes", p.notes);
+	    		person.setAttribute("rank", p.rank);
+	    		person.setAttribute("precinct", p.getPrecinct());
+	    		person.setAttribute("timesVoted", p.timesVoted);
+	    		person.setAttribute("party", p.party);
+	    	
+	    		people.appendChild(person); //finalize element
+			}
+			if(filename == null){
+				SimpleDateFormat df = new SimpleDateFormat("dd-MM-yy-hh-mm-ss");
+		        String date = df.format(new Date());
+		        output = new File("list+"+date+".xml");
+			} else {
+				output = new File(filename);
+			}
+			
+			
+			
+			//System.out.println("Writing: " + "list+"+date+".xml");
+			
+			StreamResult result = new StreamResult(output);
 			TransformerFactory transformerFactory = TransformerFactory.newInstance();
 			Transformer transformer = transformerFactory.newTransformer();
 			DOMSource source = new DOMSource(doc);
-			//System.out.println("Writing: " + "list+"+date+".xml");
-			output = new File("list+"+date+".xml");
-			StreamResult result = new StreamResult(output);
-			
-			
 			transformer.transform(source, result);
 		
 			
 		}catch (Exception e){
-			System.out.println("XML WRITE ERROR");
+			System.out.println("XML CREATION ERROR");
 			e.printStackTrace();
 		}
+		
 		return output;
-		
-		
-
-			
 			
 	}
 
@@ -173,16 +214,19 @@ public class FileHandler {
 			
 			for(House h : houseList){
 				Element person = doc.createElement("person"); //create element
-	    		person.setAttribute("first", h.head.first); //give it data
-	    		person.setAttribute("last", h.head.last);
-	    		person.setAttribute("number", h.head.num);
-	    		person.setAttribute("sname", h.head.sname);
-	    		person.setAttribute("snum", h.head.snum);
-	    		person.setAttribute("notes", h.head.notes);
-	    		person.setAttribute("rank", Integer.toString(h.head.rank));
-	    		person.setAttribute("precinct", Integer.toString(h.head.precinct));
-	    		person.setAttribute("timesVoted", Integer.toString(h.head.timesVoted));
-	    		person.setAttribute("party", h.head.party);
+	    		person.setAttribute("first", h.getHead().first); //give it data
+	    		person.setAttribute("last", h.getHead().last);
+	    		person.setAttribute("number", h.getHead().num);
+	    		person.setAttribute("sname", h.getHead().sname);
+	    		person.setAttribute("snum", h.getHead().snum);
+	    		person.setAttribute("notes", h.getHead().notes);
+	    		person.setAttribute("rank", h.getHead().rank);
+	    		person.setAttribute("precinct", h.getHead().getPrecinct());
+	    		person.setAttribute("timesVoted", h.getHead().timesVoted);
+	    		person.setAttribute("party", h.getHead().party);
+	    		if(h.lat != 0){
+	    			
+	    		}
 	    	
 	    		people.appendChild(person); //finalize element
 			}
@@ -209,20 +253,17 @@ public class FileHandler {
 
 	}
 
-	public void displayXML(Gui UX){
+	public String xmlToString(){
 		
 		LinkedList<Person> list = null;
 		
 		try {
 			list = this.xmlParse();
 		} catch (ParserConfigurationException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (SAXException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -234,13 +275,31 @@ public class FileHandler {
 			display += temp;
 		}
 		
-		UX.setTextArea(display);
-		return;
+		return display;
 		
+	}
+	
+	public File convertToXML(String filename){
+		file = (this.xmlCreate(filename, this.getList()));
+		return (this.xmlCreate(filename, this.getList()));
+	}
+	
+	public String[][][] to3DArray(){
+		
+		
+		LinkedList<Person> list = this.getList();
+		String[][][] output = new String[list.size()][list.peek().toArray().length][2];
+		
+		for(int i = 0 ; i < output.length ; i++){
+			Person p = list.poll();
+			output[i] = p.toArray();
+		}
+		
+		return output;
+	
 	}
 
 	//END XML R/W
-	
 	
 	/* textParse()
 	 * Also known as the hard-code-iest code Ive ever written intentionally
@@ -287,4 +346,3 @@ public class FileHandler {
 	}
 	
 }
-

@@ -48,9 +48,8 @@ Temporary Items
 
 # Used for saving data
 *.txt
+
 *.xml
 
-# Used for Java Files
+# Used for backing up Legacy Java Files
 *.bak
-*.class
-/bin/
