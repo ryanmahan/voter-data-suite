@@ -127,7 +127,10 @@ public class ButtonActions {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			// TODO Write a method to combine xml files
-
+			FileHandler fhInt = new FileHandler(internal);
+			
+			
+			
 		}
 
 	}

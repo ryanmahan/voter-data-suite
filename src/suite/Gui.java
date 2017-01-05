@@ -113,7 +113,7 @@ public class Gui extends JFrame implements ActionListener {
 	  export.addActionListener(this);
 	  
 	  JMenuItem imp = new JMenuItem();
-	  imp.setAction(new MenuActions.Import());
+	  imp.setAction(new MenuActions.Import(this));
 	  imp.setText("Import");
 	  imp.addActionListener(this);
 	  

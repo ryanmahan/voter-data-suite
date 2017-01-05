@@ -115,21 +115,50 @@ public class MenuActions {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			//TODO: Write method to export to tab-collated txt file
 			
+			JFileChooser fc = new JFileChooser();
+			fc.setDialogTitle("Choose a file to Export to");
+			FileFilter filter = new FileNameExtensionFilter("Tab-Collated Excel File","txt");
+			fc.setFileFilter(filter);
+			
+			int choice = fc.showOpenDialog(null);
+			
+			if (choice == JFileChooser.APPROVE_OPTION) {
+				String filename = fc.getSelectedFile().getAbsolutePath();
+				File f = new File(filename);
+				FileHandler fh = new FileHandler(f);
+			}			
 		}
 
 	}
 
 	public static class Import extends AbstractAction {
 
+		Gui UX;
+		public Import (Gui UX){
+			this.UX = UX;
+		}
+		
+		
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			//TODO: Write method to import tab-collacted txt file
+			JFileChooser fc = new JFileChooser();
+			FileFilter filter = new FileNameExtensionFilter("Tab-Collated Excel File","txt");
+			fc.setFileFilter(filter);
+			int choice = fc.showOpenDialog(null);
 			
+			if (choice == JFileChooser.APPROVE_OPTION) {
+				String filename = fc.getSelectedFile().getAbsolutePath();
+				File f = new File(filename);
+				FileHandler fh = new FileHandler(f);
+				
+				fh.importTxt(UX);
+			}
+
 		}
-
+		
 	}
-	
-
 }
+
+

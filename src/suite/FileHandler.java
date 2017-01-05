@@ -1,8 +1,15 @@
 package suite;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
+import java.io.Writer;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
@@ -343,6 +350,50 @@ public class FileHandler {
 	        
 	    names.close();
 	    return list;
+	}
+	
+	public void importTxt(Gui UX){
+		
+	}
+	
+	public void ExportXML(){
+		
+		FileHandler fh = new FileHandler(new File("data/temp.xml"));
+		if(!file.getName().endsWith("txt")){
+			return;
+		}
+		
+		String[][][] list = fh.to3DArray();
+		String firstLine = "";
+		for(String s : list[0][0]){
+			firstLine.concat(s);
+			firstLine += "\t";
+		}
+		String data = "";
+		for(String[][] a : list){
+			for(int i = 0 ; i < a.length ; i++){
+				data.concat(a[i][0]);
+				data += "\t";
+			}
+			data += "\n";
+		}
+		
+		try (Writer writer = new BufferedWriter(new OutputStreamWriter(
+	              new FileOutputStream(file.getName()), "utf-8"))) {
+		writer.write(firstLine + "\n" + data);
+			
+	} catch (UnsupportedEncodingException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	} catch (FileNotFoundException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	} catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+		
+		
 	}
 	
 }
