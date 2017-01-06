@@ -17,6 +17,8 @@ import suite.Gui;
 @SuppressWarnings("serial")
 public class MenuActions {
 	
+	private final static File internal = new File("data/temp.xml");
+	
 	public static class SaveAs extends AbstractAction {
 		Gui UX;
 		public SaveAs(Gui UX){
@@ -46,8 +48,8 @@ public class MenuActions {
 		        	
 		        	if(reply == 0){ //if they choose OK
 		        		
-		        		FileHandler internal = new FileHandler(new File("data/temp.xml"));
-					    internal.xmlWrite(filename, internal.getList());
+		        		FileHandler fh = new FileHandler(internal);
+					    fh.xmlWrite(filename, fh.getList());
 					    return;
 					    
 		        	} else { //if they hit cancel, pop a new save as dialog up
@@ -63,8 +65,8 @@ public class MenuActions {
 					} catch (IOException e1) {
 						e1.printStackTrace();
 					}
-		        	FileHandler internal = new FileHandler(new File("data/temp.xml"));
-				    internal.xmlWrite(filename, internal.getList());
+		        	FileHandler fh = new FileHandler(internal);
+				    fh.xmlWrite(filename, fh.getList());
 		        }
 			    
 		    }
@@ -89,7 +91,7 @@ public class MenuActions {
 				String filename = fc.getSelectedFile().getAbsolutePath();
 				File f = new File(filename);
 				FileHandler fh = new FileHandler(f);
-				File appFile = new File("data/temp.xml");
+				File appFile = internal;
 				
 				if(appFile.exists())
 					appFile.delete();
@@ -101,7 +103,7 @@ public class MenuActions {
 				}
 				fh.xmlWrite("data/temp.xml", fh.getList());
 				FileHandler internal = new FileHandler(appFile);
-				//UX.setTextArea(internal.xmlToString());
+		
 				String[][][] from = internal.to3DArray();
 				UX.setTableData(from);
 			}
@@ -113,23 +115,28 @@ public class MenuActions {
 
 	public static class Export extends AbstractAction {
 
+		
+		
+		
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			
 			JFileChooser fc = new JFileChooser();
-			fc.setDialogTitle("Choose a file to Export to");
-			FileFilter filter = new FileNameExtensionFilter("Tab-Collated Excel File","txt");
+			FileFilter filter = new FileNameExtensionFilter("Ryans Voter Data","txt");
+			
 			fc.setFileFilter(filter);
+			int choice = fc.showSaveDialog(null);
 			
-			int choice = fc.showOpenDialog(null);
-			
-			if (choice == JFileChooser.APPROVE_OPTION) {
+			if(choice == JFileChooser.APPROVE_OPTION) {
+				
 				String filename = fc.getSelectedFile().getAbsolutePath();
 				File f = new File(filename);
-				FileHandler fh = new FileHandler(f);
-			}			
-		}
 
+			FileHandler fh = new FileHandler(internal);	
+			fh.exportXML(f);
+			}
+
+		}
 	}
 
 	public static class Import extends AbstractAction {
@@ -148,16 +155,8 @@ public class MenuActions {
 			fc.setFileFilter(filter);
 			int choice = fc.showOpenDialog(null);
 			
-			if (choice == JFileChooser.APPROVE_OPTION) {
-				String filename = fc.getSelectedFile().getAbsolutePath();
-				File f = new File(filename);
-				FileHandler fh = new FileHandler(f);
-				
-				fh.importTxt(UX);
-			}
-
+			
 		}
-		
 	}
 }
 

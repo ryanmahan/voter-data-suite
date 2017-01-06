@@ -8,13 +8,10 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.Scanner;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -356,14 +353,13 @@ public class FileHandler {
 		
 	}
 	
-	public void ExportXML(){
+	public void exportXML(File f){
 		
-		FileHandler fh = new FileHandler(new File("data/temp.xml"));
-		if(!file.getName().endsWith("txt")){
+		if(!f.getName().endsWith("txt")){
 			return;
 		}
 		
-		String[][][] list = fh.to3DArray();
+		String[][][] list = this.to3DArray();
 		String firstLine = "";
 		for(String s : list[0][0]){
 			firstLine.concat(s);
@@ -383,13 +379,10 @@ public class FileHandler {
 		writer.write(firstLine + "\n" + data);
 			
 	} catch (UnsupportedEncodingException e) {
-		// TODO Auto-generated catch block
 		e.printStackTrace();
 	} catch (FileNotFoundException e) {
-		// TODO Auto-generated catch block
 		e.printStackTrace();
 	} catch (IOException e) {
-		// TODO Auto-generated catch block
 		e.printStackTrace();
 	}
 		

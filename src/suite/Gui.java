@@ -169,7 +169,7 @@ public class Gui extends JFrame implements ActionListener {
 		
 		JButton combineList = new JButton();
 		combineList.addActionListener(this);
-		combineList.setAction(new ButtonActions.Combine());
+		combineList.setAction(new ButtonActions.Combine(this));
 		combineList.setText("Combine Lists");
 
 		buttonPanel.add(phoneBankBut);

@@ -71,7 +71,10 @@ public class Person {
     	counter++;
     }
  
-    public String getAddress(){
+    public Person() {
+	}
+
+	public String getAddress(){
     	return (this.snum + this.sname);
     }
     

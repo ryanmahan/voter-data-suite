@@ -6,13 +6,18 @@ import java.util.LinkedList;
 
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import suite.DataDriver;
 import suite.FileHandler;
 import suite.Gui;
 import suite.House;
+import suite.Person;
+import suite.PersonCombiner;
 
 @SuppressWarnings("serial")
 public class ButtonActions {
@@ -123,11 +128,46 @@ public class ButtonActions {
 	
 	
 	public static class Combine extends AbstractAction{
+		Gui UX;
+		public Combine(Gui UX){
+			this.UX = UX;
+		}
 		
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// TODO Write a method to combine xml files
-			FileHandler fhInt = new FileHandler(internal);
+			// TODO bugtest
+			JFileChooser fc = new JFileChooser();
+			FileFilter filter = new FileNameExtensionFilter("Ryans Voter Data","txt");
+			
+			fc.setFileFilter(filter);
+			int choice = fc.showSaveDialog(null);
+			File f = null;
+			if(choice == JFileChooser.APPROVE_OPTION) {
+				String filename = fc.getSelectedFile().getAbsolutePath();
+				f = new File(filename);
+				
+				FileHandler fhInt = new FileHandler(internal);
+				FileHandler fhExt = new FileHandler(f);
+				
+				LinkedList<Person> list1 =  fhInt.getList();
+				LinkedList<Person> list2 = fhExt.getList();
+				LinkedList<Person> output = new LinkedList<Person>();
+				
+				for(Person p1 :  list1){
+					for(Person p2 : list2){
+						PersonCombiner pc = new PersonCombiner(p1, p2);
+						if(pc.isMatch()){
+							list1.remove(p1);
+							list2.remove(p2);
+							output.add(pc.combine());
+						}
+					}
+				}
+				
+				fhInt.xmlWrite(internal.getName(), output);
+				UX.setTableData(fhInt.to3DArray());
+				
+			}
 			
 			
 			
