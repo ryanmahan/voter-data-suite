@@ -19,8 +19,8 @@ public class Gui extends JFrame implements ActionListener {
 	private final Font menuFont = new Font("Arial", Font.PLAIN, 12);
 	private JPanel tablePanel = new JPanel(new GridBagLayout());
 	private JFrame mainFrame;
-	private JProgressBar phonebankBar;
 	private JTable table;
+	private ImageIcon img = new ImageIcon("data/icon.png");
 	
 	public Gui(){
 		prepareGUI();
@@ -52,7 +52,7 @@ public class Gui extends JFrame implements ActionListener {
 		JMenuBar menus = this.menuBar();
     	JPanel buttons = this.createButtons();
     	
-    	ImageIcon img = new ImageIcon("data/icon.png");
+    	
     	mainFrame.setIconImage(img.getImage());
     	
     	mainFrame.setJMenuBar(menus);
@@ -273,18 +273,70 @@ public class Gui extends JFrame implements ActionListener {
 		return output;
 	}
 
-	public void progressBar(int i){
-
-		phonebankBar.setMaximum(100);
-		phonebankBar.setMinimum(0);
-		phonebankBar.setValue(i);
-
-		phonebankBar.setString(Integer.toString(i) + "%");
-		phonebankBar.update(phonebankBar.getGraphics());
-
-
+	public Object[] createProgressBar(int progress, String taskName){
+		
+		JFrame progBarFrame = new JFrame();
+		progBarFrame.setLayout(new BorderLayout());
+		progBarFrame.setSize(250, 100);
+		
+		progBarFrame.setIconImage(img.getImage());
+		JLabel label = new JLabel("Progress bar for: " + taskName);
+		label.setFont(menuFont);
+		label.setVisible(true);
+		label.setOpaque(true);
+		
+		JProgressBar prog = new JProgressBar();
+		prog.setForeground(darkBlue);
+		prog.setStringPainted(true);
+		prog.setOpaque(true);
+		prog.setMaximum(100);
+		prog.setMinimum(0);
+		prog.setValue(progress);
+		prog.setVisible(true);
+		
+		progBarFrame.add(label, BorderLayout.NORTH);
+		progBarFrame.add(prog, BorderLayout.SOUTH);
+		progBarFrame.setVisible(true);
+		
+		return new Object[]{label, prog};
 	}
-
+	static boolean done = false;
+	double start = 0;
+	double time = 0;
+	double task100 = 0;
+	double taskTime = 0;
+	
+	public void setProgress(Object[] elements, double currTaskNumber, double total){
+		
+		JLabel timeRemain = (JLabel) elements[0];
+		
+		
+		if(currTaskNumber%25 == 0){
+			if(currTaskNumber == 0)
+				start = System.currentTimeMillis();
+			else{
+				time = System.currentTimeMillis();
+				taskTime = (time-start)/currTaskNumber;
+			}
+		}
+			
+		
+		
+		int remainingTime = (int) ((taskTime*(total-currTaskNumber)/1000));
+		
+		if(remainingTime == 0)
+			timeRemain.setText("Calculating Remaining time");
+		else
+			timeRemain.setText("Time Remaining: " + remainingTime/60 + "m and " + remainingTime%60 + "s");
+		
+		int progress = (int) (currTaskNumber/total*100);
+		JProgressBar bar = (JProgressBar) elements[1];
+		bar.setValue(progress);
+		
+		
+		bar.update(bar.getGraphics());
+		timeRemain.update(timeRemain.getGraphics());
+	}
 	
 	
   	@Override

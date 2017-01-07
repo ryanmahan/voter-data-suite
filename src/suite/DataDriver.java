@@ -17,13 +17,15 @@ public class DataDriver {
 		double counter = 0;
         
         String HTML, num = "No phone number";
+        Object[] elements = UX.createProgressBar(0, "Phone Banking from Internet");
+        
         
         for (Person p : voters) {
+        	UX.setProgress(elements, counter, total);
         	counter++;
             HTML = HTMLGet(p);
             num = recursivePhoneFinder(HTML, num);
             p.num = num;
-            UX.progressBar((int) ((counter/total)*100.0));
             num = "No phone number";
         }
         File output = inputFileHandler.xmlWrite("data/temp.xml", voters);
@@ -53,7 +55,7 @@ public class DataDriver {
     			}
     		}
     		
-    		UX.progressBar((int) ((counter/total)*100.0));
+    		
     		
     	}
     	

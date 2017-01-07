@@ -37,7 +37,7 @@ public class ButtonActions {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			
-			Object[] options = {"Cancel" , "Net" , "Cancel"};
+			Object[] options = {"Net" , "File" , "Cancel"};
 			JFrame popUp = new JFrame("Pop Up");
 			int n = JOptionPane.showOptionDialog(popUp, "Would you like to phonebank from the masterlist or net?",
 					"File or Net?", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE,
