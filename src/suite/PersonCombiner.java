@@ -33,8 +33,8 @@ public class PersonCombiner {
 				return false;
 			}
 		}
-		if(!p1.num.isEmpty() && !p2.num.isEmpty()){
-			if(!p1.num.equalsIgnoreCase(p2.num)){
+		if(!p1.getNum().isEmpty() && !p2.getNum().isEmpty()){
+			if(!p1.getNum().equalsIgnoreCase(p2.getNum())){
 				return false;
 			}
 		}
@@ -93,12 +93,12 @@ public class PersonCombiner {
 		} else if(!p1.sname.isEmpty() && !p2.sname.isEmpty()){
 			output.sname = p1.sname;
 		}
-		if(!p1.num.isEmpty() && p2.num.isEmpty()){
-			output.num = p1.num;
-		} else if(p1.num.isEmpty() && !p2.num.isEmpty()){
-			output.num = p2.num;
-		} else if(!p1.num.isEmpty() && !p2.num.isEmpty()){
-			output.num = p1.num;
+		if(!p1.getNum().isEmpty() && p2.getNum().isEmpty()){
+			output.setNum(p1.getNum());
+		} else if(p1.getNum().isEmpty() && !p2.getNum().isEmpty()){
+			output.setNum(p2.getNum());
+		} else if(!p1.getNum().isEmpty() && !p2.getNum().isEmpty()){
+			output.setNum(p1.getNum());
 		}
 		if(!p1.rank.isEmpty() && p2.rank.isEmpty()){
 			output.rank = p1.rank;

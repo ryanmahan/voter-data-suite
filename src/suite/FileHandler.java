@@ -76,7 +76,7 @@ public class FileHandler {
 				Element person = doc.createElement("person"); //create element
 	    		person.setAttribute("first", p.first); //give it data
 	    		person.setAttribute("last", p.last);
-	    		person.setAttribute("number", p.num);
+	    		person.setAttribute("number", p.getNum());
 	    		person.setAttribute("sname", p.sname);
 	    		person.setAttribute("snum", p.snum);
 	    		person.setAttribute("notes", p.notes);
@@ -121,7 +121,7 @@ public class FileHandler {
 				Element person = doc.createElement("person"); //create element
 	    		person.setAttribute("first", p.first); //give it data
 	    		person.setAttribute("last", p.last);
-	    		person.setAttribute("number", p.num);
+	    		person.setAttribute("number", p.getNum());
 	    		person.setAttribute("sname", p.sname);
 	    		person.setAttribute("snum", p.snum);
 	    		person.setAttribute("notes", p.notes);
@@ -220,7 +220,7 @@ public class FileHandler {
 				Element person = doc.createElement("person"); //create element
 	    		person.setAttribute("first", h.getHead().first); //give it data
 	    		person.setAttribute("last", h.getHead().last);
-	    		person.setAttribute("number", h.getHead().num);
+	    		person.setAttribute("number", h.getHead().getNum());
 	    		person.setAttribute("sname", h.getHead().sname);
 	    		person.setAttribute("snum", h.getHead().snum);
 	    		person.setAttribute("notes", h.getHead().notes);

@@ -49,7 +49,28 @@ public class ButtonActions {
 					except.printStackTrace();
 				}
 			} else if(n == 1){//file
-				//TODO: Make Masterlist
+				FileHandler fh = new FileHandler(internal);
+				FileHandler mast = new FileHandler(new File("data/masterlist.xml"));
+				LinkedList<Person> masterList = mast.getList();
+				LinkedList<Person> need = fh.getList();
+				System.out.println("Running");
+				for(Person p : need){
+					for(Person m : masterList){
+						PersonCombiner pc = new PersonCombiner(p, m);
+						if(pc.isMatch()){
+							p.setNum(m.getNum());
+						}
+					}
+				}
+				for(Person p : need){
+					if(p.getNum().equals("")){
+						p.setNum("None Found");
+					}
+				}
+		    	fh.xmlWrite("data/temp.xml", need);
+				System.out.println("Done");
+		    	UX.setTableData(fh.to3DArray());
+				
 			} 
 		}
 		
@@ -68,9 +89,26 @@ public class ButtonActions {
 			@SuppressWarnings("unused")
 			LinkedList<House> list = DataDriver.houseMaker(internal);
 			FileHandler fh = new FileHandler(internal);
-			
-			//TODO: finish writing this
-
+	       
+			LinkedList<Person> voters = fh.getList();
+	    	LinkedList<House> houses = new LinkedList<House>();
+	    	String curr = null;
+	    	House nextHouse = null;
+	    	
+	    	
+	    	for(Person p : voters){
+	    		if(p.getAddress().equals(curr)){//if the same house
+	    			
+	    			nextHouse.addMember(p);
+	    			
+	    		} else {//if a new house
+	    			nextHouse = new House(p);
+	    			houses.add(nextHouse);
+	    			curr = p.getAddress();
+	    		}
+	    	}
+	    	
+	    	fh.xmlHouseWrite(houses);
 			UX.setTableData(fh.to3DArray());
 		
 		}

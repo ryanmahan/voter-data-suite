@@ -15,7 +15,7 @@ import suite.Gui;
 
 
 @SuppressWarnings("serial")
-public class MenuActions {
+public class FileMenuActions {
 	
 	private final static File internal = new File("data/temp.xml");
 	

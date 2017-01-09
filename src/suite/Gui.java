@@ -98,22 +98,22 @@ public class Gui extends JFrame implements ActionListener {
 	  file.setMnemonic(KeyEvent.VK_A);
 
 	  JMenuItem open = new JMenuItem();
-	  open.setAction(new MenuActions.Open(this));
+	  open.setAction(new FileMenuActions.Open(this));
 	  open.setText("Open");
 	  open.addActionListener(this);
 	  
 	  JMenuItem saveAs = new JMenuItem();
-	  saveAs.setAction(new MenuActions.SaveAs(this));
+	  saveAs.setAction(new FileMenuActions.SaveAs(this));
 	  saveAs.setText("Save As");
 	  saveAs.addActionListener(this);
 	  
 	  JMenuItem export = new JMenuItem();
-	  export.setAction(new MenuActions.Export());
+	  export.setAction(new FileMenuActions.Export());
 	  export.setText("Export to Excel");
 	  export.addActionListener(this);
 	  
 	  JMenuItem imp = new JMenuItem();
-	  imp.setAction(new MenuActions.Import(this));
+	  imp.setAction(new FileMenuActions.Import(this));
 	  imp.setText("Import");
 	  imp.addActionListener(this);
 	  
@@ -133,6 +133,51 @@ public class Gui extends JFrame implements ActionListener {
 
 	  return file;
   }
+	
+	private JMenu createSortMenu(){
+		
+		JMenu sorts = new JMenu("Sort by");
+		
+		JMenuItem precinct = new JMenuItem();
+		precinct.setAction(new FileMenuActions.Import(this));
+		precinct.setText("Import");
+		precinct.addActionListener(this);
+		
+		JMenuItem first = new JMenuItem();
+		first.setAction(new FileMenuActions.Open(this));
+		first.setText("Open");
+		first.addActionListener(this);
+
+		JMenuItem last = new JMenuItem();
+		last.setAction(new FileMenuActions.SaveAs(this));
+		last.setText("Save As");
+		last.addActionListener(this);
+
+		JMenuItem street = new JMenuItem();
+		street.setAction(new FileMenuActions.Export());
+		street.setText("Export to Excel");
+		street.addActionListener(this);
+
+		JMenuItem rank = new JMenuItem();
+		rank.setAction(new FileMenuActions.Import(this));
+		rank.setText("Import");
+		rank.addActionListener(this);
+		
+		JMenuItem timesVoted = new JMenuItem();
+		timesVoted.setAction(new FileMenuActions.Import(this));
+		timesVoted.setText("Import");
+		timesVoted.addActionListener(this);
+		
+		sorts.add(precinct);
+		sorts.add(first);
+		sorts.add(last);
+		sorts.add(street);
+		sorts.add(rank);
+		sorts.add(timesVoted);
+		sorts.setFont(menuFont);
+		
+		return sorts;
+	}
 
   
 	private JPanel createButtons(){
@@ -235,7 +280,7 @@ public class Gui extends JFrame implements ActionListener {
 	             "Exit Confirmation", JOptionPane.YES_NO_CANCEL_OPTION, 
 	             JOptionPane.QUESTION_MESSAGE, null, null, null);
 		if(confirm == 0){
-			new MenuActions.SaveAs(this).actionPerformed(null);
+			new FileMenuActions.SaveAs(this).actionPerformed(null);
 		} else if(confirm == 1){
 			System.exit(0);
 		}
@@ -245,6 +290,7 @@ public class Gui extends JFrame implements ActionListener {
 	public void setTableData(String[][][] from){
 
 		String[][] to = new String[from.length][from[0].length+1];
+		
 		for(int i = 0 ; i < from.length ; i++){
 			for(int j = 0 ; j < from[0].length ; j++){
 				if(j == 0)

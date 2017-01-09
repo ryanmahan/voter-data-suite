@@ -14,7 +14,7 @@ public class Person {
     String last = "";
     String snum = "";//Street Number
     String sname = "";//Street Name
-    String num = "";
+    private String num = "";
     String rank = "";
     String timesVoted = "";
     private String precinct = "";
@@ -38,7 +38,7 @@ public class Person {
     public Person(String f, String l, String num){
     	this.first = f;
         this.last = l;
-        this.num = num;
+        this.setNum(num);
         this.ID = counter;
         counter++;
     }
@@ -66,7 +66,7 @@ public class Person {
     	this.precinct 		= precinct;
     	this.timesVoted 	= timesVoted;
     	this.notes 			= notes;
-    	this.num 			= phone;
+    	this.setNum(phone);
     	this.ID				= counter;
     	counter++;
     }
@@ -102,7 +102,7 @@ public class Person {
     	ret[2] = this.last;
     	ret[3] = this.snum;
     	ret[4] = this.sname;
-    	ret[5] = this.num;
+    	ret[5] = this.getNum();
     	ret[6] = this.rank;
     	ret[7] = this.timesVoted;
     	ret[8] = this.precinct;
@@ -237,6 +237,14 @@ public class Person {
 
 	public void setPrecinct(String precinct) {
 		this.precinct = precinct;
+	}
+
+	public String getNum() {
+		return num;
+	}
+
+	public void setNum(String num) {
+		this.num = num;
 	}
     
 }

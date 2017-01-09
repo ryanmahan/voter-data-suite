@@ -25,7 +25,7 @@ public class DataDriver {
         	counter++;
             HTML = HTMLGet(p);
             num = recursivePhoneFinder(HTML, num);
-            p.num = num;
+            p.setNum(num);
             num = "No phone number";
         }
         File output = inputFileHandler.xmlWrite("data/temp.xml", voters);
@@ -46,12 +46,12 @@ public class DataDriver {
     	double total = need.size();
         double counter = 0;
     	for(Person p : need){
-    		p.num = "No phone number";
+    		p.setNum("No phone number");
     		counter++;
     		
     		for(Person p2 : master){
     			if((p.first).equals(p2.first) && (p.last).equals(p2.last)){
-    				p.num = p2.num;
+    				p.setNum(p2.getNum());
     			}
     		}
     		
@@ -89,13 +89,12 @@ public class DataDriver {
         	
         	//String link = "http://people.yellowpages.com/whitepages?first=" + p.first + "&last=" + p.last + "&zip=auburn&state=ma&site=79";
         	String link = "https://thatsthem.com/name/" + p.first + "-" + p.last + "/Auburn-MA";
-        	System.out.println(link);
-            html = Jsoup.connect((String)(link)).timeout(2000).get().html();
+            html = Jsoup.connect((String)(link)).timeout(5000).get().html();
         }
         catch (Exception e) {
         	System.out.println("error? " + e);
 			try {
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 			} catch (InterruptedException e1) {
 				e1.printStackTrace();
 			}
@@ -152,27 +151,7 @@ public class DataDriver {
      */
     public static LinkedList<House> houseMaker(File fin) {
     	
-    	FileHandler handler = new FileHandler(fin);
-    	LinkedList<Person> voters = handler.getList();
-       
     	
-    	LinkedList<House> houses = new LinkedList<House>();
-    	String curr = null;
-    	House nextHouse = null;
-    	
-    	for(Person p : voters){
-    		if(p.getAddress().equals(curr)){//if the same house
-    			
-    			nextHouse.addMember(p);
-    			
-    		} else {//if a new house
-    			nextHouse = new House(p);
-    			houses.add(nextHouse);
-    			curr = p.getAddress();
-    		}
-    	}
-    	
-    	handler.xmlHouseWrite(houses);
     	
     	return houses;
     	
