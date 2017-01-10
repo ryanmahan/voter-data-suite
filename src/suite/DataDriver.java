@@ -30,7 +30,6 @@ public class DataDriver {
         }
         File output = inputFileHandler.xmlWrite("data/temp.xml", voters);
         UX.setTableData(inputFileHandler.to3DArray());
-        //TODO: Progress Bar
         return output;
         
     }
@@ -43,11 +42,8 @@ public class DataDriver {
     	LinkedList<Person> need = needFileIO.getList(); 
     	LinkedList<Person> master = masterFileIO.getList();
     	
-    	double total = need.size();
-        double counter = 0;
     	for(Person p : need){
     		p.setNum("No phone number");
-    		counter++;
     		
     		for(Person p2 : master){
     			if((p.first).equals(p2.first) && (p.last).equals(p2.last)){
@@ -235,16 +231,16 @@ public class DataDriver {
      * 
      */
     
-	public static LinkedList<House> sortByDist(LinkedList<House> list){
-		
-		//double progress = 0;
-		
+	public static LinkedList<House> sortByDist(LinkedList<House> list, Gui UX){
+
 		@SuppressWarnings("unchecked")
 		LinkedList<House> precincts[] = new LinkedList[5];
 		for(int i = 0 ; i < 5 ; i++){
 			precincts[i] = new LinkedList<House>();
 		}
-		
+		Object[] elements = UX.createProgressBar(0, "Sort by Dist");
+		double total = list.size()*2;
+		double curr = 0;
 		for(House h : list){
 			int precinct = Integer.parseInt(h.getHead().getPrecinct());
 			if(precinct > 5){
@@ -257,11 +253,9 @@ public class DataDriver {
 				System.out.println(h.getAddress());
 				precincts[precinct-1].remove(h);
 			}
-			//progress++;
-			//TODO: Progress bar
+			UX.setProgress(elements, curr, total);
+			curr++;
 		}
-		
-		System.out.println("Got all lat long, moving on");
 		
 		LinkedList<House> output = new LinkedList<House>();
 		
@@ -269,21 +263,11 @@ public class DataDriver {
 			LinkedList<House> preOut = new LinkedList<House>();
 			preOut = recursiveSortHelper(pre.peek(), pre, preOut);
 			output.addAll(preOut);
-			//progress++;
-			//UX.progressBar((int) progress/list.size()/2); 
-		}
-		
-		for(House h : output){
-			if(h != null){
-				System.out.println(h.getAddress());
-			} else {
-				System.out.println("null house found");
-			}
+			UX.setProgress(elements, curr, total);
+			curr++; 
 		}
 		
 		return output;
-		
-
 	}
 
 	/*recursiveSortHelper

@@ -38,9 +38,7 @@ public class FileHandler {
 	public LinkedList<Person> getList() {
 
     	LinkedList<Person> list = null;
-    	if(file.getName().endsWith(".txt")){
-    		list = this.txtParse();
-    	} else if(file.getName().endsWith(".xml")){
+    	if(file.getName().endsWith(".xml")){
     		try {
 				list = this.xmlParse();
 			} catch (ParserConfigurationException e) {
@@ -51,7 +49,7 @@ public class FileHandler {
 				e.printStackTrace();
 			}
     	} else {
-    		throw new IllegalArgumentException("File not a .xml or .txt");
+    		throw new IllegalArgumentException("File not a .xml");
     	}
     	
     	return list;
@@ -305,52 +303,23 @@ public class FileHandler {
 
 	//END XML R/W
 	
-	/* textParse()
-	 * Also known as the hard-code-iest code Ive ever written intentionally
-	 * 
-	 * PLease forgive me, Ill figure out a way to make this legacy code one day
-	 * The idea is to basically only make this a dev-only function
-	 */
-	public LinkedList<Person> txtParse(){
-	    
-		Scanner names = null;
+	public LinkedList<Person> importTxt(String[] data){
+		
+		LinkedList<Person> list = new LinkedList<Person>();
+		Scanner scans = null;
 		try {
-			names = new Scanner(file);
+			scans = new Scanner(file);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
-        LinkedList<Person> list = new LinkedList<Person>();
-        
-        while (names.hasNextLine()) {
-        	
-            String curr = names.nextLine();
-            String[] splits = curr.split("\t");
-            if(splits.length == 2){
-            	list.add(new Person(splits[0], splits[1]));
-            }
-            else if(splits.length == 3){
-            	list.add(new Person(splits[0], splits[1], splits[2]));
-            }
-            else if(splits.length == 5){
-            	list.add(new Person(splits[0], splits[2], splits[1], splits[3], splits[4]));
-            }
-            else if(splits.length == 9){
-            	list.add(new Person(splits[0], splits[1], splits[2], splits[3], splits[4], "-1", splits[6], splits[5], splits[7], "1"));
-            }
-            else if(splits.length == 10){
-            	list.add(new Person(splits[0], splits[1], splits[2], splits[3], splits[4], splits[5], splits[6], splits[7], splits[8], splits[9]));
-            }
-            
-            
-        }	
-	    
-	        
-	    names.close();
-	    return list;
-	}
-	
-	public void importTxt(Gui UX){
 		
+		while(scans.hasNextLine()){
+			String line = scans.nextLine();
+			String[] splits = line.split("\t");
+			list.add(new Person(splits, data));
+		}
+		
+		return list;
 	}
 	
 	public void exportXML(File f){

@@ -86,8 +86,6 @@ public class ButtonActions {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			
-			@SuppressWarnings("unused")
-			
 			FileHandler fh = new FileHandler(internal);
 	       
 			LinkedList<Person> voters = fh.getList();
@@ -118,16 +116,27 @@ public class ButtonActions {
 	}
 	
 	public static class NotHome extends AbstractAction{
-
+		//TODO: Bugtest
+		Gui UX;
+		
+		public NotHome(Gui UX){
+			this.UX = UX;
+		}
+		
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			LinkedList<House> homeList = DataDriver.houseMaker(internal);
-			  System.out.println(homeList.size());
-			  for (House h : homeList){
-				  h.setNotHome();
-			  }
-			  //TODO: Finish this
+			LinkedList<Person> notHomes = new LinkedList<Person>();
+			for (House h : homeList){
+				h.setNotHome();
+				if(h.isNotHome()){
+					notHomes.add(h.getHead());
+				}
+			}
 			
+			FileHandler fh = new FileHandler(internal);
+			fh.xmlWrite("data/temp.xml", notHomes);
+			UX.setTableData(fh.to3DArray());
 		}
 		
 	}
@@ -146,15 +155,18 @@ public class ButtonActions {
 			  
 			  //sorry for this line below
 			  if(Integer.parseInt(sortList.peek().getHead().getPrecinct()) == -1){
-				  //this.setTextArea("No Precincts found, please enter file with Precincts!");
-				  return;
+				  JFrame frame = new JFrame();
+				  JOptionPane.showMessageDialog(frame,
+						    "No precincts found on list");
 			  }
 			  if(sortList.size() == 0){
-				  //this.setTextArea("No Homes Found");
+				  JFrame frame = new JFrame();
+				  JOptionPane.showMessageDialog(frame,
+						    "No Houses found on list");
 				  return;
 			  }
 
-			  sortList = DataDriver.sortByDist(sortList);
+			  sortList = DataDriver.sortByDist(sortList, UX);
 			  System.out.println("Recieved List of Houses: " + sortList.size());
 
 			  FileHandler fhSort = new FileHandler(internal);

@@ -3,6 +3,7 @@ package actions;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
+import java.util.LinkedList;
 
 import javax.swing.AbstractAction;
 import javax.swing.JFileChooser;
@@ -12,6 +13,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import suite.FileHandler;
 import suite.Gui;
+import suite.Person;
 
 
 @SuppressWarnings("serial")
@@ -138,7 +140,8 @@ public class FileMenuActions {
 
 		}
 	}
-
+	
+	static File imp;
 	public static class Import extends AbstractAction {
 
 		Gui UX;
@@ -147,13 +150,8 @@ public class FileMenuActions {
 			this.UX = UX;
 			this.created = created;
 		}
-		
-		private Object boxes = null;
-		
-		@Override
+
 		public void actionPerformed(ActionEvent e) {
-			//TODO: Write method to import tab-collacted txt file
-			
 			if(!created){
 				JFileChooser fc = new JFileChooser();
 				FileFilter filter = new FileNameExtensionFilter("Tab-Collated Excel File","txt");
@@ -161,13 +159,16 @@ public class FileMenuActions {
 				int choice = fc.showOpenDialog(null);
 				if(choice == JFileChooser.APPROVE_OPTION){
 					UX.createImportMenu();
+					imp = new File(fc.getSelectedFile().getAbsolutePath());
 				}
 			} else {
 				String[] input = UX.getImportArgs();
-				
+				FileHandler fh = new FileHandler(imp);
+				LinkedList<Person> list = fh.importTxt(input);
+				fh.xmlWrite("data/temp.xml", list);
+				fh = new FileHandler(internal);
+				UX.setTableData(fh.to3DArray());
 			}
-			
-			
 		}
 	}
 }

@@ -141,40 +141,35 @@ public class Gui extends JFrame implements ActionListener {
 	private JMenu createSortMenu(){
 		
 		JMenu sorts = new JMenu("Sort by");
+		sorts.setFont(menuFont);
 		
 		JMenuItem precinct = new JMenuItem();
-		precinct.setAction(new FileMenuActions.Export());
+		precinct.setAction(new SortMenuActions.precinct(this));
 		precinct.setText("Precinct");
 		precinct.addActionListener(this);
 		
-		JMenuItem first = new JMenuItem();
-		first.setAction(new FileMenuActions.Open(this));
-		first.setText("First");
-		first.addActionListener(this);
-
-		JMenuItem last = new JMenuItem();
-		last.setAction(new FileMenuActions.SaveAs(this));
-		last.setText("Last");
-		last.addActionListener(this);
+		JMenuItem name = new JMenuItem();
+		name.setAction(new SortMenuActions.name(this));
+		name.setText("Name");
+		name.addActionListener(this);
 
 		JMenuItem street = new JMenuItem();
-		street.setAction(new FileMenuActions.Export());
+		street.setAction(new SortMenuActions.street(this));
 		street.setText("Street");
 		street.addActionListener(this);
 
 		JMenuItem rank = new JMenuItem();
-		rank.setAction(new FileMenuActions.Import(this, false));
+		rank.setAction(new SortMenuActions.rank(this));
 		rank.setText("Rank");
 		rank.addActionListener(this);
 		
 		JMenuItem timesVoted = new JMenuItem();
-		timesVoted.setAction(new FileMenuActions.Import(this, false));
+		timesVoted.setAction(new SortMenuActions.timesVoted(this));
 		timesVoted.setText("Times Voted");
 		timesVoted.addActionListener(this);
 		
 		sorts.add(precinct);
-		sorts.add(first);
-		sorts.add(last);
+		sorts.add(name);
 		sorts.add(street);
 		sorts.add(rank);
 		sorts.add(timesVoted);
@@ -207,7 +202,7 @@ public class Gui extends JFrame implements ActionListener {
 		JButton showNotHome = new JButton();
 		showNotHome.addActionListener(this);
 		showNotHome.setActionCommand("notHome");
-		showNotHome.setAction(new ButtonActions.NotHome());
+		showNotHome.setAction(new ButtonActions.NotHome(this));
 		showNotHome.setText("Not Home");
 
 		JButton sortByDist = new JButton();
@@ -389,14 +384,11 @@ public class Gui extends JFrame implements ActionListener {
 	}
 	
 	private ArrayList<JComboBox<String>> columns = new ArrayList<JComboBox<String>>(8);
+	private JFrame menu = new JFrame("Import Menu");
 	
 	public void createImportMenu(){
 		
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		double width = screenSize.getWidth();
-		double height = screenSize.getHeight();
 		
-		JFrame menu = new JFrame("Import Menu");
 		menu.setSize(300,500);
 		GridLayout menuLayout = new GridLayout(1,2);
 		menuLayout.setColumns(2);
@@ -405,7 +397,7 @@ public class Gui extends JFrame implements ActionListener {
 		menuLayout.setVgap(25);
 		menu.setLayout(new FlowLayout());
 		
-		String[] personData = new String[]{"Empty", "First Name", "Last Name", "Street Number", "Street Name",
+		String[] personData = new String[]{"Empty", "Party", "First Name", "Last Name", "Street Number", "Street Name",
 					"Rank", "Precinct", "Phone Number", "Times Voted", "Notes"};
 		
 		
@@ -437,11 +429,13 @@ public class Gui extends JFrame implements ActionListener {
 	}
 	
 	public String[] getImportArgs(){
-		String[] input = new String[8];
+		String[] input = new String[columns.size()];
 		
-		for(int i = 0 ; i < 8 ; i++){
+		for(int i = 0 ; i < columns.size() ; i++){
 			input[i] = columns.get(i).getSelectedItem().toString();
 		}
+		menu.setVisible(false);
+		menu.dispose();
 		
 		return input;
 		

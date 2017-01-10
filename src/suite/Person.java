@@ -25,33 +25,8 @@ public class Person {
     double lat=0;
     double lng=0;
     
-
-    
-    
-    public Person(String f, String l) {
-        this.first = f;
-        this.last = l;
-        this.ID = counter;
-        counter++;
-    }
-    
-    public Person(String f, String l, String num){
-    	this.first = f;
-        this.last = l;
-        this.setNum(num);
-        this.ID = counter;
-        counter++;
-    }
-
-    public Person(String p, String f, String l, String stNum, String stName){
-    	this.party = p;
-    	this.first = f;
-    	this.last = l;
-    	this.snum = stNum;
-    	this.sname = stName;
-    	this.ID = counter;
-    	counter++;
-    }
+    public Person() {
+	}
     
     public Person(String p, String l, String f, String stNum, String stName, String rank, String timesVoted, String precinct, String notes, String phone){
     	if(first.equals("First Name")){
@@ -70,8 +45,41 @@ public class Person {
     	this.ID				= counter;
     	counter++;
     }
- 
-    public Person() {
+
+	public Person(String[] splits, String[] data) {
+		
+		for(int i = 0 ; i < splits.length ; i++){
+			if(data[i].equalsIgnoreCase("empty")){
+				continue;
+			}
+			else if(data[i].equalsIgnoreCase("Party")){
+				this.party = splits[i];
+			}
+			else if(data[i].equalsIgnoreCase("First Name")){
+				this.first = splits[i];
+			}
+			else if(data[i].equalsIgnoreCase("Last Name")){
+				this.last = splits[i];
+			}
+			else if(data[i].equalsIgnoreCase("Street Number")){
+				this.snum = splits[i];
+			}
+			else if(data[i].equalsIgnoreCase("Street Name")){
+				this.sname = splits[i];
+			}
+			else if(data[i].equalsIgnoreCase("Precinct")){
+				this.precinct = splits[i];
+			}
+			else if(data[i].equalsIgnoreCase("Phone Number")){
+				this.num = splits[i];
+			}
+			else if(data[i].equalsIgnoreCase("Times Voted")){
+				this.timesVoted = splits[i];
+			}
+			else if(data[i].equalsIgnoreCase("Notes")){
+				this.notes = splits[i];
+			}
+		}
 	}
 
 	public String getAddress(){
@@ -95,7 +103,6 @@ public class Person {
     
     public String[][] toArray(){
     	
-
     	String[] ret = new String[10];
     	ret[0] = this.party;
     	ret[1] = this.first;
