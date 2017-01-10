@@ -87,13 +87,15 @@ public class ButtonActions {
 		public void actionPerformed(ActionEvent e) {
 			
 			@SuppressWarnings("unused")
-			LinkedList<House> list = DataDriver.houseMaker(internal);
+			
 			FileHandler fh = new FileHandler(internal);
 	       
 			LinkedList<Person> voters = fh.getList();
 	    	LinkedList<House> houses = new LinkedList<House>();
 	    	String curr = null;
 	    	House nextHouse = null;
+	    	
+	    	
 	    	
 	    	
 	    	for(Person p : voters){

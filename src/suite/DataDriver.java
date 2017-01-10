@@ -151,7 +151,25 @@ public class DataDriver {
      */
     public static LinkedList<House> houseMaker(File fin) {
     	
+    	FileHandler fh = new FileHandler(new File("data/temp.txt"));
+	       
+		LinkedList<Person> voters = fh.getList();
+    	LinkedList<House> houses = new LinkedList<House>();
+    	String curr = null;
+    	House nextHouse = null;
     	
+    	
+    	for(Person p : voters){
+    		if(p.getAddress().equals(curr)){//if the same house
+    			
+    			nextHouse.addMember(p);
+    			
+    		} else {//if a new house
+    			nextHouse = new House(p);
+    			houses.add(nextHouse);
+    			curr = p.getAddress();
+    		}
+    	}
     	
     	return houses;
     	

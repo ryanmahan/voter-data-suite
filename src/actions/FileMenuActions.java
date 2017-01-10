@@ -142,18 +142,30 @@ public class FileMenuActions {
 	public static class Import extends AbstractAction {
 
 		Gui UX;
-		public Import (Gui UX){
+		boolean created;
+		public Import (Gui UX, Boolean created){
 			this.UX = UX;
+			this.created = created;
 		}
 		
+		private Object boxes = null;
 		
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			//TODO: Write method to import tab-collacted txt file
-			JFileChooser fc = new JFileChooser();
-			FileFilter filter = new FileNameExtensionFilter("Tab-Collated Excel File","txt");
-			fc.setFileFilter(filter);
-			int choice = fc.showOpenDialog(null);
+			
+			if(!created){
+				JFileChooser fc = new JFileChooser();
+				FileFilter filter = new FileNameExtensionFilter("Tab-Collated Excel File","txt");
+				fc.setFileFilter(filter);
+				int choice = fc.showOpenDialog(null);
+				if(choice == JFileChooser.APPROVE_OPTION){
+					UX.createImportMenu();
+				}
+			} else {
+				String[] input = UX.getImportArgs();
+				
+			}
 			
 			
 		}

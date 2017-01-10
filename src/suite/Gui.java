@@ -2,6 +2,7 @@ package suite;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
 
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
@@ -84,9 +85,12 @@ public class Gui extends JFrame implements ActionListener {
 	  menuBar = new JMenuBar();
 	  mainFrame.setJMenuBar(menuBar);
   
-		//create menu item
+	  //create menu item
 	  JMenu file = fileMenuItem();
 	  menuBar.add(file);
+	  
+	  JMenu sort = createSortMenu();
+	  menuBar.add(sort);
 		
 	  return menuBar;
 	  
@@ -113,7 +117,7 @@ public class Gui extends JFrame implements ActionListener {
 	  export.addActionListener(this);
 	  
 	  JMenuItem imp = new JMenuItem();
-	  imp.setAction(new FileMenuActions.Import(this));
+	  imp.setAction(new FileMenuActions.Import(this, false));
 	  imp.setText("Import");
 	  imp.addActionListener(this);
 	  
@@ -139,33 +143,33 @@ public class Gui extends JFrame implements ActionListener {
 		JMenu sorts = new JMenu("Sort by");
 		
 		JMenuItem precinct = new JMenuItem();
-		precinct.setAction(new FileMenuActions.Import(this));
-		precinct.setText("Import");
+		precinct.setAction(new FileMenuActions.Export());
+		precinct.setText("Precinct");
 		precinct.addActionListener(this);
 		
 		JMenuItem first = new JMenuItem();
 		first.setAction(new FileMenuActions.Open(this));
-		first.setText("Open");
+		first.setText("First");
 		first.addActionListener(this);
 
 		JMenuItem last = new JMenuItem();
 		last.setAction(new FileMenuActions.SaveAs(this));
-		last.setText("Save As");
+		last.setText("Last");
 		last.addActionListener(this);
 
 		JMenuItem street = new JMenuItem();
 		street.setAction(new FileMenuActions.Export());
-		street.setText("Export to Excel");
+		street.setText("Street");
 		street.addActionListener(this);
 
 		JMenuItem rank = new JMenuItem();
-		rank.setAction(new FileMenuActions.Import(this));
-		rank.setText("Import");
+		rank.setAction(new FileMenuActions.Import(this, false));
+		rank.setText("Rank");
 		rank.addActionListener(this);
 		
 		JMenuItem timesVoted = new JMenuItem();
-		timesVoted.setAction(new FileMenuActions.Import(this));
-		timesVoted.setText("Import");
+		timesVoted.setAction(new FileMenuActions.Import(this, false));
+		timesVoted.setText("Times Voted");
 		timesVoted.addActionListener(this);
 		
 		sorts.add(precinct);
@@ -384,9 +388,67 @@ public class Gui extends JFrame implements ActionListener {
 		timeRemain.update(timeRemain.getGraphics());
 	}
 	
+	private ArrayList<JComboBox<String>> columns = new ArrayList<JComboBox<String>>(8);
 	
-  	@Override
-	public void actionPerformed(ActionEvent arg0){}
+	public void createImportMenu(){
+		
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		double width = screenSize.getWidth();
+		double height = screenSize.getHeight();
+		
+		JFrame menu = new JFrame("Import Menu");
+		menu.setSize(300,500);
+		GridLayout menuLayout = new GridLayout(1,2);
+		menuLayout.setColumns(2);
+		menuLayout.setRows(9);
+		menuLayout.setHgap(10);
+		menuLayout.setVgap(25);
+		menu.setLayout(new FlowLayout());
+		
+		String[] personData = new String[]{"Empty", "First Name", "Last Name", "Street Number", "Street Name",
+					"Rank", "Precinct", "Phone Number", "Times Voted", "Notes"};
+		
+		
+		JPanel cbPanel = new JPanel(menuLayout);
+		
+		for(int i = 0 ; i < 9 ; i++){
+			JComboBox<String> cb = new JComboBox<String>(personData);
+			cb.setSelectedIndex(0);
+			cb.setFont(menuFont);
+			JLabel label = new JLabel("Data Type in column " + (i+1));
+			label.setFont(menuFont);
+			cbPanel.add(label);
+			cbPanel.add(cb);
+			columns.add(cb);
+		}
+		
+		menu.add(cbPanel);
+		
+		JButton done = new JButton("Done");
+		done.setAction(new FileMenuActions.Import(this, true));
+		done.setBackground(darkBlue);
+		done.setText("Done");
+		done.setForeground(Color.WHITE);
+		done.setOpaque(true);
 
+		menu.add(done);
+		menu.setVisible(true);
+		
+	}
+	
+	public String[] getImportArgs(){
+		String[] input = new String[8];
+		
+		for(int i = 0 ; i < 8 ; i++){
+			input[i] = columns.get(i).getSelectedItem().toString();
+		}
+		
+		return input;
+		
+	}
+	
+	public void actionPerformed(ActionEvent arg0){
+	}
+  	
 }
 
