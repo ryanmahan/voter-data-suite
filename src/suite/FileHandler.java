@@ -72,15 +72,15 @@ public class FileHandler {
 			
 			for(Person p : list){
 				Element person = doc.createElement("person"); //create element
-	    		person.setAttribute("first", p.first); //give it data
-	    		person.setAttribute("last", p.last);
+	    		person.setAttribute("first", p.getFirst()); //give it data
+	    		person.setAttribute("last", p.getLast());
 	    		person.setAttribute("number", p.getNum());
-	    		person.setAttribute("sname", p.sname);
-	    		person.setAttribute("snum", p.snum);
-	    		person.setAttribute("notes", p.notes);
-	    		person.setAttribute("rank", p.rank);
+	    		person.setAttribute("sname", p.getSname());
+	    		person.setAttribute("snum", p.getSnum());
+	    		person.setAttribute("notes", p.getNotes());
+	    		person.setAttribute("rank", p.getRank());
 	    		person.setAttribute("precinct", p.getPrecinct());
-	    		person.setAttribute("timesVoted", p.timesVoted);
+	    		person.setAttribute("timesVoted", p.getTimesVoted());
 	    		person.setAttribute("party", p.party);
 	    	
 	    		people.appendChild(person); //finalize element
@@ -117,15 +117,15 @@ public class FileHandler {
 			
 			for(Person p : list){
 				Element person = doc.createElement("person"); //create element
-	    		person.setAttribute("first", p.first); //give it data
-	    		person.setAttribute("last", p.last);
+	    		person.setAttribute("first", p.getFirst()); //give it data
+	    		person.setAttribute("last", p.getLast());
 	    		person.setAttribute("number", p.getNum());
-	    		person.setAttribute("sname", p.sname);
-	    		person.setAttribute("snum", p.snum);
-	    		person.setAttribute("notes", p.notes);
-	    		person.setAttribute("rank", p.rank);
+	    		person.setAttribute("sname", p.getSname());
+	    		person.setAttribute("snum", p.getSnum());
+	    		person.setAttribute("notes", p.getNotes());
+	    		person.setAttribute("rank", p.getRank());
 	    		person.setAttribute("precinct", p.getPrecinct());
-	    		person.setAttribute("timesVoted", p.timesVoted);
+	    		person.setAttribute("timesVoted", p.getTimesVoted());
 	    		person.setAttribute("party", p.party);
 	    	
 	    		people.appendChild(person); //finalize element
@@ -216,15 +216,15 @@ public class FileHandler {
 			
 			for(House h : houseList){
 				Element person = doc.createElement("person"); //create element
-	    		person.setAttribute("first", h.getHead().first); //give it data
-	    		person.setAttribute("last", h.getHead().last);
+	    		person.setAttribute("first", h.getHead().getFirst()); //give it data
+	    		person.setAttribute("last", h.getHead().getLast());
 	    		person.setAttribute("number", h.getHead().getNum());
-	    		person.setAttribute("sname", h.getHead().sname);
-	    		person.setAttribute("snum", h.getHead().snum);
-	    		person.setAttribute("notes", h.getHead().notes);
-	    		person.setAttribute("rank", h.getHead().rank);
+	    		person.setAttribute("sname", h.getHead().getSname());
+	    		person.setAttribute("snum", h.getHead().getSnum());
+	    		person.setAttribute("notes", h.getHead().getNotes());
+	    		person.setAttribute("rank", h.getHead().getRank());
 	    		person.setAttribute("precinct", h.getHead().getPrecinct());
-	    		person.setAttribute("timesVoted", h.getHead().timesVoted);
+	    		person.setAttribute("timesVoted", h.getHead().getTimesVoted());
 	    		person.setAttribute("party", h.getHead().party);
 	    		if(h.lat != 0){
 	    			

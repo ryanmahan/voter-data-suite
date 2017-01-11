@@ -10,15 +10,15 @@ public class Person {
 	
 	
 	String party = "";
-    String first = "";
-    String last = "";
-    String snum = "";//Street Number
-    String sname = "";//Street Name
+    private String first = "";
+    private String last = "";
+    private String snum = "";//Street Number
+    private String sname = "";//Street Name
     private String num = "";
-    String rank = "";
-    String timesVoted = "";
+    private String rank = "";
+    private String timesVoted = "";
     private String precinct = "";
-    String notes = "";
+    private String notes = "";
     int ID;
 
     int counter = 0;
@@ -29,18 +29,18 @@ public class Person {
 	}
     
     public Person(String p, String l, String f, String stNum, String stName, String rank, String timesVoted, String precinct, String notes, String phone){
-    	if(first.equals("First Name")){
+    	if(getFirst().equals("First Name")){
     		return;
     	}
     	this.party 			= p;
-    	this.first 			= f;
-    	this.last 			= l;
-    	this.snum 			= stNum;
-    	this.sname 			= stName;
-    	this.rank 			= rank;
+    	this.setFirst(f);
+    	this.setLast(l);
+    	this.setSnum(stNum);
+    	this.setSname(stName);
+    	this.setRank(rank);
     	this.precinct 		= precinct;
-    	this.timesVoted 	= timesVoted;
-    	this.notes 			= notes;
+    	this.setTimesVoted(timesVoted);
+    	this.setNotes(notes);
     	this.setNum(phone);
     	this.ID				= counter;
     	counter++;
@@ -56,16 +56,16 @@ public class Person {
 				this.party = splits[i];
 			}
 			else if(data[i].equalsIgnoreCase("First Name")){
-				this.first = splits[i];
+				this.setFirst(splits[i]);
 			}
 			else if(data[i].equalsIgnoreCase("Last Name")){
-				this.last = splits[i];
+				this.setLast(splits[i]);
 			}
 			else if(data[i].equalsIgnoreCase("Street Number")){
-				this.snum = splits[i];
+				this.setSnum(splits[i]);
 			}
 			else if(data[i].equalsIgnoreCase("Street Name")){
-				this.sname = splits[i];
+				this.setSname(splits[i]);
 			}
 			else if(data[i].equalsIgnoreCase("Precinct")){
 				this.precinct = splits[i];
@@ -74,16 +74,16 @@ public class Person {
 				this.num = splits[i];
 			}
 			else if(data[i].equalsIgnoreCase("Times Voted")){
-				this.timesVoted = splits[i];
+				this.setTimesVoted(splits[i]);
 			}
 			else if(data[i].equalsIgnoreCase("Notes")){
-				this.notes = splits[i];
+				this.setNotes(splits[i]);
 			}
 		}
 	}
 
 	public String getAddress(){
-    	return (this.snum + this.sname);
+    	return (this.getSnum() + " " + this.getSname());
     }
     
     public String getAllAvail(){
@@ -105,15 +105,15 @@ public class Person {
     	
     	String[] ret = new String[10];
     	ret[0] = this.party;
-    	ret[1] = this.first;
-    	ret[2] = this.last;
-    	ret[3] = this.snum;
-    	ret[4] = this.sname;
+    	ret[1] = this.getFirst();
+    	ret[2] = this.getLast();
+    	ret[3] = this.getSnum();
+    	ret[4] = this.getSname();
     	ret[5] = this.getNum();
-    	ret[6] = this.rank;
-    	ret[7] = this.timesVoted;
+    	ret[6] = this.getRank();
+    	ret[7] = this.getTimesVoted();
     	ret[8] = this.precinct;
-    	ret[9] = this.notes;
+    	ret[9] = this.getNotes();
     	
     	boolean filledIn[] = new boolean[10];
     	boolean visited[] = new boolean[10];
@@ -237,7 +237,7 @@ public class Person {
        
         
     }
-
+    
 	public String getPrecinct() {
 		return precinct;
 	}
@@ -252,6 +252,62 @@ public class Person {
 
 	public void setNum(String num) {
 		this.num = num;
+	}
+
+	public String getSname() {
+		return sname;
+	}
+
+	public void setSname(String sname) {
+		this.sname = sname;
+	}
+
+	public String getSnum() {
+		return snum;
+	}
+
+	public void setSnum(String snum) {
+		this.snum = snum;
+	}
+
+	public String getFirst() {
+		return first;
+	}
+
+	public void setFirst(String first) {
+		this.first = first;
+	}
+
+	public String getLast() {
+		return last;
+	}
+
+	public void setLast(String last) {
+		this.last = last;
+	}
+
+	public String getRank() {
+		return rank;
+	}
+
+	public void setRank(String rank) {
+		this.rank = rank;
+	}
+
+	public String getTimesVoted() {
+		return timesVoted;
+	}
+
+	public void setTimesVoted(String timesVoted) {
+		this.timesVoted = timesVoted;
+	}
+
+	public String getNotes() {
+		return notes;
+	}
+
+	public void setNotes(String notes) {
+		this.notes = notes;
 	}
     
 }

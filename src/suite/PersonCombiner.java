@@ -13,23 +13,23 @@ public class PersonCombiner {
 	
 	public boolean isMatch(){
 		
-		if(!p1.first.isEmpty() && !p2.first.isEmpty()){//if both not empty
-			if(!p1.first.equalsIgnoreCase(p2.first)){//if do not equal
+		if(!p1.getFirst().isEmpty() && !p2.getFirst().isEmpty()){//if both not empty
+			if(!p1.getFirst().equalsIgnoreCase(p2.getFirst())){//if do not equal
 				return false;//return false, we dont care about the rest of this method, since one data point didnt match
 			}
 		}
-		if(!p1.last.isEmpty() && !p2.last.isEmpty()){
-			if(!p1.last.equalsIgnoreCase(p2.last)){
+		if(!p1.getLast().isEmpty() && !p2.getLast().isEmpty()){
+			if(!p1.getLast().equalsIgnoreCase(p2.getLast())){
 				return false;
 			}
 		}
-		if(!p1.snum.isEmpty() && !p2.snum.isEmpty()){
-			if(!p1.snum.equalsIgnoreCase(p2.snum)){
+		if(!p1.getSnum().isEmpty() && !p2.getSnum().isEmpty()){
+			if(!p1.getSnum().equalsIgnoreCase(p2.getSnum())){
 				return false;
 			}
 		}
-		if(!p1.sname.isEmpty() && !p2.sname.isEmpty()){
-			if(!p1.sname.equalsIgnoreCase(p2.sname)){
+		if(!p1.getSname().isEmpty() && !p2.getSname().isEmpty()){
+			if(!p1.getSname().equalsIgnoreCase(p2.getSname())){
 				return false;
 			}
 		}
@@ -38,8 +38,8 @@ public class PersonCombiner {
 				return false;
 			}
 		}
-		if(!p1.rank.isEmpty() && !p2.rank.isEmpty()){
-			if(!p1.rank.equalsIgnoreCase(p2.rank)){
+		if(!p1.getRank().isEmpty() && !p2.getRank().isEmpty()){
+			if(!p1.getRank().equalsIgnoreCase(p2.getRank())){
 				return false;
 			}
 		}
@@ -48,13 +48,13 @@ public class PersonCombiner {
 				return false;
 			}
 		}
-		if(!p1.timesVoted.isEmpty() && !p2.timesVoted.isEmpty()){
-			if(!p1.timesVoted.equalsIgnoreCase(p2.timesVoted)){
+		if(!p1.getTimesVoted().isEmpty() && !p2.getTimesVoted().isEmpty()){
+			if(!p1.getTimesVoted().equalsIgnoreCase(p2.getTimesVoted())){
 				return false;
 			}
 		}
-		if(!p1.notes.isEmpty() && !p2.notes.isEmpty()){
-			if(!p1.notes.equalsIgnoreCase(p2.notes)){
+		if(!p1.getNotes().isEmpty() && !p2.getNotes().isEmpty()){
+			if(!p1.getNotes().equalsIgnoreCase(p2.getNotes())){
 				return false;
 			}
 		}
@@ -65,33 +65,33 @@ public class PersonCombiner {
 		
 		Person output = new Person();
 		
-		if(!p1.first.isEmpty() && p2.first.isEmpty()){
-			output.first = p1.first;
-		} else if(p1.first.isEmpty() && !p2.first.isEmpty()){
-			output.first = p2.first;
-		} else if(!p1.first.isEmpty() && !p2.first.isEmpty()){
-			output.first = p1.first;
+		if(!p1.getFirst().isEmpty() && p2.getFirst().isEmpty()){
+			output.setFirst(p1.getFirst());
+		} else if(p1.getFirst().isEmpty() && !p2.getFirst().isEmpty()){
+			output.setFirst(p2.getFirst());
+		} else if(!p1.getFirst().isEmpty() && !p2.getFirst().isEmpty()){
+			output.setFirst(p1.getFirst());
 		}
-		if(!p1.last.isEmpty() && p2.last.isEmpty()){
-			output.last = p1.last;
-		} else if(p1.last.isEmpty() && !p2.last.isEmpty()){
-			output.last = p2.last;
-		} else if(!p1.last.isEmpty() && !p2.last.isEmpty()){
-			output.last = p1.last;
+		if(!p1.getLast().isEmpty() && p2.getLast().isEmpty()){
+			output.setLast(p1.getLast());
+		} else if(p1.getLast().isEmpty() && !p2.getLast().isEmpty()){
+			output.setLast(p2.getLast());
+		} else if(!p1.getLast().isEmpty() && !p2.getLast().isEmpty()){
+			output.setLast(p1.getLast());
 		}
-		if(!p1.snum.isEmpty() && p2.snum.isEmpty()){
-			output.snum = p1.snum;
-		} else if(p1.snum.isEmpty() && !p2.snum.isEmpty()){
-			output.snum = p2.snum;
-		} else if(!p1.snum.isEmpty() && !p2.snum.isEmpty()){
-			output.snum = p1.snum;
+		if(!p1.getSnum().isEmpty() && p2.getSnum().isEmpty()){
+			output.setSnum(p1.getSnum());
+		} else if(p1.getSnum().isEmpty() && !p2.getSnum().isEmpty()){
+			output.setSnum(p2.getSnum());
+		} else if(!p1.getSnum().isEmpty() && !p2.getSnum().isEmpty()){
+			output.setSnum(p1.getSnum());
 		}
-		if(!p1.sname.isEmpty() && p2.sname.isEmpty()){
-			output.sname = p1.sname;
-		} else if(p1.sname.isEmpty() && !p2.sname.isEmpty()){
-			output.sname = p2.sname;
-		} else if(!p1.sname.isEmpty() && !p2.sname.isEmpty()){
-			output.sname = p1.sname;
+		if(!p1.getSname().isEmpty() && p2.getSname().isEmpty()){
+			output.setSname(p1.getSname());
+		} else if(p1.getSname().isEmpty() && !p2.getSname().isEmpty()){
+			output.setSname(p2.getSname());
+		} else if(!p1.getSname().isEmpty() && !p2.getSname().isEmpty()){
+			output.setSname(p1.getSname());
 		}
 		if(!p1.getNum().isEmpty() && p2.getNum().isEmpty()){
 			output.setNum(p1.getNum());
@@ -100,12 +100,12 @@ public class PersonCombiner {
 		} else if(!p1.getNum().isEmpty() && !p2.getNum().isEmpty()){
 			output.setNum(p1.getNum());
 		}
-		if(!p1.rank.isEmpty() && p2.rank.isEmpty()){
-			output.rank = p1.rank;
-		} else if(p1.rank.isEmpty() && !p2.rank.isEmpty()){
-			output.rank = p2.rank;
-		} else if(!p1.rank.isEmpty() && !p2.rank.isEmpty()){
-			output.rank = p1.rank;
+		if(!p1.getRank().isEmpty() && p2.getRank().isEmpty()){
+			output.setRank(p1.getRank());
+		} else if(p1.getRank().isEmpty() && !p2.getRank().isEmpty()){
+			output.setRank(p2.getRank());
+		} else if(!p1.getRank().isEmpty() && !p2.getRank().isEmpty()){
+			output.setRank(p1.getRank());
 		}
 		if(!p1.getPrecinct().isEmpty() && p2.getPrecinct().isEmpty()){
 			output.setPrecinct(p1.getPrecinct());
@@ -114,19 +114,19 @@ public class PersonCombiner {
 		} else if(!p1.getPrecinct().isEmpty() && !p2.getPrecinct().isEmpty()){
 			output.setPrecinct(p1.getPrecinct());
 		}
-		if(!p1.timesVoted.isEmpty() && p2.timesVoted.isEmpty()){
-			output.timesVoted = p1.timesVoted;
-		} else if(p1.timesVoted.isEmpty() && !p2.timesVoted.isEmpty()){
-			output.timesVoted = p2.timesVoted;
-		} else if(!p1.timesVoted.isEmpty() && !p2.timesVoted.isEmpty()){
-			output.timesVoted = p1.timesVoted;
+		if(!p1.getTimesVoted().isEmpty() && p2.getTimesVoted().isEmpty()){
+			output.setTimesVoted(p1.getTimesVoted());
+		} else if(p1.getTimesVoted().isEmpty() && !p2.getTimesVoted().isEmpty()){
+			output.setTimesVoted(p2.getTimesVoted());
+		} else if(!p1.getTimesVoted().isEmpty() && !p2.getTimesVoted().isEmpty()){
+			output.setTimesVoted(p1.getTimesVoted());
 		}
-		if(!p1.notes.isEmpty() && p2.notes.isEmpty()){
-			output.notes = p1.notes;
-		} else if(p1.notes.isEmpty() && !p2.notes.isEmpty()){
-			output.notes = p2.notes;
-		} else if(!p1.notes.isEmpty() && !p2.notes.isEmpty()){
-			output.notes = p1.notes;
+		if(!p1.getNotes().isEmpty() && p2.getNotes().isEmpty()){
+			output.setNotes(p1.getNotes());
+		} else if(p1.getNotes().isEmpty() && !p2.getNotes().isEmpty()){
+			output.setNotes(p2.getNotes());
+		} else if(!p1.getNotes().isEmpty() && !p2.getNotes().isEmpty()){
+			output.setNotes(p1.getNotes());
 		}
 		
 		return output;

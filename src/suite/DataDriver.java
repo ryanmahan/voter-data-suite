@@ -46,7 +46,7 @@ public class DataDriver {
     		p.setNum("No phone number");
     		
     		for(Person p2 : master){
-    			if((p.first).equals(p2.first) && (p.last).equals(p2.last)){
+    			if((p.getFirst()).equals(p2.getFirst()) && (p.getLast()).equals(p2.getLast())){
     				p.setNum(p2.getNum());
     			}
     		}
@@ -79,12 +79,12 @@ public class DataDriver {
     public static String HTMLGet(Person p) {
     	String html = null;
         try {
-        	String streetName = p.sname;
+        	String streetName = p.getSname();
         	streetName = streetName.replaceAll(" ", "+");
         	//String link = "http://www.whitepages.com/search/FindNearby?&street="+ p.snum + "+" + streetName + "&where=Auburn+Ma";
         	
         	//String link = "http://people.yellowpages.com/whitepages?first=" + p.first + "&last=" + p.last + "&zip=auburn&state=ma&site=79";
-        	String link = "https://thatsthem.com/name/" + p.first + "-" + p.last + "/Auburn-MA";
+        	String link = "https://thatsthem.com/name/" + p.getFirst() + "-" + p.getLast() + "/Auburn-MA";
             html = Jsoup.connect((String)(link)).timeout(5000).get().html();
         }
         catch (Exception e) {

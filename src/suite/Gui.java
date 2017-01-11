@@ -9,6 +9,7 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 
 import actions.*;
+import actions.EntryActions;
 
 
 
@@ -91,6 +92,9 @@ public class Gui extends JFrame implements ActionListener {
 	  
 	  JMenu sort = createSortMenu();
 	  menuBar.add(sort);
+	  
+	  JMenu entry = createDataEntryMenu();
+	  menuBar.add(entry);
 		
 	  return menuBar;
 	  
@@ -167,6 +171,7 @@ public class Gui extends JFrame implements ActionListener {
 		timesVoted.setAction(new SortMenuActions.timesVoted(this));
 		timesVoted.setText("Times Voted");
 		timesVoted.addActionListener(this);
+		timesVoted.setFont(menuFont);
 		
 		sorts.add(precinct);
 		sorts.add(name);
@@ -174,10 +179,72 @@ public class Gui extends JFrame implements ActionListener {
 		sorts.add(rank);
 		sorts.add(timesVoted);
 		sorts.setFont(menuFont);
+		  
+		  for(Component c : sorts.getMenuComponents()){
+			  c.setFont(menuFont);
+		  }
 		
 		return sorts;
 	}
 
+	private JMenu createDataEntryMenu(){
+		
+		JMenu dataEntry = new JMenu("Data Entry");
+		
+		JMenuItem enableTableEditing = new JMenuItem("Edit in Table");
+		enableTableEditing.setActionCommand("enableTableEditing");
+		enableTableEditing.addActionListener(this);
+		
+		JMenu massEntry = new JMenu("Specialized Entry");
+		massEntry.setFont(menuFont);
+		
+		
+		
+		JMenuItem byRank = new JMenuItem();
+		byRank.setAction(new EntryActions.RankEntry(this));
+		byRank.setActionCommand("batchRank");
+		byRank.addActionListener(this);
+		byRank.setText("Rank");
+		
+		JMenuItem byNotes = new JMenuItem("Batch Notes");
+		byNotes.setAction(new EntryActions.NotesEntry(this));
+		byNotes.setActionCommand("batchNotes");
+		byNotes.addActionListener(this);
+		byNotes.setText("Notes");
+		
+		JMenuItem byNotHome = new JMenuItem("Batch Not Home");
+		byNotHome.setAction(new EntryActions.NotHomeEntry(this));
+		byNotHome.setActionCommand("batchNotHome");
+		byNotHome.addActionListener(this);
+		byNotHome.setText("Not Home");
+		
+		JMenuItem allData = new JMenuItem("All data");
+		allData.setAction(new EntryActions.anyEntry(this));
+		allData.addActionListener(this);
+		allData.setText("All Data");
+		
+		dataEntry.add(enableTableEditing);
+		dataEntry.add(massEntry);
+		massEntry.add(allData);
+		massEntry.add(byNotHome);
+		massEntry.add(byRank);
+		massEntry.add(byNotes);
+		
+		dataEntry.setFont(menuFont);
+		dataEntry.setVisible(true);
+		
+		for(Component c : dataEntry.getMenuComponents()){
+			  c.setFont(menuFont);
+		  }
+		
+		for(Component c : massEntry.getMenuComponents()){
+			  c.setFont(menuFont);
+		}
+		
+		return dataEntry;
+		
+		
+	}
   
 	private JPanel createButtons(){
 
@@ -261,6 +328,7 @@ public class Gui extends JFrame implements ActionListener {
 
 		if(tablePanel != null)
 			tablePanel.removeAll();
+		
 		tablePanel.add(table);
 		tablePanel.revalidate();
 		tablePanel.repaint();
@@ -345,6 +413,7 @@ public class Gui extends JFrame implements ActionListener {
 		
 		return new Object[]{label, prog};
 	}
+	
 	static boolean done = false;
 	double start = 0;
 	double time = 0;
@@ -443,6 +512,5 @@ public class Gui extends JFrame implements ActionListener {
 	
 	public void actionPerformed(ActionEvent arg0){
 	}
-  	
 }
 

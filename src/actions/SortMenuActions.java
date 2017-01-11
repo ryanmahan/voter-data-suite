@@ -1,24 +1,56 @@
 package actions;
 
 import java.awt.event.ActionEvent;
+import java.io.File;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedList;
 
 import javax.swing.AbstractAction;
 
+import suite.FileHandler;
 import suite.Gui;
+import suite.Person;
 
 @SuppressWarnings("serial")
 public class SortMenuActions {
 
+	private final static File internal = new File("data/temp.xml");
+	
+	
 	public static class street extends AbstractAction{
 
 		Gui UX;
 		public street(Gui UX){
 			this.UX = UX;
 		}
-		
-		
+
 		public void actionPerformed(ActionEvent arg0) {
-			// TODO Auto-generated method stub
+			
+			FileHandler fh = new FileHandler(internal);
+			LinkedList<Person> list = fh.getList();
+			
+			Comparator<Person> comparatorSname = new Comparator<Person>() {
+	            @Override
+	            public int compare(Person p1, Person p2) {
+	                return p1.getSname().compareToIgnoreCase(p2.getSname());
+	            }
+	                  };
+	        System.out.println(list.poll().getAllAvail());   
+			Collections.sort(list, comparatorSname);
+			System.out.println(list.poll().getAllAvail());  
+			Comparator<Person> comparatorSnum = new Comparator<Person>() {
+	            @Override
+	            public int compare(Person p1, Person p2) {
+	                return p1.getSnum().compareTo(p2.getSnum());
+	            }
+	                  };     
+	                  
+	       list.sort(comparatorSnum);
+	       
+	       fh.xmlWrite(internal.getAbsolutePath(), list);
+	       UX.setTableData(fh.to3DArray());
+	       
 		}
 	}
 	
@@ -31,7 +63,33 @@ public class SortMenuActions {
 		
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// TODO Auto-generated method stub
+			
+			FileHandler fh = new FileHandler(internal);
+			LinkedList<Person> list = fh.getList();
+			
+			Comparator<Person> comparatorLast = new Comparator<Person>() {
+	            @Override
+	            public int compare(Person p1, Person p2) {
+	                return p1.getLast().compareTo(p2.getLast());
+	            }
+	                  }; 
+	                  
+	       Collections.sort(list, comparatorLast);
+	       
+	       Comparator<Person> comparatorFirst = new Comparator<Person>() {
+	            @Override
+	            public int compare(Person p1, Person p2) {
+	            	if(p1.getLast().equals(p2.getLast()))
+	            		return p1.getFirst().compareTo(p2.getFirst());
+	            	else
+	            		return 0;
+	            }
+	                  };
+	                  
+	       Collections.sort(list, comparatorFirst); 
+	       
+	       fh.xmlWrite(internal.getAbsolutePath(), list);
+	       UX.setTableData(fh.to3DArray());
 		}
 	}
 	
@@ -44,7 +102,40 @@ public class SortMenuActions {
 		
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// TODO Auto-generated method stub
+			
+			FileHandler fh = new FileHandler(internal);
+			LinkedList<Person> list = fh.getList();
+			
+			Comparator<Person> comparatorPrecinct = new Comparator<Person>() {
+	            @Override
+	            public int compare(Person p1, Person p2) {
+	                return p1.getPrecinct().compareTo(p2.getPrecinct());
+	            }
+	                  }; 
+	                  
+	        list.sort(comparatorPrecinct);  
+	        
+	        Comparator<Person> comparatorSname = new Comparator<Person>() {
+	            @Override
+	            public int compare(Person p1, Person p2) {
+	                return p1.getSname().compareTo(p2.getSname());
+	            }
+	                  };
+	                  
+			list.sort(comparatorSname);
+			
+			Comparator<Person> comparatorSnum = new Comparator<Person>() {
+	            @Override
+	            public int compare(Person p1, Person p2) {
+	                return p1.getSnum().compareTo(p2.getSnum());
+	            }
+	                  };     
+	                  
+	       list.sort(comparatorSnum);
+	       
+	       fh.xmlWrite(internal.getAbsolutePath(), list);
+	       UX.setTableData(fh.to3DArray());
+	        
 		}
 	}
 	
@@ -57,7 +148,39 @@ public class SortMenuActions {
 		
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// TODO Auto-generated method stub
+
+			FileHandler fh = new FileHandler(internal);
+			LinkedList<Person> list = fh.getList();
+			
+			Comparator<Person> comparatorRank = new Comparator<Person>() {
+	            @Override
+	            public int compare(Person p1, Person p2) {
+	                return p1.getRank().compareTo(p2.getRank());
+	            }
+	                  }; 
+	                  
+	        list.sort(comparatorRank);
+	        
+	        Comparator<Person> comparatorSname = new Comparator<Person>() {
+	            @Override
+	            public int compare(Person p1, Person p2) {
+	                return p1.getSname().compareTo(p2.getSname());
+	            }
+	                  };
+	                  
+			list.sort(comparatorSname);
+			
+			Comparator<Person> comparatorSnum = new Comparator<Person>() {
+	            @Override
+	            public int compare(Person p1, Person p2) {
+	                return p1.getSnum().compareTo(p2.getSnum());
+	            }
+	                  };     
+	                  
+	       list.sort(comparatorSnum);
+	       
+	       fh.xmlWrite(internal.getAbsolutePath(), list);
+	       UX.setTableData(fh.to3DArray());
 		}
 	}
 	
@@ -70,7 +193,39 @@ public class SortMenuActions {
 		
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// TODO Auto-generated method stub
+
+			FileHandler fh = new FileHandler(internal);
+			LinkedList<Person> list = fh.getList();
+			
+			Comparator<Person> comparatorTimesVoted = new Comparator<Person>() {
+	            @Override
+	            public int compare(Person p1, Person p2) {
+	                return p1.getTimesVoted().compareTo(p2.getTimesVoted());
+	            }
+	                  }; 
+	                  
+	        list.sort(comparatorTimesVoted);
+	        
+	        Comparator<Person> comparatorSname = new Comparator<Person>() {
+	            @Override
+	            public int compare(Person p1, Person p2) {
+	                return p1.getSname().compareTo(p2.getSname());
+	            }
+	                  };
+	                  
+			list.sort(comparatorSname);
+			
+			Comparator<Person> comparatorSnum = new Comparator<Person>() {
+	            @Override
+	            public int compare(Person p1, Person p2) {
+	                return p1.getSnum().compareTo(p2.getSnum());
+	            }
+	                  };     
+	                  
+	       list.sort(comparatorSnum);
+	       
+	       fh.xmlWrite(internal.getAbsolutePath(), list);
+	       UX.setTableData(fh.to3DArray());
 		}
 	}
 

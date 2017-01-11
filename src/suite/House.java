@@ -43,7 +43,7 @@ public class House {
 	}
 	
 	public String getAddress(){
-		return (getHead().snum + " " + getHead().sname);
+		return (getHead().getSnum() + " " + getHead().getSname());
 	}
 	
 	public int getSize(){
@@ -67,7 +67,7 @@ public class House {
 		boolean test = false;
 		
 		for(Person p : this.getMembers()){
-			if(p.notes.contains("Not Home") || p.notes.contains("NH")){
+			if(p.getNotes().contains("Not Home") || p.getNotes().contains("NH")){
 				test = true;
 			}
 		}
