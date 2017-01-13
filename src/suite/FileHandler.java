@@ -300,8 +300,6 @@ public class FileHandler {
 		return output;
 	
 	}
-
-	//END XML R/W
 	
 	public LinkedList<Person> importTxt(String[] data){
 		

@@ -127,7 +127,10 @@ public class SortMenuActions {
 			Comparator<Person> comparatorSnum = new Comparator<Person>() {
 	            @Override
 	            public int compare(Person p1, Person p2) {
-	                return p1.getSnum().compareTo(p2.getSnum());
+	            	if(p1.getSname().equals(p2.getSname()))
+	            		return p1.getSnum().compareTo(p2.getSnum());
+	            	else 
+	            		return 0;
 	            }
 	                  };     
 	                  

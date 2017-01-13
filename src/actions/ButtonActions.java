@@ -2,6 +2,7 @@ package actions;
 
 
 import java.io.File;
+import java.util.Iterator;
 import java.util.LinkedList;
 
 import java.awt.event.ActionEvent;
@@ -187,12 +188,12 @@ public class ButtonActions {
 		
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// TODO bugtest
+			/*// TODO re-write
 			JFileChooser fc = new JFileChooser();
-			FileFilter filter = new FileNameExtensionFilter("Ryans Voter Data","txt");
+			FileFilter filter = new FileNameExtensionFilter("Ryans Voter Data","xml");
 			
 			fc.setFileFilter(filter);
-			int choice = fc.showSaveDialog(null);
+			int choice = fc.showOpenDialog(null);
 			File f = null;
 			if(choice == JFileChooser.APPROVE_OPTION) {
 				String filename = fc.getSelectedFile().getAbsolutePath();
@@ -204,27 +205,81 @@ public class ButtonActions {
 				LinkedList<Person> list1 =  fhInt.getList();
 				LinkedList<Person> list2 = fhExt.getList();
 				LinkedList<Person> output = new LinkedList<Person>();
+				Iterator<Person> iter1 = list1.iterator();
+				Iterator<Person> iter2 = list2.iterator();
+				System.out.println("Going into loop");
 				
-				for(Person p1 :  list1){
-					for(Person p2 : list2){
+				int currTaskNumber = 0;
+				Boolean matchFound = false;
+				while(iter1.hasNext()){
+					Person p1 = iter1.next();
+					while(iter2.hasNext()){
+						matchFound = false;
+						currTaskNumber++;
+						Person p2 = iter2.next();
 						PersonCombiner pc = new PersonCombiner(p1, p2);
 						if(pc.isMatch()){
-							list1.remove(p1);
-							list2.remove(p2);
 							output.add(pc.combine());
+							iter1.remove();
+							iter2.remove();
+							break;
 						}
 					}
+					if(!matchFound)
+						output.add(p1);
+					
 				}
+				
+				System.out.println("Exited");
+				
+				System.out.println(output.size());
+				while(iter2.hasNext()){
+					Person p2 = iter2.next();
+					output.add(p2);
+				}
+				System.out.println(output.size());
 				
 				fhInt.xmlWrite(internal.getName(), output);
 				UX.setTableData(fhInt.to3DArray());
-				
+				*/
+			//}	
+		}
+	}
+	
+	public static class saveTableEdits extends AbstractAction{
+		
+		Gui UX;
+		public saveTableEdits(Gui UX){
+			this.UX = UX;
+		}
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			
+			Object[][][] array = UX.getTableData();
+			String[] dataType = new String[array[0].length];
+			LinkedList<Person> list = new LinkedList<Person>();
+			
+			for(int i = 0 ; i < array[0].length ; i++){
+				dataType[i] = (String) array[0][i][1];
+				System.out.println(dataType[i]);
 			}
 			
+			for(int i = 0 ; i < array.length ; i++){
+				String[] values = new String[array[0].length];
+				for(int j = 0 ; j < array[0].length ; j++){
+					values[j] = (String) array[i][j][0];
+				}
+				list.add(new Person(values, dataType));
+			}
 			
+			FileHandler fh = new FileHandler(internal);
+			fh.xmlWrite(internal.getAbsolutePath(), list);
+			UX.setTableData(fh.to3DArray());
 			
 		}
-
+		
+		
+		
 	}
 	
 }

@@ -46,38 +46,41 @@ public class Person {
     	counter++;
     }
 
-	public Person(String[] splits, String[] data) {
+	public Person(String[] values, String[] dataType) {
 		
-		for(int i = 0 ; i < splits.length ; i++){
-			if(data[i].equalsIgnoreCase("empty")){
+		for(int i = 0 ; i < values.length ; i++){
+			if(dataType[i].equalsIgnoreCase("empty") || dataType[i].equalsIgnoreCase("row")){
 				continue;
 			}
-			else if(data[i].equalsIgnoreCase("Party")){
-				this.party = splits[i];
+			else if(dataType[i].equalsIgnoreCase("Party")){
+				this.party = values[i];
 			}
-			else if(data[i].equalsIgnoreCase("First Name")){
-				this.setFirst(splits[i]);
+			else if(dataType[i].equalsIgnoreCase("First Name") || dataType[i].equalsIgnoreCase("First")){
+				this.setFirst(values[i]);
 			}
-			else if(data[i].equalsIgnoreCase("Last Name")){
-				this.setLast(splits[i]);
+			else if(dataType[i].equalsIgnoreCase("Last Name") || dataType[i].equalsIgnoreCase("Last")){
+				this.setLast(values[i]);
 			}
-			else if(data[i].equalsIgnoreCase("Street Number")){
-				this.setSnum(splits[i]);
+			else if(dataType[i].equalsIgnoreCase("Street Number") || dataType[i].equalsIgnoreCase("St. Number")){
+				this.setSnum(values[i]);
 			}
-			else if(data[i].equalsIgnoreCase("Street Name")){
-				this.setSname(splits[i]);
+			else if(dataType[i].equalsIgnoreCase("Street Name") || dataType[i].equalsIgnoreCase("St. Name")){
+				this.setSname(values[i]);
 			}
-			else if(data[i].equalsIgnoreCase("Precinct")){
-				this.precinct = splits[i];
+			else if(dataType[i].equalsIgnoreCase("Precinct")){
+				this.precinct = values[i];
 			}
-			else if(data[i].equalsIgnoreCase("Phone Number")){
-				this.num = splits[i];
+			else if(dataType[i].equalsIgnoreCase("Phone Number") || dataType[i].equalsIgnoreCase("Phone")){
+				this.num = values[i];
 			}
-			else if(data[i].equalsIgnoreCase("Times Voted")){
-				this.setTimesVoted(splits[i]);
+			else if(dataType[i].equalsIgnoreCase("Times Voted")){
+				this.setTimesVoted(values[i]);
 			}
-			else if(data[i].equalsIgnoreCase("Notes")){
-				this.setNotes(splits[i]);
+			else if(dataType[i].equalsIgnoreCase("Notes")){
+				this.setNotes(values[i]);
+			}
+			else if(dataType[i].equalsIgnoreCase("Rank")){
+				this.setNotes(values[i]);
 			}
 		}
 	}
@@ -176,7 +179,7 @@ public class Person {
     		}
     		else if(filledIn[7] && !visited[7]){
     			output[i][0] = ret[7];
-    			output[i][1] = "Voted";
+    			output[i][1] = "Times Voted";
     			visited[7] = true;
     			continue;
     		}

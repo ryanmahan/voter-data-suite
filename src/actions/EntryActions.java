@@ -17,6 +17,23 @@ public class EntryActions {
 
 	private static final File internal = new File("data/temp.xml");
 	
+	public static class TableEdits extends AbstractAction {
+		
+		Gui UX;
+		public TableEdits(Gui UX){
+			this.UX = UX;
+		}
+		
+		
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			UX.toggleTableEditing();
+		}
+		
+	}
+	
+	
+	
 	public static class RankEntry extends AbstractAction {
 
 		Gui UX;

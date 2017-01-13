@@ -19,10 +19,11 @@ public class Gui extends JFrame implements ActionListener {
 
 	private final Color darkBlue = new Color(17,14,111);
 	private final Font menuFont = new Font("Arial", Font.PLAIN, 12);
-	private JPanel tablePanel = new JPanel(new GridBagLayout());
+	private JPanel tablePanel = new JPanel(new BorderLayout());
 	private JFrame mainFrame;
 	private JTable table;
 	private ImageIcon img = new ImageIcon("data/icon.png");
+	private Boolean isTableEditable = false;
 	
 	public Gui(){
 		prepareGUI();
@@ -191,14 +192,13 @@ public class Gui extends JFrame implements ActionListener {
 		
 		JMenu dataEntry = new JMenu("Data Entry");
 		
-		JMenuItem enableTableEditing = new JMenuItem("Edit in Table");
-		enableTableEditing.setActionCommand("enableTableEditing");
+		JCheckBoxMenuItem enableTableEditing = new JCheckBoxMenuItem("Edit in Table");
 		enableTableEditing.addActionListener(this);
+		enableTableEditing.setAction(new EntryActions.TableEdits(this));
+		enableTableEditing.setText("Edit in table");
 		
 		JMenu massEntry = new JMenu("Specialized Entry");
 		massEntry.setFont(menuFont);
-		
-		
 		
 		JMenuItem byRank = new JMenuItem();
 		byRank.setAction(new EntryActions.RankEntry(this));
@@ -246,6 +246,9 @@ public class Gui extends JFrame implements ActionListener {
 		
 	}
   
+	
+	
+	
 	private JPanel createButtons(){
 
 		GridLayout buttonPanelLayout = new GridLayout(10,1);
@@ -276,7 +279,7 @@ public class Gui extends JFrame implements ActionListener {
 		sortByDist.addActionListener(this);
 		sortByDist.setActionCommand("sortByDist");
 		sortByDist.setAction(new ButtonActions.Distance(this));
-		sortByDist.setText("Sort");
+		sortByDist.setText("Sort by Distance");
 		
 		JButton combineList = new JButton();
 		combineList.addActionListener(this);
@@ -324,7 +327,7 @@ public class Gui extends JFrame implements ActionListener {
 		tablePanel.setLayout(new GridLayout(1,1));
 
 		table = new JTable(display, columnNames);
-		table.setEnabled(false);
+		table.setEnabled(isTableEditable);
 
 		if(tablePanel != null)
 			tablePanel.removeAll();
@@ -375,15 +378,49 @@ public class Gui extends JFrame implements ActionListener {
 	}
 
 
-	public Object[][] getTableData(){
-		Object[][] output = new Object[table.getRowCount()][table.getColumnCount()];
+	public Object[][][] getTableData(){
+		
+		int columns = table.getColumnCount();
+		Object[][][] output = new Object[table.getRowCount()][columns][2];
 
+		for(int i = 0 ; i < columns ; i++){
+			output[0][i][1] = table.getColumnName(i);
+		}
+		
 		for(int i = 0 ; i < table.getRowCount() ; i++){
 			for(int j = 0 ; j < table.getColumnCount() ; j++){
-				output[i][j] = table.getValueAt(i, j);
+				output[i][j][0] = table.getValueAt(i, j);
+				output[i][j][1] = output[0][j][1];
 			}  
 		}
 		return output;
+	}
+	
+
+	public void toggleTableEditing(){
+		
+		JPanel savePanel = new JPanel();
+		mainFrame.add(savePanel, BorderLayout.SOUTH);
+		JButton saveEdits = new JButton();
+		savePanel.add(saveEdits);
+		saveEdits.setAction(new ButtonActions.saveTableEdits(this));
+		saveEdits.setText("Click me to save your edits");
+		saveEdits.setBackground(darkBlue);
+		saveEdits.setForeground(Color.WHITE);
+		saveEdits.setOpaque(true);
+
+		if(!isTableEditable){
+			isTableEditable = true;
+			table.setEnabled(true);
+			savePanel.setVisible(true);
+			saveEdits.setVisible(true);
+		} else {
+			isTableEditable = false;
+			table.setEnabled(false);
+			savePanel.setVisible(false);	
+			saveEdits.setVisible(false);
+			saveEdits.repaint();
+		}
 	}
 
 	public Object[] createProgressBar(int progress, String taskName){
@@ -495,7 +532,7 @@ public class Gui extends JFrame implements ActionListener {
 		menu.add(done);
 		menu.setVisible(true);
 		
-	}
+	}	
 	
 	public String[] getImportArgs(){
 		String[] input = new String[columns.size()];
