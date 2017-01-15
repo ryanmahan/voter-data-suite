@@ -30,10 +30,12 @@ public class FileMenuActions {
 		
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			
 			JFileChooser fc = new JFileChooser();
 			FileFilter filter = new FileNameExtensionFilter("Ryans Voter Data","vd", "xml");
 			fc.setFileFilter(filter);
 			int choice = fc.showSaveDialog(null);
+			
 		    if (choice == JFileChooser.APPROVE_OPTION) {
 		        String filename = fc.getSelectedFile().getAbsolutePath();
 		        
@@ -108,17 +110,11 @@ public class FileMenuActions {
 		
 				String[][][] from = internal.to3DArray();
 				UX.setTableData(from);
-			}
-			
-	    	
+			}	
 		}
-		
 	}
 
-	public static class Export extends AbstractAction {
-
-		
-		
+	public static class Export extends AbstractAction {	
 		
 		@Override
 		public void actionPerformed(ActionEvent e) {

@@ -1,17 +1,12 @@
 package actions;
 
-
 import java.io.File;
-import java.util.Iterator;
 import java.util.LinkedList;
 
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.filechooser.FileFilter;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
 import suite.DataDriver;
 import suite.FileHandler;
@@ -28,9 +23,6 @@ public class ButtonActions {
 	public static class PhoneBank extends AbstractAction{
 
 		Gui UX;
-		
-		
-		
 		public PhoneBank(Gui g){
 			UX = g;
 		}
@@ -142,43 +134,6 @@ public class ButtonActions {
 		
 	}
 	
-	public static class Distance extends AbstractAction{
-		Gui UX;
-		public Distance(Gui UX){
-			this.UX = UX;
-		}
-		
-		
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			 LinkedList<House> sortList = DataDriver.houseMaker(internal);
-			  System.out.println("List Made: " + sortList.size());
-			  
-			  //sorry for this line below
-			  if(Integer.parseInt(sortList.peek().getHead().getPrecinct()) == -1){
-				  JFrame frame = new JFrame();
-				  JOptionPane.showMessageDialog(frame,
-						    "No precincts found on list");
-			  }
-			  if(sortList.size() == 0){
-				  JFrame frame = new JFrame();
-				  JOptionPane.showMessageDialog(frame,
-						    "No Houses found on list");
-				  return;
-			  }
-
-			  sortList = DataDriver.sortByDist(sortList, UX);
-			  System.out.println("Recieved List of Houses: " + sortList.size());
-
-			  FileHandler fhSort = new FileHandler(internal);
-			  fhSort.xmlHouseWrite(sortList);
-			  UX.setTableData(fhSort.to3DArray());
-			  
-			
-		}
-		
-	}
-	
 	
 	public static class Combine extends AbstractAction{
 		Gui UX;
@@ -188,61 +143,7 @@ public class ButtonActions {
 		
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			/*// TODO re-write
-			JFileChooser fc = new JFileChooser();
-			FileFilter filter = new FileNameExtensionFilter("Ryans Voter Data","xml");
-			
-			fc.setFileFilter(filter);
-			int choice = fc.showOpenDialog(null);
-			File f = null;
-			if(choice == JFileChooser.APPROVE_OPTION) {
-				String filename = fc.getSelectedFile().getAbsolutePath();
-				f = new File(filename);
-				
-				FileHandler fhInt = new FileHandler(internal);
-				FileHandler fhExt = new FileHandler(f);
-				
-				LinkedList<Person> list1 =  fhInt.getList();
-				LinkedList<Person> list2 = fhExt.getList();
-				LinkedList<Person> output = new LinkedList<Person>();
-				Iterator<Person> iter1 = list1.iterator();
-				Iterator<Person> iter2 = list2.iterator();
-				System.out.println("Going into loop");
-				
-				int currTaskNumber = 0;
-				Boolean matchFound = false;
-				while(iter1.hasNext()){
-					Person p1 = iter1.next();
-					while(iter2.hasNext()){
-						matchFound = false;
-						currTaskNumber++;
-						Person p2 = iter2.next();
-						PersonCombiner pc = new PersonCombiner(p1, p2);
-						if(pc.isMatch()){
-							output.add(pc.combine());
-							iter1.remove();
-							iter2.remove();
-							break;
-						}
-					}
-					if(!matchFound)
-						output.add(p1);
-					
-				}
-				
-				System.out.println("Exited");
-				
-				System.out.println(output.size());
-				while(iter2.hasNext()){
-					Person p2 = iter2.next();
-					output.add(p2);
-				}
-				System.out.println(output.size());
-				
-				fhInt.xmlWrite(internal.getName(), output);
-				UX.setTableData(fhInt.to3DArray());
-				*/
-			//}	
+			//TODO Write new Combine Method
 		}
 	}
 	

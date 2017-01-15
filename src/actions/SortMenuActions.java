@@ -7,9 +7,13 @@ import java.util.Comparator;
 import java.util.LinkedList;
 
 import javax.swing.AbstractAction;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
+import suite.DataDriver;
 import suite.FileHandler;
 import suite.Gui;
+import suite.House;
 import suite.Person;
 
 @SuppressWarnings("serial")
@@ -230,6 +234,43 @@ public class SortMenuActions {
 	       fh.xmlWrite(internal.getAbsolutePath(), list);
 	       UX.setTableData(fh.to3DArray());
 		}
+	}
+	
+	public static class Distance extends AbstractAction{
+		Gui UX;
+		public Distance(Gui UX){
+			this.UX = UX;
+		}
+		
+		
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			 LinkedList<House> sortList = DataDriver.houseMaker(internal);
+			  System.out.println("List Made: " + sortList.size());
+			  
+			  //sorry for this line below
+			  if(Integer.parseInt(sortList.peek().getHead().getPrecinct()) == -1){
+				  JFrame frame = new JFrame();
+				  JOptionPane.showMessageDialog(frame,
+						    "No precincts found on list");
+			  }
+			  if(sortList.size() == 0){
+				  JFrame frame = new JFrame();
+				  JOptionPane.showMessageDialog(frame,
+						    "No Houses found on list");
+				  return;
+			  }
+
+			  sortList = DataDriver.sortByDist(sortList, UX);
+			  System.out.println("Recieved List of Houses: " + sortList.size());
+
+			  FileHandler fhSort = new FileHandler(internal);
+			  fhSort.xmlHouseWrite(sortList);
+			  UX.setTableData(fhSort.to3DArray());
+			  
+			
+		}
+		
 	}
 
 	

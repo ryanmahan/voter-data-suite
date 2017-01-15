@@ -5,6 +5,7 @@ import java.io.File;
 import java.util.LinkedList;
 
 import javax.swing.AbstractAction;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import suite.FileHandler;
@@ -31,8 +32,6 @@ public class EntryActions {
 		}
 		
 	}
-	
-	
 	
 	public static class RankEntry extends AbstractAction {
 
@@ -77,11 +76,30 @@ public class EntryActions {
 		
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// TODO Auto-generated method stub
+			//TODO test
+			FileHandler fh = new FileHandler(internal);
+			LinkedList<Person> list = fh.getList();
 			
-		}
-		
+			for(Person p : list){
+				
+				String info = p.getLast() + ", " + p.getFirst() + " @ " + p.getAddress();
+				JFrame frame = new JFrame("Notes Data Entry");
+				String output = JOptionPane.showInputDialog(frame, "Enter Notes for " + info);
+			   
+				Boolean filled = p.getNotes().length() > 0;
+				
+				if(filled){
+					p.setNotes(p.getNotes().concat(" " + output));
+				} else {
+					p.setNotes(output);
+				}
+			    
+				fh.xmlWrite(internal.getAbsolutePath(), list);
+				UX.setTableData(fh.to3DArray());
+			}
+		}	
 	}
+		
 	public static class NotHomeEntry extends AbstractAction {
 
 		Gui UX;
@@ -89,13 +107,13 @@ public class EntryActions {
 			this.UX = UX;
 		}
 		
-		
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			FileHandler fh = new FileHandler(internal);
 			LinkedList<Person> list = fh.getList();
 			
 			for(Person p : list){
+				
 				String info = p.getLast() + ", " + p.getFirst() + " @ " + p.getAddress();
 				String[] options = new String[] {"Yes", "No", "Skip", "Cancel"};
 				int output = JOptionPane.showOptionDialog(null, "Was " + info + " home?" , "Not Home Data Entry",
@@ -122,27 +140,9 @@ public class EntryActions {
 			    
 				fh.xmlWrite(internal.getAbsolutePath(), list);
 				UX.setTableData(fh.to3DArray());
-			    
 				
-			}
-			
-			
-		}
-		
+			}					
+		}			
 	}
 	
-	public static class anyEntry extends AbstractAction {
-
-		Gui UX;
-		public anyEntry(Gui UX){
-			this.UX = UX;
-		}
-		
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			// TODO Auto-generated method stub
-			
-		}
-		
-	}
 }

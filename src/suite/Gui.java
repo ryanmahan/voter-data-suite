@@ -11,29 +11,26 @@ import javax.swing.table.TableColumnModel;
 import actions.*;
 import actions.EntryActions;
 
-
-
 public class Gui extends JFrame implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
 
 	private final Color darkBlue = new Color(17,14,111);
-	private final Font menuFont = new Font("Arial", Font.PLAIN, 12);
+	private final Font menuFont = new Font("Arial", Font.PLAIN, 15);
 	private JPanel tablePanel = new JPanel(new BorderLayout());
 	private JFrame mainFrame;
 	private JTable table;
 	private ImageIcon img = new ImageIcon("data/icon.png");
 	private Boolean isTableEditable = false;
+	private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+	private double width = screenSize.getWidth();
+	private double height = screenSize.getHeight();
 	
 	public Gui(){
 		prepareGUI();
 	}
 	
 	private void prepareGUI()  {
-	  
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		double width = screenSize.getWidth();
-		double height = screenSize.getHeight();
 	  
 		//initialize the window/frame
 		mainFrame = new JFrame("Voter Data Suite"); 
@@ -63,8 +60,6 @@ public class Gui extends JFrame implements ActionListener {
     	mainFrame.add(buttons, BorderLayout.WEST);
     	
     	mainFrame.setVisible(true);
-    	
- 
   }
 	
 	private JPanel initTablePanel(){
@@ -174,11 +169,18 @@ public class Gui extends JFrame implements ActionListener {
 		timesVoted.addActionListener(this);
 		timesVoted.setFont(menuFont);
 		
+		JMenuItem sortByDist = new JMenuItem();
+		sortByDist.addActionListener(this);
+		sortByDist.setActionCommand("sortByDist");
+		sortByDist.setAction(new SortMenuActions.Distance(this));
+		sortByDist.setText("Distance");
+		
 		sorts.add(precinct);
 		sorts.add(name);
 		sorts.add(street);
 		sorts.add(rank);
 		sorts.add(timesVoted);
+		sorts.add(sortByDist);
 		sorts.setFont(menuFont);
 		  
 		  for(Component c : sorts.getMenuComponents()){
@@ -218,14 +220,8 @@ public class Gui extends JFrame implements ActionListener {
 		byNotHome.addActionListener(this);
 		byNotHome.setText("Not Home");
 		
-		JMenuItem allData = new JMenuItem("All data");
-		allData.setAction(new EntryActions.anyEntry(this));
-		allData.addActionListener(this);
-		allData.setText("All Data");
-		
 		dataEntry.add(enableTableEditing);
 		dataEntry.add(massEntry);
-		massEntry.add(allData);
 		massEntry.add(byNotHome);
 		massEntry.add(byRank);
 		massEntry.add(byNotes);
@@ -244,10 +240,7 @@ public class Gui extends JFrame implements ActionListener {
 		return dataEntry;
 		
 		
-	}
-  
-	
-	
+	}  
 	
 	private JPanel createButtons(){
 
@@ -275,12 +268,6 @@ public class Gui extends JFrame implements ActionListener {
 		showNotHome.setAction(new ButtonActions.NotHome(this));
 		showNotHome.setText("Not Home");
 
-		JButton sortByDist = new JButton();
-		sortByDist.addActionListener(this);
-		sortByDist.setActionCommand("sortByDist");
-		sortByDist.setAction(new ButtonActions.Distance(this));
-		sortByDist.setText("Sort by Distance");
-		
 		JButton combineList = new JButton();
 		combineList.addActionListener(this);
 		combineList.setAction(new ButtonActions.Combine(this));
@@ -289,12 +276,12 @@ public class Gui extends JFrame implements ActionListener {
 		buttonPanel.add(phoneBankBut);
 		buttonPanel.add(houseMake);
 		buttonPanel.add(showNotHome);
-		buttonPanel.add(sortByDist);
-		buttonPanel.add(combineList);
+		//buttonPanel.add(combineList);
 
 		Component[] buttons = buttonPanel.getComponents();
 
 		for(Component c : buttons){
+			c.setFont(menuFont);
 			c.setBackground(darkBlue);
 			c.setForeground(Color.WHITE);
 			((JButton) c).setOpaque(true);
@@ -364,12 +351,13 @@ public class Gui extends JFrame implements ActionListener {
 		for(int i = 0 ; i < from.length ; i++){
 			for(int j = 0 ; j < from[0].length ; j++){
 				if(j == 0)
-					to[i][0] = Integer.toString(i+1);
+					to[i][0] = Integer.toString(i+1);		
 				to[i][j+1] = from[i][j][0];
 			}
 		}
 		String[] columns = new String[from[0].length+1];
 		columns[0] = "Row";
+		
 		for(int i = 0 ; i < from[0].length ; i++){
 			columns[i+1] = from[0][i][1];
 		}
@@ -496,9 +484,7 @@ public class Gui extends JFrame implements ActionListener {
 		
 		
 		menu.setSize(300,500);
-		GridLayout menuLayout = new GridLayout(1,2);
-		menuLayout.setColumns(2);
-		menuLayout.setRows(9);
+		GridLayout menuLayout = new GridLayout(9,2);
 		menuLayout.setHgap(10);
 		menuLayout.setVgap(25);
 		menu.setLayout(new FlowLayout());
@@ -531,7 +517,6 @@ public class Gui extends JFrame implements ActionListener {
 
 		menu.add(done);
 		menu.setVisible(true);
-		
 	}	
 	
 	public String[] getImportArgs(){
@@ -550,4 +535,3 @@ public class Gui extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent arg0){
 	}
 }
-

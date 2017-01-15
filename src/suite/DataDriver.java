@@ -50,15 +50,10 @@ public class DataDriver {
     				p.setNum(p2.getNum());
     			}
     		}
-    		
-    		
-    		
     	}
     	
     	File output = needFileIO.xmlWrite("data/temp.xml", need);
     	UX.setTableData(needFileIO.to3DArray());
-    	
-
     	
     	//Write to XML file and return said file
 		return output;
