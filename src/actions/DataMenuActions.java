@@ -16,7 +16,7 @@ import suite.Person;
 import suite.PersonCombiner;
 
 @SuppressWarnings("serial")
-public class ButtonActions {
+public class DataMenuActions {
 	
 	private final static File internal = new File("data/temp.xml");
 	

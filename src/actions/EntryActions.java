@@ -137,11 +137,9 @@ public class EntryActions {
 				} else if(output == 3){//stop
 					break;
 				}
-			    
-				fh.xmlWrite(internal.getAbsolutePath(), list);
-				UX.setTableData(fh.to3DArray());
-				
-			}					
+			}	
+			fh.xmlWrite(internal.getAbsolutePath(), list);
+			UX.setTableData(fh.to3DArray());
 		}			
 	}
 	

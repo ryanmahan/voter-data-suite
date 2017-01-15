@@ -142,7 +142,7 @@ public class DataDriver {
      */
     public static LinkedList<House> houseMaker(File fin) {
     	
-    	FileHandler fh = new FileHandler(new File("data/temp.txt"));
+    	FileHandler fh = new FileHandler(new File("data/temp.xml"));
 	       
 		LinkedList<Person> voters = fh.getList();
     	LinkedList<House> houses = new LinkedList<House>();

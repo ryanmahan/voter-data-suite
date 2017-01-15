@@ -50,14 +50,12 @@ public class Gui extends JFrame implements ActionListener {
 		
 		JPanel tableTest = this.initTablePanel();
 		JMenuBar menus = this.menuBar();
-    	JPanel buttons = this.createButtons();
     	
     	
     	mainFrame.setIconImage(img.getImage());
     	
     	mainFrame.setJMenuBar(menus);
     	mainFrame.add(tableTest);
-    	mainFrame.add(buttons, BorderLayout.WEST);
     	
     	mainFrame.setVisible(true);
   }
@@ -85,6 +83,9 @@ public class Gui extends JFrame implements ActionListener {
 	  //create menu item
 	  JMenu file = fileMenuItem();
 	  menuBar.add(file);
+	  
+	  JMenu data = createDataMenu();
+	  menuBar.add(data);
 	  
 	  JMenu sort = createSortMenu();
 	  menuBar.add(sort);
@@ -242,52 +243,46 @@ public class Gui extends JFrame implements ActionListener {
 		
 	}  
 	
-	private JPanel createButtons(){
+	private JMenu createDataMenu(){
 
-		GridLayout buttonPanelLayout = new GridLayout(10,1);
-		buttonPanelLayout.setVgap(15);
-		JPanel buttonPanel = new JPanel(buttonPanelLayout);
-		buttonPanel.setBackground(Color.WHITE);
+		JMenu dataMenu = new JMenu("Data");
 
-		JButton phoneBankBut = new JButton("Phone Bank");
+		JMenuItem phoneBankBut = new JMenuItem("Phone Bank");
 		phoneBankBut.addActionListener(this);
 		phoneBankBut.setText("Phone Bank");
-		phoneBankBut.setAction(new ButtonActions.PhoneBank(this));
+		phoneBankBut.setAction(new DataMenuActions.PhoneBank(this));
 		phoneBankBut.setText("Phone Bank");
 
-		JButton houseMake = new JButton("Make Houses");
+		JMenuItem houseMake = new JMenuItem("Make Houses");
 		houseMake.addActionListener(this);
 
-		houseMake.setAction(new ButtonActions.HouseMake(this));
+		houseMake.setAction(new DataMenuActions.HouseMake(this));
 		houseMake.setActionCommand("Houses");
 		houseMake.setText("Show Houses");
 
-		JButton showNotHome = new JButton();
+		JMenuItem showNotHome = new JMenuItem();
 		showNotHome.addActionListener(this);
 		showNotHome.setActionCommand("notHome");
-		showNotHome.setAction(new ButtonActions.NotHome(this));
+		showNotHome.setAction(new DataMenuActions.NotHome(this));
 		showNotHome.setText("Not Home");
 
-		JButton combineList = new JButton();
+		JMenuItem combineList = new JMenuItem();
 		combineList.addActionListener(this);
-		combineList.setAction(new ButtonActions.Combine(this));
+		combineList.setAction(new DataMenuActions.Combine(this));
 		combineList.setText("Combine Lists");
 
-		buttonPanel.add(phoneBankBut);
-		buttonPanel.add(houseMake);
-		buttonPanel.add(showNotHome);
+		dataMenu.add(phoneBankBut);
+		dataMenu.add(houseMake);
+		dataMenu.add(showNotHome);
 		//buttonPanel.add(combineList);
 
-		Component[] buttons = buttonPanel.getComponents();
+		Component[] buttons = dataMenu.getMenuComponents();
 
 		for(Component c : buttons){
 			c.setFont(menuFont);
-			c.setBackground(darkBlue);
-			c.setForeground(Color.WHITE);
-			((JButton) c).setOpaque(true);
 		}
-
-		return buttonPanel;
+		dataMenu.setFont(menuFont);
+		return dataMenu;
 	}
 
 	public void resizeColumnWidth(JTable table) {
@@ -391,7 +386,7 @@ public class Gui extends JFrame implements ActionListener {
 		mainFrame.add(savePanel, BorderLayout.SOUTH);
 		JButton saveEdits = new JButton();
 		savePanel.add(saveEdits);
-		saveEdits.setAction(new ButtonActions.saveTableEdits(this));
+		saveEdits.setAction(new DataMenuActions.saveTableEdits(this));
 		saveEdits.setText("Click me to save your edits");
 		saveEdits.setBackground(darkBlue);
 		saveEdits.setForeground(Color.WHITE);
