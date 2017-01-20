@@ -310,7 +310,8 @@ public class Gui extends JFrame implements ActionListener {
 
 		table = new JTable(display, columnNames);
 		table.setEnabled(isTableEditable);
-
+		table.setFont(menuFont);
+		
 		if(tablePanel != null)
 			tablePanel.removeAll();
 		
