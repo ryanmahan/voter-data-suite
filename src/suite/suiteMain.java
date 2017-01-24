@@ -1,5 +1,7 @@
 package suite;
 
+import ui.Gui;
+
 public class suiteMain {
 
 	//TODO Table font

@@ -10,10 +10,10 @@ import javax.swing.JOptionPane;
 
 import suite.DataDriver;
 import suite.FileHandler;
-import suite.Gui;
 import suite.House;
 import suite.Person;
 import suite.PersonCombiner;
+import ui.Gui;
 
 @SuppressWarnings("serial")
 public class DataMenuActions {

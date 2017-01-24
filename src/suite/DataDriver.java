@@ -3,6 +3,9 @@ package suite;
 
 import java.util.LinkedList;
 import org.jsoup.Jsoup;
+
+import ui.Gui;
+
 import java.io.*;
 
 
@@ -17,16 +20,16 @@ public class DataDriver {
 		double counter = 0;
         
         String HTML, num = "No phone number";
-        Object[] elements = UX.createProgressBar(0, "Phone Banking from Internet");
         
+        ui.progressBar progBar = new ui.progressBar("Phone Banking");
         
         for (Person p : voters) {
-        	UX.setProgress(elements, counter, total);
         	counter++;
             HTML = HTMLGet(p);
             num = recursivePhoneFinder(HTML, num);
             p.setNum(num);
             num = "No phone number";
+            progBar.setProgress(counter, total);
         }
         File output = inputFileHandler.xmlWrite("data/temp.xml", voters);
         UX.setTableData(inputFileHandler.to3DArray());
@@ -225,7 +228,6 @@ public class DataDriver {
      * 		first, I end up running (500^2)*5, which is 5 times more efficient!
      * 
      */
-    
 	public static LinkedList<House> sortByDist(LinkedList<House> list, Gui UX){
 
 		@SuppressWarnings("unchecked")
@@ -233,7 +235,9 @@ public class DataDriver {
 		for(int i = 0 ; i < 5 ; i++){
 			precincts[i] = new LinkedList<House>();
 		}
-		Object[] elements = UX.createProgressBar(0, "Sort by Dist");
+		
+		ui.progressBar progBar = new ui.progressBar("Sorting by Distance");
+		
 		double total = list.size()*2;
 		double curr = 0;
 		for(House h : list){
@@ -248,8 +252,12 @@ public class DataDriver {
 				System.out.println(h.getAddress());
 				precincts[precinct-1].remove(h);
 			}
-			UX.setProgress(elements, curr, total);
+			progBar.setProgress(curr, total);
 			curr++;
+			
+			if(progBar.getClose()){
+				break;
+			}
 		}
 		
 		LinkedList<House> output = new LinkedList<House>();
@@ -258,7 +266,7 @@ public class DataDriver {
 			LinkedList<House> preOut = new LinkedList<House>();
 			preOut = recursiveSortHelper(pre.peek(), pre, preOut);
 			output.addAll(preOut);
-			UX.setProgress(elements, curr, total);
+			progBar.setProgress(curr, total);
 			curr++; 
 		}
 		
@@ -301,7 +309,6 @@ public class DataDriver {
 		
 	}
 	
-	
 	private static House findClosestSortHelper(House from, LinkedList<House> list){
 		HouseDist ret = null;
 		double low = 100000;
@@ -316,13 +323,11 @@ public class DataDriver {
 		return ret.toHouse;
 	}
 	
-	
     private static double getDist(House h1, House h2){
 	   double xdif = h1.lat - h2.lat;
 	   double ydif = h1.lng - h2.lng;
 	   return (Math.sqrt(Math.pow(xdif, 2) + Math.pow(ydif, 2)));
    }
-	
-	
+
 }
     

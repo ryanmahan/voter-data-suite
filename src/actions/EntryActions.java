@@ -9,8 +9,8 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import suite.FileHandler;
-import suite.Gui;
 import suite.Person;
+import ui.Gui;
 
 
 @SuppressWarnings("serial")

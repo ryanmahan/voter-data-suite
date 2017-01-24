@@ -1,4 +1,4 @@
-package suite;
+package ui;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -405,72 +405,6 @@ public class Gui extends JFrame implements ActionListener {
 			saveEdits.setVisible(false);
 			saveEdits.repaint();
 		}
-	}
-
-	public Object[] createProgressBar(int progress, String taskName){
-		
-		JFrame progBarFrame = new JFrame();
-		progBarFrame.setLayout(new BorderLayout());
-		progBarFrame.setSize(250, 100);
-		
-		progBarFrame.setIconImage(img.getImage());
-		JLabel label = new JLabel("Progress bar for: " + taskName);
-		label.setFont(menuFont);
-		label.setVisible(true);
-		label.setOpaque(true);
-		
-		JProgressBar prog = new JProgressBar();
-		prog.setForeground(darkBlue);
-		prog.setStringPainted(true);
-		prog.setOpaque(true);
-		prog.setMaximum(100);
-		prog.setMinimum(0);
-		prog.setValue(progress);
-		prog.setVisible(true);
-		
-		progBarFrame.add(label, BorderLayout.NORTH);
-		progBarFrame.add(prog, BorderLayout.SOUTH);
-		progBarFrame.setVisible(true);
-		
-		return new Object[]{label, prog};
-	}
-	
-	static boolean done = false;
-	double start = 0;
-	double time = 0;
-	double task100 = 0;
-	double taskTime = 0;
-	
-	public void setProgress(Object[] elements, double currTaskNumber, double total){
-		
-		JLabel timeRemain = (JLabel) elements[0];
-		
-		
-		if(currTaskNumber%25 == 0){
-			if(currTaskNumber == 0)
-				start = System.currentTimeMillis();
-			else{
-				time = System.currentTimeMillis();
-				taskTime = (time-start)/currTaskNumber;
-			}
-		}
-			
-		
-		
-		int remainingTime = (int) ((taskTime*(total-currTaskNumber)/1000));
-		
-		if(remainingTime == 0)
-			timeRemain.setText("Calculating Remaining time");
-		else
-			timeRemain.setText("Time Remaining: " + remainingTime/60 + "m and " + remainingTime%60 + "s");
-		
-		int progress = (int) (currTaskNumber/total*100);
-		JProgressBar bar = (JProgressBar) elements[1];
-		bar.setValue(progress);
-		
-		
-		bar.update(bar.getGraphics());
-		timeRemain.update(timeRemain.getGraphics());
 	}
 	
 	private ArrayList<JComboBox<String>> columns = new ArrayList<JComboBox<String>>(8);

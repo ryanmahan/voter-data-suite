@@ -12,8 +12,8 @@ import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import suite.FileHandler;
-import suite.Gui;
 import suite.Person;
+import ui.Gui;
 
 
 @SuppressWarnings("serial")
