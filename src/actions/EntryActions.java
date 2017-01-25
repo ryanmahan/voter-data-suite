@@ -120,6 +120,24 @@ public class EntryActions {
 					        JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE,
 					        null, options, options[0]);
 			    
+				
+				
+				String notes = p.getNotes();
+				String homeIds[] = new String[]{"NH", "Was Home", "Home Not Entered"};
+				
+				for(String id : homeIds)
+					
+				if(notes.contains(id)){
+					if(notes.length() == id.length())
+						p.setNotes("");
+					else{
+						int index = notes.indexOf(id);
+						String before = notes.substring(0, index);
+						String after = notes.substring(index+id.length()-1, notes.length()-1);
+						p.setNotes(before + after);
+					}
+				}
+				
 				Boolean filled = p.getNotes().length() > 0;
 				
 				if(output == 0){//yes, home
@@ -133,8 +151,20 @@ public class EntryActions {
 					else
 						p.setNotes("NH");
 				} else if(output == 2){//skip
+					if(filled)
+						p.setNotes(p.getNotes().concat(" Home Not Entered"));
+					else
+						p.setNotes("Home Not Entered");
 					continue;
 				} else if(output == 3){//stop
+					for(Person q : list){
+						if(!q.getNotes().contains("NH") && !q.getNotes().contains("Was Home") && !q.getNotes().contains("Home Not Entered")){
+							if(filled)
+								q.setNotes(q.getNotes().concat(" Home Not Entered"));
+							else
+								q.setNotes("Home Not Entered");
+						} 
+					}
 					break;
 				}
 			}	

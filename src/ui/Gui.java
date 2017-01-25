@@ -413,17 +413,17 @@ public class Gui extends JFrame implements ActionListener {
 	public void createImportMenu(){
 		
 		
-		menu.setSize(300,500);
+		menu.setSize(350,450);
+		BorderLayout bl = new BorderLayout();
+		menu.setLayout(bl);
 		GridLayout menuLayout = new GridLayout(9,2);
 		menuLayout.setHgap(10);
-		menuLayout.setVgap(25);
-		menu.setLayout(new FlowLayout());
+		menuLayout.setVgap(15);
+		JPanel cbPanel = new JPanel(menuLayout);
+		
 		
 		String[] personData = new String[]{"Empty", "Party", "First Name", "Last Name", "Street Number", "Street Name",
 					"Rank", "Precinct", "Phone Number", "Times Voted", "Notes"};
-		
-		
-		JPanel cbPanel = new JPanel(menuLayout);
 		
 		for(int i = 0 ; i < 9 ; i++){
 			JComboBox<String> cb = new JComboBox<String>(personData);
@@ -436,7 +436,7 @@ public class Gui extends JFrame implements ActionListener {
 			columns.add(cb);
 		}
 		
-		menu.add(cbPanel);
+		menu.add(cbPanel, BorderLayout.NORTH);
 		
 		JButton done = new JButton("Done");
 		done.setAction(new FileMenuActions.Import(this, true));
@@ -445,7 +445,7 @@ public class Gui extends JFrame implements ActionListener {
 		done.setForeground(Color.WHITE);
 		done.setOpaque(true);
 
-		menu.add(done);
+		menu.add(done, BorderLayout.SOUTH);
 		menu.setVisible(true);
 	}	
 	
