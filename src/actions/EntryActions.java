@@ -45,6 +45,8 @@ public class EntryActions {
 			FileHandler fh = new FileHandler(internal);
 			LinkedList<Person> list = fh.getList();
 			
+			
+			
 			for(Person p : list){
 				
 				String info = p.getLast() + ", " + p.getFirst() + " @ " + p.getAddress();
@@ -53,16 +55,21 @@ public class EntryActions {
 					        JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE,
 					        null, options, options[0]);
 			    
-				if(output == 5)
+				if(output == 5){//skip
+					p.setRank("0");
 					continue;
-				if(output == 6)
+				}
+				if(output == 6){//stop
+					for(Person q : list){
+						if(q.getRank() == "")
+							q.setRank("0");
+					}
 					break;
-
+				}
 				p.setRank(Integer.toString(output+1));
-			    
-				fh.xmlWrite(internal.getAbsolutePath(), list);
-				UX.setTableData(fh.to3DArray());
 			}
+			fh.xmlWrite(internal.getAbsolutePath(), list);
+			UX.setTableData(fh.to3DArray());
 		}
 		
 	}
@@ -125,12 +132,12 @@ public class EntryActions {
 				String notes = p.getNotes();
 				String homeIds[] = new String[]{"NH", "Was Home", "Home Not Entered"};
 				
-				for(String id : homeIds)
+				for(String id : homeIds){
 					
-				if(notes.contains(id)){
-					if(notes.length() == id.length())
-						p.setNotes("");
-					else{
+					if(notes.contains(id)){
+						if(notes.length() == id.length())
+							p.setNotes("");
+					}else{
 						int index = notes.indexOf(id);
 						String before = notes.substring(0, index);
 						String after = notes.substring(index+id.length()-1, notes.length()-1);

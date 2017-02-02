@@ -6,7 +6,6 @@ public class suiteMain {
 
 	//TODO Phone bank crawler
 	//FIXME Rank crawling/Writing
-	//FIXME Cant leave sortByDist
 	
 	
 	public static void main(String args[]) throws Exception{

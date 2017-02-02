@@ -19,7 +19,8 @@ public class DataDriver {
 		double total = voters.size();
 		double counter = 0;
         
-        String HTML, num = "No phone number";
+        String HTML;
+        String num = "No phone number";
         
         ui.progressBar progBar = new ui.progressBar("Phone Banking");
         
@@ -268,6 +269,10 @@ public class DataDriver {
 			output.addAll(preOut);
 			progBar.setProgress(curr, total);
 			curr++; 
+			
+			if(progBar.getClose()){
+				break;
+			}
 		}
 		
 		return output;
