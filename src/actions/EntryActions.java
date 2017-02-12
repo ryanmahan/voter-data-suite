@@ -177,7 +177,48 @@ public class EntryActions {
 			}	
 			fh.xmlWrite(internal.getAbsolutePath(), list);
 			UX.setTableData(fh.to3DArray());
-		}			
+		}		
+	}
+	
+	public static class addColumn extends AbstractAction{
+
+		Gui UX;
+		String columnType;
+		
+		public addColumn(Gui UX, String columnType){
+			this.UX = UX;
+			this.columnType = columnType;
+		}
+		
+		
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			// TODO Auto-generated method stub
+			
+			String[][][] data = UX.getTableData();
+			String[][][] withColumn = new String[data.length][data[0].length+1][data[0][0].length];
+			System.out.println(columnType);
+			
+			for(int i = 0 ; i < data.length ; i++){
+				for(int j = 0 ; j < data[0].length ; j++){
+					for(int k = 0 ; k < data[0][0].length ; k++){
+						withColumn[i][j][k] = data[i][j][k];
+					}
+				}
+			}
+			
+			
+			for(int i = 0 ; i < withColumn.length ; i++){
+				withColumn[0][withColumn[0].length-1][1] = columnType;
+				withColumn[0][withColumn[0].length-1][0] = ""; //TODO do this cleaner
+			}
+			
+			UX.setTableData(withColumn);
+			
+			
+			
+		}
+		
 	}
 	
 }

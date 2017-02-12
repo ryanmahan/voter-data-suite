@@ -221,8 +221,24 @@ public class Gui extends JFrame implements ActionListener {
 		byNotHome.addActionListener(this);
 		byNotHome.setText("Not Home");
 		
+		JMenu addColumn = new JMenu("Add column...");
+		addColumn.setFont(menuFont);
+		
+		String[] types = new String[]{"first", "last", "snum", "sname",
+									  "num", "rank", "timesVoted", 
+									  "precinct", "notes"};
+		
+		for(String type : types){
+			JMenuItem temp = new JMenuItem();
+			temp.setAction(new EntryActions.addColumn(this, type));
+			temp.setText(type);
+			temp.setFont(menuFont);
+			addColumn.add(temp);
+		}
+		
 		dataEntry.add(enableTableEditing);
 		dataEntry.add(massEntry);
+		dataEntry.add(addColumn);
 		massEntry.add(byNotHome);
 		massEntry.add(byRank);
 		massEntry.add(byNotes);
@@ -308,6 +324,11 @@ public class Gui extends JFrame implements ActionListener {
 		
 		tablePanel.setLayout(new GridLayout(1,1));
 
+		for(String cn : columnNames){
+			System.out.println("Name: " + cn);
+		}
+		
+		
 		table = new JTable(display, columnNames);
 		table.setEnabled(isTableEditable);
 		table.setFont(menuFont);
@@ -362,18 +383,19 @@ public class Gui extends JFrame implements ActionListener {
 	}
 
 
-	public Object[][][] getTableData(){
+	public String[][][] getTableData(){
 		
 		int columns = table.getColumnCount();
-		Object[][][] output = new Object[table.getRowCount()][columns][2];
+		String[][][] output = new String[table.getRowCount()][columns][2];
 
 		for(int i = 0 ; i < columns ; i++){
 			output[0][i][1] = table.getColumnName(i);
+			System.out.println(table.getColumnName(i));
 		}
 		
 		for(int i = 0 ; i < table.getRowCount() ; i++){
 			for(int j = 0 ; j < table.getColumnCount() ; j++){
-				output[i][j][0] = table.getValueAt(i, j);
+				output[i][j][0] = (String) table.getValueAt(i, j);
 				output[i][j][1] = output[0][j][1];
 			}  
 		}

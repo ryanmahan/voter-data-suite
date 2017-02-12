@@ -6,6 +6,7 @@ public class suiteMain {
 
 	//TODO Phone bank crawler
 	//FIXME Rank crawling/Writing
+	//TODO Add column ability
 	
 	
 	public static void main(String args[]) throws Exception{
